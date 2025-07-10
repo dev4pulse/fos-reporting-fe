@@ -1,7 +1,7 @@
 import React from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 
-import Sidebar from './Sidebar'; // ✅ Correct import
+import Sidebar from '../../Components/Sidebar';
 
 const DashboardLayout = () => {
   const navigate = useNavigate();

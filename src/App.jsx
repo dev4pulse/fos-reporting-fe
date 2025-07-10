@@ -2,16 +2,16 @@ import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 // Import all components from /pages
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Login from './pages/Login';
-import Registration from './pages/Registration';
-import DashboardLayout from './pages/DashboardLayout';
-import EmployeeDashboard from './pages/EmployeeDashboard';
-import ManagerDashboard from './pages/ManagerDashboard';
-import OwnerDashboard from './pages/OwnerDashboard';
-import InventoryDashboard from './pages/InventoryDashboard';
-import ProductManagement from './pages/ProductManagement';
-import SalesCollections from './pages/SalesCollections';
-import BorrowersDashboard from './pages/BorrowersDashboard';
+import Login from './pages/Login/login';
+import Registration from './pages/Registration/Registration';
+import DashboardLayout from './pages/DashboardLayout/DashboardLayout';
+import EmployeeDashboard from './pages/EmployeeDashboard/EmployeeDashboard';
+import ManagerDashboard from './pages/ManagerDashboard/ManagerDashboard';
+import OwnerDashboard from './pages/OwnerDashboard/OwnerDashboard';
+import InventoryDashboard from './pages/InventoryDashboard/InventoryDashboard';
+import ProductManagement from './pages/ProductManagement/ProductManagement';
+import SalesCollections from './pages/SalesCollections/SalesCollections';
+import BorrowersDashboard from './pages/BorrowersDashboard/BorrowersDashboard';
 
 const App = () => {
   return (

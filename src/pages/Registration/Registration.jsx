@@ -29,7 +29,7 @@ const Registration = () => {
     }
 
     try {
-      const response = await axios.post('http://localhost:8081/employee', payload)
+      const response = await axios.post('http://localhost:8080/employee', payload)
       console.log('✅ Registered:', response.data)
       setMessage('Employee registered successfully!')
       setError('')
