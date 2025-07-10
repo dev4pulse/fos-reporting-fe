@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import './login.css'
 
 const Login = () => {
   const [username, setUsername] = useState('')
@@ -11,12 +12,12 @@ const Login = () => {
 const handleLogin = async (e) => {
   e.preventDefault()
   try {
-    const response = await axios.post('https://pulse-293050141084.asia-south1.run.app/login', {
+    const response = await axios.post("/api/login", {
       username,
       password,
     })
 
-    console.log(response.data) // You should see { status: "success", employeeId: 123 }
+    console.log(response.data)
 
     if (response.data.status === 'success') {
       navigate('/dashboard')

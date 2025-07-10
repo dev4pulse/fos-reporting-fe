@@ -1,7 +1,7 @@
 import React from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
-
 import Sidebar from '../../Components/Sidebar';
+import './DashboardLayout.css';
 
 const DashboardLayout = () => {
   const navigate = useNavigate();
@@ -12,9 +12,9 @@ const DashboardLayout = () => {
   };
 
   return (
-    <div className="dashboard-container" style={{ display: 'flex', minHeight: '100vh' }}>
+    <div className="dashboard-container">
       <Sidebar onLogout={handleLogout} />
-      <main style={{ flex: 1, padding: '20px' }}>
+      <main className="dashboard-main">
         <Outlet />
       </main>
     </div>

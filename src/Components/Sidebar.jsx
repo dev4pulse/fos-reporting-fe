@@ -1,46 +1,22 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import './Sidebar.css';
 
 const Sidebar = ({ onLogout }) => {
-  const linkStyle = ({ isActive }) => ({
-    display: 'block',
-    padding: '12px 16px',
-    textDecoration: 'none',
-    backgroundColor: isActive ? '#f0f0f0' : 'transparent',
-    fontWeight: isActive ? 'bold' : 'normal',
-    color: '#333'
-  });
-
   return (
-    <div style={{
-      width: '220px',
-      backgroundColor: '#fafafa',
-      borderRight: '1px solid #ddd',
-      paddingTop: '20px',
-    }}>
-      <nav>
-        <NavLink to="/dashboard/employee" style={linkStyle}>Employee Dashboard</NavLink>
-        <NavLink to="/dashboard/manager" style={linkStyle}>Manager Dashboard</NavLink>
-        <NavLink to="/dashboard/owner" style={linkStyle}>Owner Dashboard</NavLink>
-        <NavLink to="/dashboard/inventory" style={linkStyle}>Inventory Dashboard</NavLink>
-        <NavLink to="/dashboard/product" style={linkStyle}>Product Management</NavLink>
-        <NavLink to="/dashboard/sales-collections" style={linkStyle}>Sales & Collections</NavLink>
-        <NavLink to="/dashboard/borrowers" style={linkStyle}>Borrowers Dashboard</NavLink>
-        <button 
-          onClick={onLogout}
-          style={{
-            marginTop: '20px',
-            padding: '10px 16px',
-            width: '100%',
-            border: 'none',
-            backgroundColor: '#f44336',
-            color: 'white',
-            cursor: 'pointer'
-          }}>
-          Logout
-        </button>
+    <aside className="sidebar">
+      <nav className="nav-links">
+        <NavLink to="/dashboard/employee" className="nav-link">Employee Dashboard</NavLink>
+        <NavLink to="/dashboard/manager" className="nav-link">Manager Dashboard</NavLink>
+        <NavLink to="/dashboard/owner" className="nav-link">Owner Dashboard</NavLink>
+        <NavLink to="/dashboard/inventory" className="nav-link">Inventory Dashboard</NavLink>
+        <NavLink to="/dashboard/product" className="nav-link">Product Management</NavLink>
+        <NavLink to="/dashboard/sales-collections" className="nav-link">Sales & Collections</NavLink>
+        <NavLink to="/dashboard/borrowers" className="nav-link">Borrowers Dashboard</NavLink>
+
+        <button className="logout-btn" onClick={onLogout}>Logout</button>
       </nav>
-    </div>
+    </aside>
   );
 };
 

@@ -16,7 +16,7 @@ const SalesCollections = () => {
   const [creditCard, setCreditCard] = useState(0);
 
   useEffect(() => {
-    fetch('http://localhost:8081/active')
+    fetch('api/active')
       .then(res => res.json())
       .then(setEmployees)
       .catch(() => alert('Failed to load employees'));
@@ -46,11 +46,11 @@ const SalesCollections = () => {
     if (['productName', 'gun'].includes(field)) {
       const { productName, gun } = updated[index];
       if (productName && gun) {
-        fetch(`https://pulse-293050141084.asia-south1.run.app/sales/last?productName=${encodeURIComponent(productName)}&gun=${encodeURIComponent(gun)}`)
+        fetch(`api/sales/last?productName=${encodeURIComponent(productName)}&gun=${encodeURIComponent(gun)}`)
           .then(r => r.json())
           .then(data => {
             updated[index].opening = data.lastClosing || 0;
-            return fetch(`https://pulse-293050141084.asia-south1.run.app/sales/price?productName=${encodeURIComponent(productName)}&gun=${encodeURIComponent(gun)}`);
+            return fetch(`api/sales/price?productName=${encodeURIComponent(productName)}&gun=${encodeURIComponent(gun)}`);
           })
           .then(r => r.json())
           .then(price => {
@@ -109,12 +109,12 @@ const SalesCollections = () => {
     };
 
     Promise.all([
-      fetch('https://pulse-293050141084.asia-south1.run.app/sales', {
+      fetch('api/sales', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payloadSales)
       }),
-      fetch('https://pulse-293050141084.asia-south1.run.app/collections', {
+      fetch('api/collections', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payloadCollections)
@@ -122,7 +122,7 @@ const SalesCollections = () => {
     ])
       .then(responses => Promise.all(responses.map(r => r.text())))
       .then(([salesMsg, collectionsMsg]) => {
-        alert(`✅ Sales: ${salesMsg}\n✅ Collections: ${collectionsMsg}`);
+        alert(` Sales: ${salesMsg}\n Collections: ${collectionsMsg}`);
         window.location.reload();
       })
       .catch(err => alert('Error: ' + err.message));
