@@ -46,11 +46,11 @@ const SalesCollections = () => {
     if (['productName', 'gun'].includes(field)) {
       const { productName, gun } = updated[index];
       if (productName && gun) {
-        fetch(`http://pulse-293050141084.asia-south1.run.app/sales/last?productName=${encodeURIComponent(productName)}&gun=${encodeURIComponent(gun)}`)
+        fetch(`https://pulse-293050141084.asia-south1.run.app/sales/last?productName=${encodeURIComponent(productName)}&gun=${encodeURIComponent(gun)}`)
           .then(r => r.json())
           .then(data => {
             updated[index].opening = data.lastClosing || 0;
-            return fetch(`http://pulse-293050141084.asia-south1.run.app/sales/price?productName=${encodeURIComponent(productName)}&gun=${encodeURIComponent(gun)}`);
+            return fetch(`https://pulse-293050141084.asia-south1.run.app/sales/price?productName=${encodeURIComponent(productName)}&gun=${encodeURIComponent(gun)}`);
           })
           .then(r => r.json())
           .then(price => {
@@ -109,12 +109,12 @@ const SalesCollections = () => {
     };
 
     Promise.all([
-      fetch('http://pulse-293050141084.asia-south1.run.app/sales', {
+      fetch('https://pulse-293050141084.asia-south1.run.app/sales', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payloadSales)
       }),
-      fetch('http://pulse-293050141084.asia-south1.run.app/collections', {
+      fetch('https://pulse-293050141084.asia-south1.run.app/collections', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payloadCollections)
