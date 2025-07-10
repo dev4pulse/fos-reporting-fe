@@ -1,0 +1,124 @@
+/* Registration.css */
+
+/* Base layout */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(to right, #8e9eab, #eef2f3);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Container styling */
+.registration-container {
+  background-color: #ffffff;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 600px;
+  box-sizing: border-box;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Heading */
+.registration-container h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #2c3e50;
+}
+
+/* Grid layout for form */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+/* Each input field group */
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Labels */
+.registration-container label {
+  margin-bottom: 0.3rem;
+  font-weight: 600;
+  color: #34495e;
+}
+
+/* Inputs */
+.registration-container input {
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+/* Input focus effect */
+.registration-container input:focus {
+  border-color: #2980b9;
+  outline: none;
+}
+
+/* Success & error messages */
+.success {
+  color: green;
+  text-align: center;
+  font-size: 0.95rem;
+  margin: 1rem 0;
+}
+
+.error {
+  color: red;
+  text-align: center;
+  font-size: 0.95rem;
+  margin: 1rem 0;
+}
+
+/* Submit button */
+.registration-container button {
+  margin-top: 1.5rem;
+  width: 100%;
+  padding: 0.9rem;
+  background-color: #2980b9;
+  border: none;
+  border-radius: 0.5rem;
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.registration-container button:hover {
+  background-color: #2471a3;
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive two-column layout for tablet and desktop */
+@media (min-width: 768px) {
+  .form-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .registration-container button {
+    grid-column: span 2;
+  }
+}
