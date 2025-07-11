@@ -1,0 +1,271 @@
+/* SalesCollections.css - 2-column Layout Responsive Design */
+
+.container {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 30px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  box-sizing: border-box;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: -10px;
+  margin-right: -10px;
+  margin-bottom: 20px;
+}
+
+.row > div[class^="col-"] {
+  padding-left: 10px;
+  padding-right: 10px;
+  box-sizing: border-box;
+}
+
+@media (min-width: 768px) {
+  .col-2,
+  .col-3,
+  .col-4,
+  .col-6 {
+    flex: 0 0 calc(50% - 20px);
+    max-width: calc(50% - 20px);
+  }
+
+  .col-12 {
+    flex: 0 0 calc(100% - 20px);
+    max-width: calc(100% - 20px);
+  }
+}
+
+h2 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 30px;
+  color: #2c3e50;
+  border-bottom: 3px solid #3498db;
+  padding-bottom: 12px;
+  text-align: center;
+  position: relative;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+
+h4 {
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin-bottom: 25px;
+  color: #34495e;
+  border-left: 5px solid #3498db;
+  padding-left: 15px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  line-height: 1.2;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #4a69bd;
+  font-size: 0.95rem;
+}
+
+input,
+select {
+  width: 100%;
+  padding: 12px 15px;
+  font-size: 1rem;
+  border: 1px solid #dbe2ea;
+  border-radius: 8px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+  margin-bottom: 20px;
+  box-sizing: border-box;
+  background-color: #fdfdfd;
+  color: #333;
+}
+
+input:focus,
+select:focus {
+  border-color: #4a69bd;
+  box-shadow: 0 0 0 4px rgba(74, 105, 189, 0.2);
+  outline: none;
+  background-color: #fff;
+}
+
+input[readonly] {
+  background-color: #eef2f5;
+  color: #6c757d;
+  cursor: not-allowed;
+  border-style: dashed;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.product-block,
+.borrower-block {
+  border: 1px solid #e0e6ed;
+  padding: 25px;
+  border-radius: 10px;
+  margin-bottom: 25px;
+  background-color: #fcfdff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+button {
+  padding: 12px 20px;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.25s ease, transform 0.15s ease, box-shadow 0.25s ease;
+  letter-spacing: 0.5px;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.btn-add {
+  background-color: #3498db;
+  color: white;
+  margin-bottom: 30px;
+}
+
+.btn-add:hover {
+  background-color: #2980b9;
+}
+
+.btn-remove {
+  background-color: #e74c3c;
+  color: white;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.btn-remove:hover {
+  background-color: #c0392b;
+}
+
+.btn-submit {
+  width: 100%;
+  background-color: #27ae60;
+  color: white;
+  font-size: 1.1rem;
+  padding: 14px 20px;
+  margin-top: 30px;
+}
+
+.btn-submit:hover {
+  background-color: #1e8449;
+}
+
+.text-danger {
+  color: #e74c3c;
+  font-size: 0.85rem;
+  margin-top: 5px;
+  display: block;
+  font-weight: 500;
+}
+
+.d-flex {
+  display: flex;
+}
+.align-items-end {
+  align-items: flex-end;
+}
+
+@media (max-width: 768px) {
+  .container {
+    margin: 20px auto;
+    padding: 20px;
+    border-radius: 8px;
+  }
+  h2 {
+    font-size: 1.8rem;
+    margin-bottom: 25px;
+  }
+  h4 {
+    font-size: 1.4rem;
+    margin-bottom: 20px;
+    padding-left: 10px;
+  }
+  h4::before {
+    width: 4px;
+  }
+
+  .col-2,
+  .col-3,
+  .col-4,
+  .col-6,
+  .col-12 {
+    flex: 0 0 calc(100% - 20px);
+    max-width: calc(100% - 20px);
+  }
+
+  input,
+  select,
+  button {
+    font-size: 0.95rem;
+    padding: 10px 12px;
+  }
+
+  .btn-submit {
+    font-size: 1rem;
+    padding: 12px 15px;
+  }
+
+  .product-block,
+  .borrower-block {
+    padding: 18px;
+    margin-bottom: 18px;
+    border-radius: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 15px;
+  }
+  h2 {
+    font-size: 1.6rem;
+  }
+  h4 {
+    font-size: 1.2rem;
+  }
+  .row {
+    margin-left: -5px;
+    margin-right: -5px;
+    margin-bottom: 15px;
+  }
+  .row > div[class^="col-"] {
+    padding-left: 5px;
+    padding-right: 5px;
+    margin-bottom: 10px;
+  }
+  input,
+  select {
+    margin-bottom: 15px;
+  }
+  .product-block,
+  .borrower-block {
+    padding: 15px;
+    margin-bottom: 15px;
+  }
+}
