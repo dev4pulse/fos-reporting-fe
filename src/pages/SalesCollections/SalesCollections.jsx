@@ -15,7 +15,7 @@ const SalesCollections = () => {
   const [creditCard, setCreditCard] = useState('');
 
   useEffect(() => {
-    fetch('/https://pulse-293050141084.asia-south1.run.app/active')
+    fetch('https://pulse-293050141084.asia-south1.run.app/active')
       .then(res => {
         if (!res.ok) throw new Error(`HTTP error! ${res.status}`);
         return res.json();
@@ -56,8 +56,8 @@ const SalesCollections = () => {
       const { productName, gun } = updated[index];
       if (productName && gun) {
         Promise.all([
-          fetch(`/https://pulse-293050141084.asia-south1.run.app/sales/last?productName=${productName}&gun=${gun}`).then(r => r.json()),
-          fetch(`/https://pulse-293050141084.asia-south1.run.app/sales/price?productName=${productName}&gun=${gun}`).then(r => r.json())
+          fetch(`https://pulse-293050141084.asia-south1.run.app/sales/last?productName=${productName}&gun=${gun}`).then(r => r.json()),
+          fetch(`https://pulse-293050141084.asia-south1.run.app/sales/price?productName=${productName}&gun=${gun}`).then(r => r.json())
         ]).then(([lastData, priceData]) => {
           updated[index].opening = lastData.lastClosing || 0;
           updated[index].price = priceData || 0;
@@ -130,12 +130,12 @@ const SalesCollections = () => {
 
     try {
       const [res1, res2] = await Promise.all([
-        fetch('/https://pulse-293050141084.asia-south1.run.app/sales', {
+        fetch('https://pulse-293050141084.asia-south1.run.app/sales', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payloadSales)
         }),
-        fetch('/https://pulse-293050141084.asia-south1.run.app/collections', {
+        fetch('https://pulse-293050141084.asia-south1.run.app/collections', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payloadCollections)
