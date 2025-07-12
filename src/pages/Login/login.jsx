@@ -12,7 +12,7 @@ const Login = () => {
 const handleLogin = async (e) => {
   e.preventDefault()
   try {
-    const response = await axios.post("/api/login", {
+    const response = await axios.post("https://pulse-293050141084.asia-south1.run.app/login", {
       username,
       password,
     })
