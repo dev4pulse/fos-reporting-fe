@@ -1,0 +1,136 @@
+/* ManageInventory.css */
+
+.inventory-container {
+  max-width: 1100px;
+  margin: 40px auto;
+  padding: 30px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+}
+
+.inventory-container h2 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: #2c3e50;
+}
+
+.subtitle {
+  color: #6c757d;
+  font-size: 15px;
+  margin-bottom: 25px;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.inventory-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+
+.inventory-table th,
+.inventory-table td {
+  text-align: left;
+  padding: 12px 16px;
+  white-space: nowrap;
+}
+
+.inventory-table th {
+  background-color: #f4f6f8;
+  font-weight: 600;
+  color: #333;
+}
+
+.inventory-table tr:nth-child(even) {
+  background-color: #fafbfc;
+}
+
+.inventory-buttons {
+  display: flex;
+  justify-content: flex-start;
+  gap: 15px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 10px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-blue {
+  background-color: #007bff;
+  color: white;
+}
+
+.btn-blue:hover {
+  background-color: #0056b3;
+}
+
+.btn-purple {
+  background-color: #9b59b6;
+  color: white;
+}
+
+.btn-purple:hover {
+  background-color: #7d3c98;
+}
+
+.btn-gray {
+  background-color: #7f8c8d;
+  color: white;
+}
+
+.btn-gray:hover {
+  background-color: #636e72;
+}
+
+/* Form styles */
+.inventory-form {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.inventory-form h2 {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 25px;
+  text-align: center;
+}
+
+.inventory-form label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 500;
+  color: #34495e;
+  font-size: 14px;
+}
+
+.inventory-form input,
+.inventory-form select {
+  width: 100%;
+  padding: 10px 14px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  border: 1px solid #dcdcdc;
+  border-radius: 6px;
+  background-color: #fefefe;
+}
+
+.inventory-form input:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
+}
