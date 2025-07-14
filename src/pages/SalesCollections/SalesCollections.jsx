@@ -16,10 +16,7 @@ const SalesCollections = () => {
 
   useEffect(() => {
     fetch('https://pulse-293050141084.asia-south1.run.app/active')
-      .then(res => {
-        if (!res.ok) throw new Error(`HTTP error! ${res.status}`);
-        return res.json();
-      })
+      .then(res => res.ok ? res.json() : Promise.reject(res.statusText))
       .then(setEmployees)
       .catch(err => {
         setEmployeeFetchError('Failed to load employees.');
@@ -52,22 +49,34 @@ const SalesCollections = () => {
     const updated = [...products];
     updated[index][field] = value;
 
-    if (['productName', 'gun'].includes(field)) {
-      const { productName, gun } = updated[index];
-      if (productName && gun) {
-        Promise.all([
-          fetch(`https://pulse-293050141084.asia-south1.run.app/sales/last?productName=${productName}&gun=${gun}`).then(r => r.json()),
-          fetch(`https://pulse-293050141084.asia-south1.run.app/sales/price?productName=${productName}&gun=${gun}`).then(r => r.json())
-        ]).then(([lastData, priceData]) => {
-          updated[index].opening = lastData.lastClosing || 0;
-          updated[index].price = priceData || 0;
+    const { productName, gun } = updated[index];
+
+    if (field === 'productName') {
+      fetch(`https://pulse-293050141084.asia-south1.run.app/inventory/price?productName=${value}`)
+        .then(res => res.ok ? res.json() : Promise.reject(res.statusText))
+        .then(price => {
+          updated[index].price = price;
           calculateSales(updated[index]);
           setProducts(updated);
-        }).catch(err => {
-          alert(`Error fetching data for ${productName}-${gun}`);
+        })
+        .catch(err => {
+          alert(`Failed to fetch price for ${value}`);
           console.error(err);
         });
-      }
+    }
+
+    if ((field === 'productName' || field === 'gun') && productName && gun) {
+      fetch(`https://pulse-293050141084.asia-south1.run.app/sales/last?productName=${productName}&gun=${gun}`)
+        .then(res => res.ok ? res.json() : Promise.reject(res.statusText))
+        .then(data => {
+          updated[index].opening = data.lastClosing || 0;
+          calculateSales(updated[index]);
+          setProducts(updated);
+        })
+        .catch(err => {
+          alert(`Error fetching last closing for ${productName} - ${gun}`);
+          console.error(err);
+        });
     } else {
       calculateSales(updated[index]);
       setProducts(updated);
@@ -94,7 +103,7 @@ const SalesCollections = () => {
 
   const formatDate = (date) => {
     const pad = (n) => (n < 10 ? '0' + n : n);
-    return `${date.getFullYear()}-${pad(date.getMonth()+1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
   };
 
   const handleSubmit = async (e) => {
@@ -184,9 +193,7 @@ const SalesCollections = () => {
                 </option>
               ))}
             </select>
-            {employeeFetchError && (
-              <small className="text-danger">{employeeFetchError}</small>
-            )}
+            {employeeFetchError && <small className="text-danger">{employeeFetchError}</small>}
           </div>
         </div>
 
@@ -227,8 +234,7 @@ const SalesCollections = () => {
 
         <h4>Collections</h4>
         <div className="row">
-          {[
-            { label: 'Cash Received', value: cashReceived, setter: setCashReceived },
+          {[{ label: 'Cash Received', value: cashReceived, setter: setCashReceived },
             { label: 'Phone Pay', value: phonePay, setter: setPhonePay },
             { label: 'Credit Card', value: creditCard, setter: setCreditCard },
             { label: 'Total Collection', value: totalCollection.toFixed(2), readOnly: true },
