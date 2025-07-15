@@ -41,6 +41,62 @@
   color: #007bff;
 }
 
+/* Inventory dropdown */
+.inventory-toggle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 15px;
+  color: #333;
+  transition: background-color 0.2s;
+  gap: 10px;
+}
+
+.inventory-toggle:hover {
+  background-color: #f2f2f2;
+}
+
+.toggle-label {
+  flex-grow: 1;
+}
+
+.toggle-icon {
+  font-weight: bold;
+  font-size: 18px;
+  user-select: none;
+}
+
+/* Sub-navigation links */
+.sub-nav {
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.sub-link {
+  padding: 10px 16px;
+  text-decoration: none;
+  color: #555;
+  font-size: 14px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.sub-link:hover {
+  background-color: #f9f9f9;
+}
+
+.sub-link.active {
+  background-color: #e0f0ff;
+  font-weight: bold;
+  color: #007bff;
+}
+
 /* Logout button */
 .logout-btn {
   margin-top: auto;
@@ -59,7 +115,7 @@
   background-color: #d32f2f;
 }
 
-/* Responsive: stack sidebar */
+/* Responsive sidebar for mobile */
 @media (max-width: 768px) {
   .sidebar {
     width: 100%;
@@ -73,6 +129,16 @@
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: space-around;
+  }
+
+  .sub-nav {
+    padding-left: 0;
+    width: 100%;
+  }
+
+  .sub-link {
+    width: 100%;
+    text-align: center;
   }
 
   .logout-btn {

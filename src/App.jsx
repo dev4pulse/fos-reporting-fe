@@ -1,36 +1,54 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-// Import all components from /pages
 import 'bootstrap/dist/css/bootstrap.min.css';
+
+// Auth pages
 import Login from './pages/Login/login';
 import Registration from './pages/Registration/Registration';
+
+// Layout
 import DashboardLayout from './pages/DashboardLayout/DashboardLayout';
+
+// Dashboard pages
 import EmployeeDashboard from './pages/EmployeeDashboard/EmployeeDashboard';
 import ManagerDashboard from './pages/ManagerDashboard/ManagerDashboard';
 import OwnerDashboard from './pages/OwnerDashboard/OwnerDashboard';
-import InventoryDashboard from './pages/InventoryDashboard/InventoryDashboard';
 import ProductManagement from './pages/ProductManagement/ProductManagement';
 import SalesCollections from './pages/SalesCollections/SalesCollections';
 import BorrowersDashboard from './pages/BorrowersDashboard/BorrowersDashboard';
+
+// Inventory sub-pages
+import ViewInventory from './pages/InventoryDashboard/ViewInventory';
+import AddProduct from './pages/InventoryDashboard/AddProduct';
+import UpdateInventory from './pages/InventoryDashboard/UpdateInventory';
+import UpdatePrice from './pages/InventoryDashboard/UpdatePrice';
 
 const App = () => {
   return (
     <Routes>
       {/* Public routes */}
       <Route path="/" element={<Login />} />
-       <Route path="/login" element={<Login />} />
+      <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Registration />} />
 
-      {/* Private routes under dashboard layout */}
+      {/* Private dashboard routes with layout */}
       <Route path="/dashboard/*" element={<DashboardLayout />}>
+        {/* Default child route redirects to sales-collections */}
         <Route index element={<Navigate to="sales-collections" replace />} />
+
         <Route path="employee" element={<EmployeeDashboard />} />
         <Route path="manager" element={<ManagerDashboard />} />
         <Route path="owner" element={<OwnerDashboard />} />
-        <Route path="inventory" element={<InventoryDashboard />} />
         <Route path="product" element={<ProductManagement />} />
         <Route path="sales-collections" element={<SalesCollections />} />
         <Route path="borrowers" element={<BorrowersDashboard />} />
+
+        {/* Inventory main and sub-routes */}
+        <Route path="inventory" element={<Navigate to="inventory/view" replace />} />
+        <Route path="inventory/view" element={<ViewInventory />} />
+        <Route path="inventory/add-product" element={<AddProduct />} />
+        <Route path="inventory/update" element={<UpdateInventory />} />
+        <Route path="inventory/price" element={<UpdatePrice />} />
       </Route>
     </Routes>
   );
