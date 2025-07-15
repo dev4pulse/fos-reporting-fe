@@ -25,7 +25,7 @@ const UpdatePrice = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    axios.post('http://localhost:8080/inventory/update-price', formData)
+    axios.post('https://pulse-293050141084.asia-south1.run.app/inventory/update-price', formData)
       .then(res => {
         alert('Price updated successfully!');
         handleClear();

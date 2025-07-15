@@ -110,6 +110,14 @@ const SalesCollections = () => {
     e.preventDefault();
     if (!employeeId) return alert("Select employee");
 
+    const hasInvalidClosing = products.some(
+      (p) => parseFloat(p.closing) < parseFloat(p.opening)
+    );
+    if (hasInvalidClosing) {
+      alert('One or more products have Closing less than Opening. Please correct them.');
+      return;
+    }
+
     const payloadSales = {
       date: formatDate(entryDate),
       employeeId: parseInt(employeeId),
@@ -174,10 +182,7 @@ const SalesCollections = () => {
             <Flatpickr
               className="form-control"
               value={entryDate}
-              options={{
-                enableTime: true,
-                dateFormat: "d-m-Y H:i" // 👈 updated display format
-              }}
+              options={{ enableTime: true, dateFormat: "d-m-Y H:i" }}
               onChange={([date]) => setEntryDate(date)}
             />
           </div>
@@ -220,10 +225,14 @@ const SalesCollections = () => {
                 ) : (
                   <input
                     type="number"
-                    className="form-control"
+                    className={`form-control ${
+                      field === 'closing' && parseFloat(p.closing) < parseFloat(p.opening)
+                        ? 'input-error'
+                        : ''
+                    }`}
                     value={p[field]}
                     onChange={e => handleProductChange(i, field, e.target.value)}
-                    readOnly={['salesLiters', 'salesRupees','price','opening'].includes(field)}
+                    readOnly={['salesLiters', 'salesRupees', 'price', 'opening'].includes(field)}
                   />
                 )}
               </div>

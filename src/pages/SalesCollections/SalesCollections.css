@@ -269,3 +269,6 @@ button:active {
     margin-bottom: 15px;
   }
 }
+.input-error {
+  border: 2px solid red !important;
+}

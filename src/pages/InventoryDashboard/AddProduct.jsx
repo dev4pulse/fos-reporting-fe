@@ -25,7 +25,7 @@ const AddProduct = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    axios.post('http://localhost:8080/inventory/add', formData)
+    axios.post('https://pulse-293050141084.asia-south1.run.app/inventory/add', formData)
       .then(res => {
         alert('Product added successfully!');
         handleClear(); // Clear form after successful submission
