@@ -18,7 +18,7 @@ const InventoryDashboard = () => {
   });
 
   useEffect(() => {
-    axios.get(`${API_BASE_URL}/inventory`)
+    axios.get("http://localhost:8080/inventory/latest")
       .then(res => {
         setInventoryData(res.data);
         setLoading(false);
@@ -37,7 +37,7 @@ const InventoryDashboard = () => {
     e.preventDefault();
     const endpoint = view === 'update' ? '/inventory/update' : '/inventory/add';
 
-    axios.post(`${API_BASE_URL}${endpoint}`, formData)
+    axios.post("http://localhost:8080/inventory/update-price", formData)
       .then(res => {
         alert(res.data);
         setFormData({ date: '', productName: '', inventory: '', price: '' });

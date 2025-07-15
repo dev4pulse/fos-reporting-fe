@@ -220,7 +220,7 @@ const SalesCollections = () => {
                     className="form-control"
                     value={p[field]}
                     onChange={e => handleProductChange(i, field, e.target.value)}
-                    readOnly={['salesLiters', 'salesRupees'].includes(field)}
+                    readOnly={['salesLiters', 'salesRupees','price'].includes(field)}
                   />
                 )}
               </div>
