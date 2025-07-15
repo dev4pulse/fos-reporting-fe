@@ -10,7 +10,7 @@ const ViewInventory = () => {
   useEffect(() => {
     axios.get('https://pulse-293050141084.asia-south1.run.app/inventory/latest')
       .then(res => {
-        console.log('Inventory data:', res.data); // Check structure if needed
+        console.log('Inventory data:', res.data);
         setInventoryData(res.data);
         setLoading(false);
       })
@@ -38,6 +38,7 @@ const ViewInventory = () => {
                 <th>Tank Capacity (L)</th>
                 <th>Inventory (L)</th>
                 <th>Booking Limit (L)</th>
+                <th>Price (₹)</th>
                 <th>Last Inventory Updated</th>
                 <th>Last Price Updated</th>
               </tr>
@@ -50,6 +51,7 @@ const ViewInventory = () => {
                   <td>{item.tankCapacity ?? '—'}</td>
                   <td>{item.inventory ?? item.currentLevel ?? '—'}</td>
                   <td>{item.bookingLimit ?? '—'}</td>
+                  <td>{item.price ?? '—'}</td>
                   <td>{item.inventoryUpdated || item.lastUpdated
                     ? new Date(item.inventoryUpdated || item.lastUpdated).toLocaleString()
                     : '—'}</td>
