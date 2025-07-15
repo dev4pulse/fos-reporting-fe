@@ -174,7 +174,10 @@ const SalesCollections = () => {
             <Flatpickr
               className="form-control"
               value={entryDate}
-              options={{ enableTime: true, dateFormat: "Y-m-d H:i:S" }}
+              options={{
+                enableTime: true,
+                dateFormat: "d-m-Y H:i" // 👈 updated display format
+              }}
               onChange={([date]) => setEntryDate(date)}
             />
           </div>
@@ -220,7 +223,7 @@ const SalesCollections = () => {
                     className="form-control"
                     value={p[field]}
                     onChange={e => handleProductChange(i, field, e.target.value)}
-                    readOnly={['salesLiters', 'salesRupees','price'].includes(field)}
+                    readOnly={['salesLiters', 'salesRupees','price','opening'].includes(field)}
                   />
                 )}
               </div>
