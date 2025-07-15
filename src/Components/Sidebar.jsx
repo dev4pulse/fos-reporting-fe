@@ -1,9 +1,16 @@
 import React, { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import './Sidebar.css';
 
-const Sidebar = ({ onLogout }) => {
+const Sidebar = () => {
   const [inventoryOpen, setInventoryOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('username'); // optional
+    navigate('/login');
+  };
 
   return (
     <aside className="sidebar">
@@ -30,7 +37,7 @@ const Sidebar = ({ onLogout }) => {
         <NavLink to="/dashboard/sales-collections" className="nav-link">Sales & Collections</NavLink>
         <NavLink to="/dashboard/borrowers" className="nav-link">Borrowers Dashboard</NavLink>
 
-        <button className="logout-btn" onClick={onLogout}>Logout</button>
+        <button className="logout-btn" onClick={handleLogout}>Logout</button>
       </nav>
     </aside>
   );

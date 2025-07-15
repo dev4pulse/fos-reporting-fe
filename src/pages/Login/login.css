@@ -1,15 +1,5 @@
 /* login.css */
 
-body {
-  margin: 0;
-  padding: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(to right, #2980b9, #6dd5fa, #ffffff);
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
 
 .login-container {
   background-color: #ffffff;
@@ -102,4 +92,22 @@ body {
   .login-container button {
     font-size: 0.95rem;
   }
+}
+.login-container {
+  max-width: 400px;
+  margin: 80px auto;
+  padding: 30px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+}
+
+.login-form input {
+  height: 45px;
+  font-size: 16px;
+}
+
+.alert {
+  font-size: 14px;
+  padding: 10px;
 }

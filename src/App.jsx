@@ -23,6 +23,9 @@ import AddProduct from './pages/InventoryDashboard/AddProduct';
 import UpdateInventory from './pages/InventoryDashboard/UpdateInventory';
 import UpdatePrice from './pages/InventoryDashboard/UpdatePrice';
 
+// Route protection component
+import ProtectedRoute from './components/ProtectedRoute';
+
 const App = () => {
   return (
     <Routes>
@@ -31,25 +34,31 @@ const App = () => {
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Registration />} />
 
-      {/* Private dashboard routes with layout */}
-      <Route path="/dashboard/*" element={<DashboardLayout />}>
-        {/* Default child route redirects to sales-collections */}
+      {/* Protected dashboard routes */}
+      <Route
+        path="/dashboard/*"
+        element={
+          <ProtectedRoute>
+            <DashboardLayout />
+          </ProtectedRoute>
+        }
+      >
         <Route index element={<Navigate to="sales-collections" replace />} />
-
         <Route path="employee" element={<EmployeeDashboard />} />
         <Route path="manager" element={<ManagerDashboard />} />
         <Route path="owner" element={<OwnerDashboard />} />
         <Route path="product" element={<ProductManagement />} />
         <Route path="sales-collections" element={<SalesCollections />} />
         <Route path="borrowers" element={<BorrowersDashboard />} />
-
-        {/* Inventory main and sub-routes */}
         <Route path="inventory" element={<Navigate to="inventory/view" replace />} />
         <Route path="inventory/view" element={<ViewInventory />} />
         <Route path="inventory/add-product" element={<AddProduct />} />
         <Route path="inventory/update" element={<UpdateInventory />} />
         <Route path="inventory/price" element={<UpdatePrice />} />
       </Route>
+
+      {/* Catch all: redirect unknown paths */}
+      <Route path="*" element={<Navigate to="/login" replace />} />
     </Routes>
   );
 };
