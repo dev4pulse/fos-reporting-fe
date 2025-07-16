@@ -94,3 +94,9 @@ small {
   margin-top: 4px;
   font-size: 12px;
 }
+.short-collection-error {
+  border-color: red !important;
+  background-color: #fff5f5;
+  color: #b91c1c;
+  font-weight: bold;
+}

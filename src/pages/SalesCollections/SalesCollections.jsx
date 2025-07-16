@@ -118,6 +118,11 @@ const SalesCollections = () => {
       return;
     }
 
+    if (parseFloat(shortCollections) < -10) {
+      alert('Short Collections cannot be less than -10');
+      return;
+    }
+
     const payloadSales = {
       date: formatDate(entryDate),
       employeeId: parseInt(employeeId),
@@ -253,7 +258,11 @@ const SalesCollections = () => {
                 value={value}
                 readOnly={readOnly}
                 onChange={e => setter?.(e.target.value)}
+                className={label === 'Short Collections' && parseFloat(shortCollections) < -10 ? 'short-collection-error' : ''}
               />
+              {label === 'Short Collections' && parseFloat(shortCollections) < -10 && (
+                <small>Short collections cannot be less than -10</small>
+              )}
             </div>
           ))}
         </div>
