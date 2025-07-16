@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import './Inventory.css';
+import './AddProduct.css';
 
 const AddProduct = () => {
   const initialValues = {
@@ -19,16 +19,16 @@ const AddProduct = () => {
   };
 
   const handleClear = () => {
-    setFormData(initialValues); // ✅ this works because initialValues is stable
+    setFormData(initialValues);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     axios.post('https://pulse-293050141084.asia-south1.run.app/inventory/add', formData)
-      .then(res => {
+      .then(() => {
         alert('Product added successfully!');
-        handleClear(); // Clear form after successful submission
+        handleClear();
       })
       .catch(err => {
         alert('Error: ' + err.message);
@@ -36,9 +36,9 @@ const AddProduct = () => {
   };
 
   return (
-    <div className="inventory-container">
-      <h2 className="inventory-heading">Add New Product</h2>
-      <form className="inventory-form" onSubmit={handleSubmit}>
+    <div className="add-product-container">
+      <h2 className="add-product-heading">Add New Product</h2>
+      <form className="add-product-form" onSubmit={handleSubmit}>
         <label>Product Name</label>
         <input
           type="text"
@@ -66,7 +66,7 @@ const AddProduct = () => {
           required
         />
 
-        <div className="inventory-buttons">
+        <div className="add-product-buttons">
           <button type="submit" className="btn btn-blue">Add Product</button>
           <button type="button" className="btn btn-gray" onClick={handleClear}>Clear</button>
         </div>

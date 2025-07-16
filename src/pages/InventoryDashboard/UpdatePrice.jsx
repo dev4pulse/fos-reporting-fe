@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import './Inventory.css';
+import './UpdatePrice.css';
 
 const UpdatePrice = () => {
   const initialValues = {
@@ -26,7 +26,7 @@ const UpdatePrice = () => {
     e.preventDefault();
 
     axios.post('https://pulse-293050141084.asia-south1.run.app/inventory/update-price', formData)
-      .then(res => {
+      .then(() => {
         alert('Price updated successfully!');
         handleClear();
       })
@@ -36,9 +36,9 @@ const UpdatePrice = () => {
   };
 
   return (
-    <div className="inventory-container">
-      <h2 className="inventory-heading">Update Product Price</h2>
-      <form className="inventory-form" onSubmit={handleSubmit}>
+    <div className="update-price-container">
+      <h2 className="update-price-heading">Update Product Price</h2>
+      <form className="update-price-form" onSubmit={handleSubmit}>
         <label>Product Name</label>
         <input
           type="text"
@@ -66,7 +66,7 @@ const UpdatePrice = () => {
           required
         />
 
-        <div className="inventory-buttons">
+        <div className="update-price-buttons">
           <button type="submit" className="btn btn-blue">Update Price</button>
           <button type="button" className="btn btn-gray" onClick={handleClear}>Clear</button>
         </div>

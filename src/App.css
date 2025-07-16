@@ -1,0 +1,83 @@
+/* ========= Base Reset ========= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f1f5f9;
+  color: #1e293b;
+  line-height: 1.5;
+}
+a {
+  text-decoration: none;
+  color: inherit;
+}
+button {
+  cursor: pointer;
+  font-family: inherit;
+}
+
+/* ========= Layout ========= */
+.page-layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f8fafc;
+}
+.main-content {
+  flex-grow: 1;
+  padding: 30px;
+  margin-left: 240px;
+}
+@media (max-width: 768px) {
+  .main-content {
+    margin-left: 0;
+    padding: 16px;
+  }
+}
+
+/* ========= Components ========= */
+.button {
+  padding: 10px 20px;
+  font-size: 15px;
+  font-weight: 500;
+  border-radius: 8px;
+  border: none;
+  transition: background-color 0.3s;
+}
+.button.primary {
+  background-color: #3b82f6;
+  color: white;
+}
+.button.primary:hover {
+  background-color: #2563eb;
+}
+.button.secondary {
+  background-color: #e2e8f0;
+  color: #1e293b;
+}
+
+/* ========= Form Elements ========= */
+.input,
+select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  font-size: 14px;
+}
+.label {
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+
+/* ========= Cards ========= */
+.card {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  padding: 24px;
+  margin-bottom: 24px;
+}

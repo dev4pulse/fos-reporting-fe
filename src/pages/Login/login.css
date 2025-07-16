@@ -1,113 +1,143 @@
-/* login.css */
-
-
+/* Full-page container */
 .login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f1f5f9;
+  padding: 20px;
+}
+
+/* Login box */
+.login-box {
   background-color: #ffffff;
-  padding: 2rem;
-  border-radius: 1rem;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-  width: 400px;
+  padding: 30px;
+  border-radius: 12px;
+  width: 100%;
   max-width: 400px;
-  box-sizing: border-box;
-  animation: fadeIn 0.6s ease-in-out;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
-.login-container h2 {
+/* Heading */
+.login-box h2 {
   text-align: center;
-  margin-bottom: 1.5rem;
-  color: #333;
+  font-size: 24px;
+  font-weight: 600;
+  color: #1e293b;
 }
 
-.login-container form {
+/* Input fields */
+.login-input {
   display: flex;
   flex-direction: column;
 }
 
-.login-container label {
-  margin-bottom: 0.3rem;
-  font-weight: 600;
-  color: #444;
-}
-
-.login-container input {
-  padding: 0.75rem;
-  margin-bottom: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 0.5rem;
-  font-size: 1rem;
-  transition: border-color 0.3s ease;
-}
-
-.login-container input:focus {
-  border-color: #3498db;
-  outline: none;
-}
-
-.login-container .error {
-  color: red;
-  margin-bottom: 1rem;
-  font-size: 0.9rem;
-  text-align: center;
-}
-
-.login-container button {
-  padding: 0.8rem;
-  background-color: #3498db;
-  border: none;
-  border-radius: 0.5rem;
-  color: white;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.login-container button:hover {
-  background-color: #2c80b4;
-}
-
-/* Fade-in animation */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Mobile-first responsiveness */
-@media (max-width: 480px) {
-  .login-container {
-    padding: 1.5rem;
-    margin: 0 1rem;
-  }
-
-  .login-container h2 {
-    font-size: 1.5rem;
-  }
-
-  .login-container input,
-  .login-container button {
-    font-size: 0.95rem;
-  }
-}
-.login-container {
-  max-width: 400px;
-  margin: 80px auto;
-  padding: 30px;
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
-}
-
-.login-form input {
-  height: 45px;
-  font-size: 16px;
-}
-
-.alert {
+.login-input label {
   font-size: 14px;
-  padding: 10px;
+  font-weight: 500;
+  margin-bottom: 6px;
+  color: #334155;
+}
+
+.login-input input {
+  padding: 12px;
+  font-size: 15px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.login-input input:focus {
+  border-color: #3b82f6;
+}
+
+/* Login button */
+.login-button {
+  width: 100%;
+  padding: 12px;
+  background-color: #3b82f6;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.login-button:hover {
+  background-color: #2563eb;
+}
+
+/* Auth links container */
+.auth-links {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 14px;
+  margin-top: 8px;
+}
+
+/* Forgot links on same line */
+.forgot-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.forgot-row a {
+  color: #3b82f6;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.forgot-row a:hover {
+  color: #1d4ed8;
+}
+
+/* Register link with label */
+.register-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+}
+
+.register-row span {
+  color: #64748b;
+}
+
+.register-row a {
+  color: #3b82f6;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.register-row a:hover {
+  color: #1d4ed8;
+}
+
+/* Responsive tweaks */
+@media (max-width: 480px) {
+  .login-box {
+    padding: 24px;
+  }
+
+  .login-box h2 {
+    font-size: 20px;
+  }
+
+  .forgot-row {
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .register-row {
+    flex-direction: column;
+  }
 }

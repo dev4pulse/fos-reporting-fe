@@ -24,7 +24,7 @@ import UpdateInventory from './pages/InventoryDashboard/UpdateInventory';
 import UpdatePrice from './pages/InventoryDashboard/UpdatePrice';
 
 // Route protection component
-import ProtectedRoute from './components/ProtectedRoute';
+import ProtectedRoute from './Components/ProtectedRoute';
 
 const App = () => {
   return (

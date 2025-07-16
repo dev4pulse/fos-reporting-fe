@@ -1,214 +1,167 @@
-/* OwnerDashboard.css */
-
 .owner-dashboard {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  max-width: 900px;
-  margin: 40px auto;
   padding: 30px;
-  background-color: #f9f9f9;
-  border-radius: 12px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
-  color: #333;
+  background-color: #f8fafc;
+  min-height: 100vh;
+  font-family: 'Segoe UI', sans-serif;
+  color: #1e293b;
 }
 
-h2 {
-  text-align: center;
-  color: #2c3e50;
-  margin-bottom: 30px;
-  font-size: 2em;
+.owner-dashboard h2 {
+  font-size: 24px;
   font-weight: 600;
+  margin-bottom: 24px;
 }
 
-.note {
-  text-align: center;
-  color: #7f8c8d;
-  margin-bottom: 25px;
-  font-style: italic;
-  font-size: 0.95em;
-}
-
-/* --- Buttons --- */
-.button-row, .daily-report-header, .form-full {
+/* Product Management Buttons */
+.button-row {
   display: flex;
-  justify-content: center;
-  gap: 15px; /* Space between buttons */
-  margin-bottom: 25px;
-  flex-wrap: wrap; /* Allow wrapping on smaller screens */
+  gap: 12px;
+  margin-bottom: 20px;
 }
 
-button {
-  padding: 12px 25px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 1em;
-  font-weight: 500;
-  transition: all 0.3s ease;
-  min-width: 160px; /* Ensure buttons have a minimum width */
-}
-
-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-button:active {
-  transform: translateY(0);
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.button-row button:first-child, /* Primary button in the row */
-.product-form button,
-.submit-btn {
-  background-color: #3498db;
+.button-row button {
+  padding: 10px 16px;
+  background-color: #3b82f6;
   color: white;
+  font-size: 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
 }
 
-.button-row button:first-child:hover,
-.product-form button:hover,
-.submit-btn:hover {
-  background-color: #2980b9;
+.button-row button.secondary {
+  background-color: #64748b;
 }
 
-.secondary {
-  background-color: #ecf0f1;
-  color: #34495e;
-  border: 1px solid #bdc3c7;
+.button-row button:hover {
+  background-color: #2563eb;
 }
 
-.secondary:hover {
-  background-color: #e0e6e7;
-  color: #2c3e50;
+.button-row button.secondary:hover {
+  background-color: #475569;
 }
 
-/* --- Input Fields --- */
-input[type="text"],
-input[type="datetime-local"],
-input[type="date"] {
-  width: 100%;
-  padding: 12px 15px;
-  margin-bottom: 15px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  font-size: 1em;
-  box-sizing: border-box; /* Include padding and border in the element's total width and height */
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-input[type="text"]:focus,
-input[type="datetime-local"]:focus,
-input[type="date"]:focus {
-  border-color: #3498db;
-  box-shadow: 0 0 8px rgba(52, 152, 219, 0.2);
-  outline: none; /* Remove default focus outline */
-}
-
-/* --- Form Sections --- */
+/* Product Form */
 .product-form {
-  background-color: #ffffff;
-  padding: 25px;
-  border-radius: 10px;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
-  margin-bottom: 30px;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Responsive grid for inputs */
-  gap: 15px;
-  align-items: end; /* Align items to the bottom, useful for button */
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 30px;
 }
 
 .product-form input {
-  margin-bottom: 0; /* Remove default margin for grid items */
+  padding: 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 14px;
 }
 
 .product-form button {
-  width: auto; /* Let button size itself based on content */
-  justify-self: center; /* Center the button in its grid cell */
-  margin-top: 10px; /* Add some space above the button */
-  grid-column: 1 / -1; /* Make button span all columns on smaller screens */
+  padding: 10px 16px;
+  background-color: #10b981;
+  color: white;
+  font-size: 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
 }
 
-/* Daily Report Header specific styling */
+.product-form button:hover {
+  background-color: #059669;
+}
+
+/* Daily Report Section */
+.daily-report-header {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
 .daily-report-header input[type="date"] {
-  max-width: 200px; /* Limit width of date input */
-  margin-bottom: 0;
-}
-
-/* --- Pump and Sales Rows --- */
-.pump-row {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 20px;
-  margin-bottom: 15px;
-  text-align: center;
-  font-weight: 600;
-  color: #34495e;
-}
-
-.pump-row > div {
   padding: 10px;
-  background-color: #eaf3f9;
-  border-radius: 8px;
-  border: 1px solid #cce7f5;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 14px;
 }
 
+.daily-report-header button.secondary {
+  background-color: #64748b;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.daily-report-header button.secondary:hover {
+  background-color: #475569;
+}
+
+/* Pump Labels */
+.pump-row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+/* Sales Input Rows */
 .sales-row {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 20px;
+  display: flex;
+  gap: 16px;
   margin-bottom: 30px;
 }
 
 .sales-row > div {
-  background-color: #ffffff;
-  padding: 15px;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
+  flex: 1;
 }
 
 .sales-row input {
-  margin-bottom: 0; /* Remove default margin for inputs in this section */
+  padding: 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 14px;
 }
 
-/* --- Responsive Adjustments --- */
+/* Submit Button */
+.form-full {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.submit-btn {
+  background-color: #3b82f6;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.submit-btn:hover {
+  background-color: #2563eb;
+}
+
+/* Responsive adjustments */
 @media (max-width: 768px) {
-  .owner-dashboard {
-    margin: 20px auto;
-    padding: 20px;
-  }
-
-  h2 {
-    font-size: 1.8em;
-  }
-
-  .button-row, .daily-report-header, .form-full {
+  .button-row,
+  .daily-report-header,
+  .pump-row,
+  .sales-row {
     flex-direction: column;
-    align-items: stretch;
+    gap: 12px;
   }
 
-  button {
-    width: 100%; /* Full width on smaller screens */
-    margin-bottom: 10px; /* Space out stacked buttons */
-  }
-
-  .daily-report-header input[type="date"] {
-    width: 100%;
-    max-width: none;
-  }
-}
-
-@media (max-width: 480px) {
-  .owner-dashboard {
-    padding: 15px;
-  }
-
-  h2 {
-    font-size: 1.5em;
-  }
-
-  .product-form {
-    grid-template-columns: 1fr; /* Stack inputs on very small screens */
+  .form-full {
+    justify-content: center;
   }
 }

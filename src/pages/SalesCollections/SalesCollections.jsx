@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import Flatpickr from 'react-flatpickr';
-import 'flatpickr/dist/themes/light.css';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 import './SalesCollections.css';
 
 const SalesCollections = () => {
@@ -173,27 +173,27 @@ const SalesCollections = () => {
   };
 
   return (
-    <div className="container">
-      <h2 className="text-center">Sales & Collections</h2>
+    <div className="sales-collections-container">
+      <h2 className="section-title">Sales & Collections</h2>
       <form onSubmit={handleSubmit}>
-        <div className="row mb-3">
-          <div className="col-md-6">
-            <label className="form-label">Entry Date & Time</label>
-            <Flatpickr
-              className="form-control"
-              value={entryDate}
-              options={{ enableTime: true, dateFormat: "d-m-Y H:i" }}
-              onChange={([date]) => setEntryDate(date)}
+        <div className="sales-form">
+          <div className="form-group">
+            <label>Entry Date & Time</label>
+            <DatePicker
+              selected={entryDate}
+              onChange={setEntryDate}
+              showTimeSelect
+              timeFormat="HH:mm"
+              timeIntervals={15}
+              dateFormat="dd-MM-yyyy HH:mm"
+              placeholderText="Select date and time"
+              className="datetime-input"
             />
           </div>
-          <div className="col-md-6">
-            <label className="form-label">Employee</label>
-            <select
-              className="form-select"
-              value={employeeId}
-              onChange={e => setEmployeeId(e.target.value)}
-              required
-            >
+
+          <div className="form-group">
+            <label>Employee</label>
+            <select value={employeeId} onChange={e => setEmployeeId(e.target.value)} required>
               <option value="">Select Employee</option>
               {employees.map(emp => (
                 <option key={emp.employeeId} value={emp.employeeId}>
@@ -201,19 +201,18 @@ const SalesCollections = () => {
                 </option>
               ))}
             </select>
-            {employeeFetchError && <small className="text-danger">{employeeFetchError}</small>}
+            {employeeFetchError && <small>{employeeFetchError}</small>}
           </div>
         </div>
 
-        <h4>Sales</h4>
+        <h4 className="section-title">Sales</h4>
         {products.map((p, i) => (
-          <div className="row mb-2" key={i}>
+          <div className="sales-form" key={i}>
             {['productName', 'gun', 'opening', 'closing', 'price', 'testing', 'salesLiters', 'salesRupees'].map((field, j) => (
-              <div className="col-md-3" key={j}>
-                <label className="form-label">{field.replace(/([A-Z])/g, ' $1')}</label>
+              <div className="form-group" key={j}>
+                <label>{field.replace(/([A-Z])/g, ' $1')}</label>
                 {['productName', 'gun'].includes(field) ? (
                   <select
-                    className="form-select"
                     value={p[field]}
                     onChange={e => handleProductChange(i, field, e.target.value)}
                     required
@@ -225,38 +224,32 @@ const SalesCollections = () => {
                 ) : (
                   <input
                     type="number"
-                    className={`form-control ${
-                      field === 'closing' && parseFloat(p.closing) < parseFloat(p.opening)
-                        ? 'input-error'
-                        : ''
-                    }`}
                     value={p[field]}
                     onChange={e => handleProductChange(i, field, e.target.value)}
                     readOnly={['salesLiters', 'salesRupees', 'price', 'opening'].includes(field)}
+                    className={field === 'closing' && parseFloat(p.closing) < parseFloat(p.opening) ? 'input-error' : ''}
                   />
                 )}
               </div>
             ))}
-            <div className="col-md-3 d-flex align-items-end">
-              <button type="button" className="btn btn-danger" onClick={() => handleRemoveProduct(i)}>Remove</button>
-            </div>
+            <button type="button" className="clear-btn" onClick={() => handleRemoveProduct(i)}>Remove</button>
           </div>
         ))}
-        <button type="button" className="btn btn-primary mb-3" onClick={handleAddProduct}>Add Product</button>
+        <button type="button" className="submit-btn" onClick={handleAddProduct}>Add Product</button>
 
-        <h4>Collections</h4>
-        <div className="row">
-          {[{ label: 'Cash Received', value: cashReceived, setter: setCashReceived },
+        <h4 className="section-title">Collections</h4>
+        <div className="sales-form">
+          {[
+            { label: 'Cash Received', value: cashReceived, setter: setCashReceived },
             { label: 'Phone Pay', value: phonePay, setter: setPhonePay },
             { label: 'Credit Card', value: creditCard, setter: setCreditCard },
             { label: 'Total Collection', value: totalCollection.toFixed(2), readOnly: true },
             { label: 'Short Collections', value: shortCollections, readOnly: true }
           ].map(({ label, value, setter, readOnly }, i) => (
-            <div className="col-md-6 mb-2" key={i}>
-              <label className="form-label">{label}</label>
+            <div className="form-group" key={i}>
+              <label>{label}</label>
               <input
                 type="number"
-                className="form-control"
                 value={value}
                 readOnly={readOnly}
                 onChange={e => setter?.(e.target.value)}
@@ -265,25 +258,25 @@ const SalesCollections = () => {
           ))}
         </div>
 
-        <h4>Borrowers</h4>
+        <h4 className="section-title">Borrowers</h4>
         {borrowers.map((b, i) => (
-          <div className="row mb-2" key={i}>
-            <div className="col-md-6">
-              <label className="form-label">Name</label>
-              <input type="text" className="form-control" value={b.name} onChange={e => handleBorrowerChange(i, 'name', e.target.value)} />
+          <div className="sales-form" key={i}>
+            <div className="form-group">
+              <label>Name</label>
+              <input type="text" value={b.name} onChange={e => handleBorrowerChange(i, 'name', e.target.value)} />
             </div>
-            <div className="col-md-4">
-              <label className="form-label">Amount</label>
-              <input type="number" className="form-control" value={b.amount} onChange={e => handleBorrowerChange(i, 'amount', e.target.value)} />
+            <div className="form-group">
+              <label>Amount</label>
+              <input type="number" value={b.amount} onChange={e => handleBorrowerChange(i, 'amount', e.target.value)} />
             </div>
-            <div className="col-md-2 d-flex align-items-end">
-              <button type="button" className="btn btn-danger" onClick={() => handleRemoveBorrower(i)}>Remove</button>
-            </div>
+            <button type="button" className="clear-btn" onClick={() => handleRemoveBorrower(i)}>Remove</button>
           </div>
         ))}
-        <button type="button" className="btn btn-secondary mb-3" onClick={handleAddBorrower}>Add Borrower</button>
+        <button type="button" className="submit-btn" onClick={handleAddBorrower}>Add Borrower</button>
 
-        <button type="submit" className="btn btn-success w-100">Submit All</button>
+        <div className="sales-actions">
+          <button type="submit" className="submit-btn">Submit All</button>
+        </div>
       </form>
     </div>
   );

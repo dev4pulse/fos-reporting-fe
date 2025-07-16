@@ -1,148 +1,159 @@
-/* Sidebar base layout */
+/* Sidebar Container */
 .sidebar {
-  width: 220px;
+  width: 240px;
   height: 100vh;
   position: fixed;
   top: 0;
   left: 0;
   background-color: #ffffff;
-  border-right: 1px solid #ddd;
-  padding: 20px 0;
+  border-right: 1px solid #e2e8f0;
   box-shadow: 2px 0 8px rgba(0, 0, 0, 0.04);
+  padding-top: 20px;
+  z-index: 1000;
   display: flex;
   flex-direction: column;
-  z-index: 1000;
+  overflow-y: auto; /* Allow scrolling if sidebar content exceeds screen */
 }
 
-/* Navigation links */
+/* Navigation Wrapper */
 .nav-links {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  padding: 0 16px;
+  gap: 10px;
+  padding: 0 20px;
 }
 
+/* Top-level Nav Links */
 .nav-link {
   padding: 12px 16px;
-  text-decoration: none;
-  color: #333;
-  border-radius: 4px;
-  font-size: 15px;
+  font-weight: 500;
+  color: #1e293b;
+  border-radius: 6px;
   transition: background-color 0.2s;
+  text-decoration: none;
 }
 
 .nav-link:hover {
-  background-color: #f2f2f2;
+  background-color: #e2e8f0;
 }
 
 .nav-link.active {
-  background-color: #e0f0ff;
-  font-weight: bold;
-  color: #007bff;
+  background-color: #3b82f6;
+  color: #ffffff;
+  text-decoration: none;
 }
 
-/* Inventory dropdown */
+/* Toggle Button (Inventory Section) */
 .inventory-toggle {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 16px;
   cursor: pointer;
-  border-radius: 4px;
-  font-size: 15px;
-  color: #333;
+  font-weight: 500;
+  padding: 12px 16px;
+  border-radius: 6px;
   transition: background-color 0.2s;
-  gap: 10px;
+  color: #1e293b;
 }
 
 .inventory-toggle:hover {
-  background-color: #f2f2f2;
+  background-color: #e2e8f0;
 }
 
 .toggle-label {
-  flex-grow: 1;
+  flex: 1;
 }
 
 .toggle-icon {
-  font-weight: bold;
   font-size: 18px;
-  user-select: none;
+  line-height: 1;
+  margin-left: 2px; /* Reduced gap between label and icon */
+  color: #94a3b8;
 }
 
-/* Sub-navigation links */
+/* Sub-navigation styles */
 .sub-nav {
-  padding-left: 20px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  margin-top: 4px;
+  padding-left: 20px;
+  gap: 6px;
+  margin-top: 6px;
+  margin-bottom: 8px;
 }
 
 .sub-link {
-  padding: 10px 16px;
-  text-decoration: none;
-  color: #555;
+  padding: 10px 12px;
   font-size: 14px;
+  color: #475569;
   border-radius: 4px;
   transition: background-color 0.2s;
+  text-decoration: none;
 }
 
 .sub-link:hover {
-  background-color: #f9f9f9;
+  background-color: #f1f5f9;
 }
 
 .sub-link.active {
-  background-color: #e0f0ff;
-  font-weight: bold;
-  color: #007bff;
+  background-color: #60a5fa;
+  color: #ffffff;
+  text-decoration: none;
 }
 
-/* Logout button */
+/* Logout Button */
 .logout-btn {
-  margin-top: auto;
-  margin-inline: 16px;
-  padding: 12px;
-  border: none;
-  background-color: #f44336;
+  margin-top: 20px;
+  padding: 10px 16px;
+  background-color: #ef4444;
   color: white;
-  border-radius: 4px;
+  border: none;
+  border-radius: 6px;
   font-weight: bold;
-  cursor: pointer;
   transition: background-color 0.3s;
 }
 
 .logout-btn:hover {
-  background-color: #d32f2f;
+  background-color: #dc2626;
 }
 
-/* Responsive sidebar for mobile */
+/* Optional: Custom Scrollbar */
+.sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background-color: #cbd5e1;
+  border-radius: 4px;
+}
+
+/* Responsive Sidebar */
 @media (max-width: 768px) {
   .sidebar {
     width: 100%;
     height: auto;
     position: relative;
     border-right: none;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid #e2e8f0;
   }
 
   .nav-links {
     flex-direction: row;
     flex-wrap: wrap;
-    justify-content: space-around;
+    gap: 8px;
+    padding: 10px;
+  }
+
+  .nav-link,
+  .inventory-toggle,
+  .logout-btn {
+    padding: 10px;
+    font-size: 14px;
   }
 
   .sub-nav {
-    padding-left: 0;
-    width: 100%;
-  }
-
-  .sub-link {
-    width: 100%;
-    text-align: center;
-  }
-
-  .logout-btn {
-    width: 100%;
-    margin: 10px 0;
+    flex: 1 0 100%;
+    margin-left: 0;
+    padding-left: 10px;
+    border-left: none;
   }
 }

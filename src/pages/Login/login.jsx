@@ -1,81 +1,69 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import './login.css';
 
 const Login = () => {
+  const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
+  const handleLogin = (e) => {
     e.preventDefault();
-    try {
-      const response = await axios.post("https://pulse-293050141084.asia-south1.run.app/login", {
-        username,
-        password,
-      });
 
-      console.log(response.data);
-
-      if (response.data.status === 'success') {
-        // Save login status in localStorage
-        localStorage.setItem('isLoggedIn', 'true');
-        localStorage.setItem('username', username); // Optional
-
-        // Navigate to dashboard
-        navigate('/dashboard');
-      } else {
-        setError(response.data.message || 'Invalid credentials');
-      }
-    } catch (err) {
-      console.error(err);
-      if (err.response?.data?.message) {
-        setError(err.response.data.message);
-      } else {
-        setError('Login failed. Please try again.');
-      }
+    // Example login logic (replace with real API call)
+    if (username && password) {
+      localStorage.setItem('isLoggedIn', 'true');
+      localStorage.setItem('username', username);
+      navigate('/dashboard/owner');
+    } else {
+      alert('Please enter both username and password');
     }
   };
 
   return (
     <div className="login-container">
-      <h2 className="text-center mb-4">Login</h2>
-      <form className="login-form" onSubmit={handleLogin}>
-        <div className="form-group mb-3">
-          <label>Username</label>
+      <form className="login-box" onSubmit={handleLogin}>
+        <h2>Login</h2>
+
+        <div className="login-input">
+          <label htmlFor="username">Username</label>
           <input
+            id="username"
             type="text"
-            className="form-control"
+            placeholder="Enter your username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             required
-            placeholder="Enter username"
           />
         </div>
 
-        <div className="form-group mb-3">
-          <label>Password</label>
+        <div className="login-input">
+          <label htmlFor="password">Password</label>
           <input
+            id="password"
             type="password"
-            className="form-control"
+            placeholder="Enter your password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            placeholder="Enter password"
           />
         </div>
 
-        {error && <div className="alert alert-danger">{error}</div>}
+        <button type="submit" className="login-button">
+          Login
+        </button>
 
-        <button type="submit" className="btn btn-primary w-100">Login</button>
+        <div className="auth-links">
+          <div className="forgot-row">
+            <a href="#">Forgot Username?</a>
+            <a href="#">Forgot Password?</a>
+          </div>
+          <div className="register-row">
+            <span>Don't have an account?</span>
+            <a href="#">Register</a>
+          </div>
+        </div>
       </form>
-
-      {/* Optional: add register or forgot password links */}
-      <div className="text-center mt-3">
-        <a href="/signup">Don't have an account? Register</a>
-      </div>
     </div>
   );
 };
