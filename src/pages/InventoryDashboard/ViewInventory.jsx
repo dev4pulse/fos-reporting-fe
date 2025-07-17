@@ -8,7 +8,7 @@ const ViewInventory = () => {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    axios.get('https://pulse-293050141084.asia-south1.run.app/inventory/latest')
+    axios.get('http://localhost:8080/inventory/latest')
       .then(res => {
         console.log('Inventory data:', res.data);
         setInventoryData(res.data);
@@ -55,8 +55,8 @@ const ViewInventory = () => {
                   <td>{item.inventoryUpdated || item.lastUpdated
                     ? new Date(item.inventoryUpdated || item.lastUpdated).toLocaleString()
                     : '—'}</td>
-                  <td>{item.priceUpdated
-                    ? new Date(item.priceUpdated).toLocaleString()
+                  <td>{item.lastPriceUpdated
+                    ? new Date(item.lastPriceUpdated).toLocaleString()
                     : '—'}</td>
                 </tr>
               ))}

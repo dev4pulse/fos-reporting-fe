@@ -7,11 +7,11 @@ const UpdatePrice = () => {
   const [formData, setFormData] = useState({
     productName: '',
     currentPrice: '',
-    price: '',
-    date: ''
+    newPrice: '',
+    lastPriceUpdated: ''
   });
 
-  // Fetch all products once
+  // Fetch product list
   useEffect(() => {
     axios.get('https://pulse-293050141084.asia-south1.run.app/inventory/latest')
       .then(res => {
@@ -22,26 +22,26 @@ const UpdatePrice = () => {
       });
   }, []);
 
-  // On product select, update current price from already fetched list
+  // On selecting product, update currentPrice
   const handleProductSelect = (e) => {
-    const selectedProduct = e.target.value;
-
-    const matchedProduct = products.find(prod => prod.productName === selectedProduct);
-    const currentPrice = matchedProduct ? matchedProduct.price : 'Not Found';
+    const selectedName = e.target.value;
+    const selectedProduct = products.find(p => p.productName === selectedName);
 
     setFormData(prev => ({
       ...prev,
-      productName: selectedProduct,
-      currentPrice: currentPrice,
-      price: ''
+      productName: selectedName,
+      currentPrice: selectedProduct?.price || '',
+      newPrice: '',
+      lastPriceUpdated: ''
     }));
   };
 
-  // Handle field changes
+  // Handle field change
   const handleChange = (e) => {
+    const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [e.target.name]: e.target.value
+      [name]: value
     }));
   };
 
@@ -50,8 +50,8 @@ const UpdatePrice = () => {
     setFormData({
       productName: '',
       currentPrice: '',
-      price: '',
-      date: ''
+      newPrice: '',
+      lastPriceUpdated: ''
     });
   };
 
@@ -61,8 +61,8 @@ const UpdatePrice = () => {
 
     const payload = {
       productName: formData.productName,
-      price: parseFloat(formData.price),
-      date: formData.date
+      newPrice: parseFloat(formData.newPrice),
+      lastPriceUpdated: new Date(formData.lastPriceUpdated).toISOString()
     };
 
     axios.post('https://pulse-293050141084.asia-south1.run.app/inventory/update-price', payload)
@@ -71,7 +71,8 @@ const UpdatePrice = () => {
         handleClear();
       })
       .catch(err => {
-        alert('Error updating price: ' + err.message);
+        console.error('Error updating price:', err);
+        alert('Failed to update price');
       });
   };
 
@@ -104,17 +105,17 @@ const UpdatePrice = () => {
         <label>New Price (₹)</label>
         <input
           type="number"
-          name="price"
-          value={formData.price}
+          name="newPrice"
+          value={formData.newPrice}
           onChange={handleChange}
           required
         />
 
-        <label>Date & Time</label>
+        <label>Last Price Updated</label>
         <input
           type="datetime-local"
-          name="date"
-          value={formData.date}
+          name="lastPriceUpdated"
+          value={formData.lastPriceUpdated}
           onChange={handleChange}
           required
         />

@@ -1,22 +1,47 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import './login.css';
 
 const Login = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
 
-    // Example login logic (replace with real API call)
-    if (username && password) {
-      localStorage.setItem('isLoggedIn', 'true');
-      localStorage.setItem('username', username);
-      navigate('/dashboard/owner');
-    } else {
+    if (!username || !password) {
       alert('Please enter both username and password');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await axios.post('https://pulse-293050141084.asia-south1.run.app/login', {
+        username,
+        password,
+      });
+
+      // ✅ Example: Handle success response (adjust based on your API)
+      if (response.status === 200) {
+        const { token, role } = response.data;
+
+        // Save login details
+        localStorage.setItem('isLoggedIn', 'true');
+        localStorage.setItem('username', username);
+        localStorage.setItem('token', token);
+        localStorage.setItem('role', role);
+
+        // ✅ Redirect to dashboard
+        navigate('/dashboard/home');
+      }
+    } catch (error) {
+      console.error('Login failed:', error);
+      alert('Invalid credentials or server error.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -49,8 +74,8 @@ const Login = () => {
           />
         </div>
 
-        <button type="submit" className="login-button">
-          Login
+        <button type="submit" className="login-button" disabled={loading}>
+          {loading ? 'Logging in...' : 'Login'}
         </button>
 
         <div className="auth-links">

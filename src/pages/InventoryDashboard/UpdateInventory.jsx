@@ -7,13 +7,12 @@ const UpdateInventory = () => {
   const [formData, setFormData] = useState({
     productID: '',
     productName: '',
-    currentLevel: '',
-    date: '',
+    currentQty: '',
+    newQty: '',
+    tankCapacity: '',
+    refillCapacity: '',
+    date: ''
   });
-
-  const [tankCapacity, setTankCapacity] = useState('');
-  const [refillSpace, setRefillSpace] = useState('');
-  const [currentPrice, setCurrentPrice] = useState('');
 
   // Get local datetime string for datetime-local input
   const getLocalDateTime = () => {
@@ -36,19 +35,25 @@ const UpdateInventory = () => {
     }));
   }, []);
 
-  // When product is selected
-  const handleProductChange = (e) => {
-    const selected = products.find(p => p.productID.toString() === e.target.value);
-    if (selected) {
-      setFormData(prev => ({
-        ...prev,
-        productID: selected.productID.toString(),
-        productName: selected.productName,
-        currentLevel: selected.currentLevel.toString(),
-      }));
-      setTankCapacity(selected.tankCapacity);
-      setCurrentPrice(selected.price);
-      setRefillSpace(selected.tankCapacity - selected.currentLevel);
+  // Handle product selection
+  const handleProductSelect = (e) => {
+    const selectedID = e.target.value;
+    const selectedProduct = products.find(p => p.productID.toString() === selectedID);
+
+    if (selectedProduct) {
+      const currentQty = selectedProduct.quantity;
+      const tankCapacity = selectedProduct.tankCapacity;
+      const refillCapacity = tankCapacity - currentQty;
+
+      setFormData({
+        ...formData,
+        productID: selectedProduct.productID.toString(),
+        productName: selectedProduct.productName,
+        currentQty: currentQty.toString(),
+        newQty: '',
+        tankCapacity: tankCapacity.toString(),
+        refillCapacity: refillCapacity.toString()
+      });
     }
   };
 
@@ -65,12 +70,12 @@ const UpdateInventory = () => {
     setFormData({
       productID: '',
       productName: '',
-      currentLevel: '',
+      currentQty: '',
+      newQty: '',
+      tankCapacity: '',
+      refillCapacity: '',
       date: getLocalDateTime(),
     });
-    setTankCapacity('');
-    setCurrentPrice('');
-    setRefillSpace('');
   };
 
   // Submit updated inventory
@@ -79,7 +84,7 @@ const UpdateInventory = () => {
 
     axios.post('https://pulse-293050141084.asia-south1.run.app/inventory/update', {
       productName: formData.productName,
-      currentLevel: formData.currentLevel,
+      currentLevel: formData.newQty,
       date: formData.date,
     })
       .then(() => {
@@ -92,61 +97,83 @@ const UpdateInventory = () => {
   };
 
   return (
-    <div className="update-inventory-container">
-      <h2 className="update-inventory-heading">Update Inventory</h2>
-      <form className="update-inventory-form" onSubmit={handleSubmit}>
-        {/* Date */}
-        <label>Date & Time</label>
-        <input
-          type="datetime-local"
-          name="date"
-          value={formData.date}
-          onChange={handleChange}
-          required
-        />
+    <div className="dashboard-content">
+      <div className="update-inventory-container">
+        <h2 className="update-inventory-heading">Update Inventory</h2>
+        <form className="update-inventory-form" onSubmit={handleSubmit}>
 
-        {/* Product Select */}
-        <label>Select Product</label>
-        <select
-          name="productID"
-          value={formData.productID}
-          onChange={handleProductChange}
-          required
-        >
-          <option value="">-- Select --</option>
-          {products.map(prod => (
-            <option key={prod.productID} value={prod.productID}>
-              {prod.productName}
-            </option>
-          ))}
-        </select>
+          {/* Date */}
+          <div className="form-row">
+            <div className="form-group full-width">
+              <label>Date & Time</label>
+              <input
+                type="datetime-local"
+                name="date"
+                value={formData.date}
+                onChange={handleChange}
+                required
+              />
+            </div>
+          </div>
 
-        {/* New Inventory */}
-        <label>New Inventory (L)</label>
-        <input
-          type="number"
-          name="currentLevel"
-          value={formData.currentLevel}
-          onChange={handleChange}
-          required
-        />
+          {/* Product Select */}
+          <div className="form-row">
+            <div className="form-group full-width">
+              <label>Select Product</label>
+              <select
+                name="productID"
+                value={formData.productID}
+                onChange={handleProductSelect}
+                required
+              >
+                <option value="">-- Select --</option>
+                {products.map(prod => (
+                  <option key={prod.productID} value={prod.productID}>
+                    {prod.productName}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
 
-        {/* Read-only Fields */}
-        <label>Current Price</label>
-        <input type="text" value={currentPrice} readOnly />
+          {/* Product Info */}
+          <div className="form-row">
+            <div className="form-group">
+              <label>Current Quantity (L)</label>
+              <input type="number" name="currentQty" value={formData.currentQty} readOnly />
+            </div>
 
-        <label>Tank Capacity (L)</label>
-        <input type="text" value={tankCapacity} readOnly />
+            <div className="form-group">
+              <label>New Quantity (L)</label>
+              <input
+                type="number"
+                name="newQty"
+                value={formData.newQty}
+                onChange={handleChange}
+                required
+              />
+            </div>
+          </div>
 
-        <label>Refill Space (L)</label>
-        <input type="text" value={refillSpace} readOnly />
+          <div className="form-row">
+            <div className="form-group">
+              <label>Total Tank Capacity (L)</label>
+              <input type="number" name="tankCapacity" value={formData.tankCapacity} readOnly />
+            </div>
 
-        {/* Buttons */}
-        <div className="update-inventory-buttons">
-          <button type="button" className="btn btn-gray" onClick={handleClear}>Clear</button>
-          <button type="submit" className="btn btn-blue">Update</button>
-        </div>
-      </form>
+            <div className="form-group">
+              <label>Refill Capacity (L)</label>
+              <input type="number" name="refillCapacity" value={formData.refillCapacity} readOnly />
+            </div>
+          </div>
+
+          {/* Buttons */}
+          <div className="form-buttons">
+            <button type="button" className="btn btn-gray" onClick={handleClear}>Clear</button>
+            <button type="submit" className="btn btn-blue">Update</button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };

@@ -1,6 +1,5 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 // Auth pages
 import Login from './pages/Login/login';
@@ -8,6 +7,7 @@ import Registration from './pages/Registration/Registration';
 
 // Layout
 import DashboardLayout from './pages/DashboardLayout/DashboardLayout';
+import DashboardHome from './components/DashboardHome';
 
 // Dashboard pages
 import EmployeeDashboard from './pages/EmployeeDashboard/EmployeeDashboard';
@@ -23,7 +23,7 @@ import AddProduct from './pages/InventoryDashboard/AddProduct';
 import UpdateInventory from './pages/InventoryDashboard/UpdateInventory';
 import UpdatePrice from './pages/InventoryDashboard/UpdatePrice';
 
-// Route protection component
+// Route protection
 import ProtectedRoute from './Components/ProtectedRoute';
 
 const App = () => {
@@ -34,7 +34,7 @@ const App = () => {
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Registration />} />
 
-      {/* Protected dashboard routes */}
+      {/* Protected Dashboard layout with nested routes */}
       <Route
         path="/dashboard/*"
         element={
@@ -43,13 +43,19 @@ const App = () => {
           </ProtectedRoute>
         }
       >
-        <Route index element={<Navigate to="sales-collections" replace />} />
+        {/* Default page after login */}
+        <Route index element={<Navigate to="home" replace />} />
+        <Route path="home" element={<DashboardHome />} />
+
+        {/* Other dashboard pages */}
         <Route path="employee" element={<EmployeeDashboard />} />
         <Route path="manager" element={<ManagerDashboard />} />
         <Route path="owner" element={<OwnerDashboard />} />
         <Route path="product" element={<ProductManagement />} />
         <Route path="sales-collections" element={<SalesCollections />} />
         <Route path="borrowers" element={<BorrowersDashboard />} />
+
+        {/* Inventory subroutes */}
         <Route path="inventory" element={<Navigate to="inventory/view" replace />} />
         <Route path="inventory/view" element={<ViewInventory />} />
         <Route path="inventory/add-product" element={<AddProduct />} />
@@ -57,7 +63,7 @@ const App = () => {
         <Route path="inventory/price" element={<UpdatePrice />} />
       </Route>
 
-      {/* Catch all: redirect unknown paths */}
+      {/* Redirect any unknown route to login */}
       <Route path="*" element={<Navigate to="/login" replace />} />
     </Routes>
   );

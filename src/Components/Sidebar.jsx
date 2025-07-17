@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
+import {
+  FaBox, FaTachometerAlt, FaSignOutAlt, FaCubes,
+  FaPlus, FaEdit, FaMoneyBillWave, FaUsers
+} from 'react-icons/fa';
 import './Sidebar.css';
 
 const Sidebar = () => {
@@ -8,36 +12,50 @@ const Sidebar = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('isLoggedIn');
-    localStorage.removeItem('username'); // optional
+    localStorage.removeItem('username');
     navigate('/login');
   };
 
   return (
     <aside className="sidebar">
-      <nav className="nav-links">
-        <NavLink to="/dashboard/employee" className="nav-link">Employee Dashboard</NavLink>
-        <NavLink to="/dashboard/manager" className="nav-link">Manager Dashboard</NavLink>
-        <NavLink to="/dashboard/owner" className="nav-link">Owner Dashboard</NavLink>
+      <nav className="sidebar-nav-links">
+        <NavLink to="/dashboard/owner" className="sidebar-nav-link">
+          <FaTachometerAlt className="icon" /> Owner Dashboard
+        </NavLink>
 
-        <div className="nav-link inventory-toggle" onClick={() => setInventoryOpen(!inventoryOpen)}>
-          <span className="toggle-label">Inventory Dashboard</span>
+        <div className="sidebar-nav-link sidebar-inventory-toggle" onClick={() => setInventoryOpen(!inventoryOpen)}>
+          <span><FaBox className="icon" /> Product Management</span>
           <span className="toggle-icon">{inventoryOpen ? '−' : '+'}</span>
         </div>
 
         {inventoryOpen && (
-          <div className="sub-nav">
-            <NavLink to="/dashboard/inventory/view" className="sub-link">View Inventory</NavLink>
-            <NavLink to="/dashboard/inventory/add-product" className="sub-link">Add New Product</NavLink>
-            <NavLink to="/dashboard/inventory/update" className="sub-link">Update Inventory</NavLink>
-            <NavLink to="/dashboard/inventory/price" className="sub-link">Update Price</NavLink>
+          <div className="sidebar-sub-nav">
+            <NavLink to="/dashboard/inventory/view" className="sidebar-sub-link">
+              <FaCubes className="icon" /> View Inventory
+            </NavLink>
+            <NavLink to="/dashboard/inventory/add-product" className="sidebar-sub-link">
+              <FaPlus className="icon" /> Add Product
+            </NavLink>
+            <NavLink to="/dashboard/inventory/update" className="sidebar-sub-link">
+              <FaEdit className="icon" /> Update Inventory
+            </NavLink>
+            <NavLink to="/dashboard/inventory/price" className="sidebar-sub-link">
+              <FaMoneyBillWave className="icon" /> Update Price
+            </NavLink>
           </div>
         )}
 
-        <NavLink to="/dashboard/product" className="nav-link">Product Management</NavLink>
-        <NavLink to="/dashboard/sales-collections" className="nav-link">Sales & Collections</NavLink>
-        <NavLink to="/dashboard/borrowers" className="nav-link">Borrowers Dashboard</NavLink>
+        <NavLink to="/dashboard/sales-collections" className="sidebar-nav-link">
+          <FaMoneyBillWave className="icon" /> Sales & Collections
+        </NavLink>
 
-        <button className="logout-btn" onClick={handleLogout}>Logout</button>
+        <NavLink to="/dashboard/borrowers" className="sidebar-nav-link">
+          <FaUsers className="icon" /> Borrowers Dashboard
+        </NavLink>
+
+        <button className="sidebar-logout-btn" onClick={handleLogout}>
+          <FaSignOutAlt className="icon" /> Logout
+        </button>
       </nav>
     </aside>
   );

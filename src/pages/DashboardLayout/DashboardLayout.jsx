@@ -7,16 +7,16 @@ const DashboardLayout = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    // Clear session or token logic here if needed
+    localStorage.clear(); // clear login/session info
     navigate('/');
   };
 
   return (
-    <div className="dashboard-container">
+    <div className="dashboard-layout">
       <Sidebar onLogout={handleLogout} />
-      <main className="dashboard-main">
+      <div className="dashboard-content">
         <Outlet />
-      </main>
+      </div>
     </div>
   );
 };
