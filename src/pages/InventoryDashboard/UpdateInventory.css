@@ -1,64 +1,100 @@
 .update-inventory-container {
-  padding: 30px;
-  background-color: #ffffff;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  max-width: 600px;
-  margin: auto;
+  padding: 20px 40px;
+  background-color: #f9f9f9;
+  min-height: 100vh;
+  box-sizing: border-box;
 }
 
 .update-inventory-heading {
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 20px;
-  text-align: center;
+  font-size: 26px;
+  font-weight: 600;
+  margin-bottom: 30px;
+  color: #333;
+  text-align: left;
+}
+
+.update-inventory-form {
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  max-width: 600px;
+  width: 100%;
 }
 
 .update-inventory-form label {
-  display: block;
-  margin-bottom: 6px;
-  font-weight: 600;
+  font-weight: 500;
   color: #333;
+  margin-bottom: 6px;
+  display: block;
 }
 
-.update-inventory-form input {
-  display: block;
+.update-inventory-form input,
+.update-inventory-form select {
   width: 100%;
-  padding: 10px;
-  margin-bottom: 18px;
+  padding: 10px 12px;
+  margin-bottom: 20px;
   border: 1px solid #ccc;
-  border-radius: 6px;
-  background-color: #f9f9f9;
+  border-radius: 8px;
+  background-color: #fefefe;
+  font-size: 15px;
   transition: border-color 0.3s ease;
 }
 
-.update-inventory-form input:focus {
-  border-color: #007bff;
+.update-inventory-form input:focus,
+.update-inventory-form select:focus {
   outline: none;
+  border-color: #ff9800;
   background-color: #fff;
 }
 
 .update-inventory-buttons {
   display: flex;
+  justify-content: flex-end;
   gap: 12px;
-  margin-top: 10px;
+  margin-top: 20px;
 }
 
 .update-inventory-buttons .btn {
-  flex: 1;
-  padding: 10px;
-  font-weight: 600;
-  border: none;
+  padding: 10px 18px;
+  font-size: 15px;
+  font-weight: 500;
   border-radius: 6px;
+  border: none;
   cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .update-inventory-buttons .btn-blue {
-  background-color: #28a745;
+  background-color: #ff9800;
   color: white;
 }
 
+.update-inventory-buttons .btn-blue:hover {
+  background-color: #e68900;
+}
+
 .update-inventory-buttons .btn-gray {
-  background-color: #ccc;
+  background-color: #e0e0e0;
   color: #333;
+}
+
+.update-inventory-buttons .btn-gray:hover {
+  background-color: #d5d5d5;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .update-inventory-container {
+    padding: 20px;
+  }
+
+  .update-inventory-form {
+    padding: 20px;
+  }
+
+  .update-inventory-buttons {
+    flex-direction: column;
+    align-items: stretch;
+  }
 }

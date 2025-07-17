@@ -21,7 +21,8 @@
   color: #333;
 }
 
-.update-price-form input {
+.update-price-form input,
+.update-price-form select {
   display: block;
   width: 100%;
   padding: 10px;
@@ -30,12 +31,20 @@
   border-radius: 6px;
   background-color: #f9f9f9;
   transition: border-color 0.3s ease;
+  font-size: 15px;
 }
 
-.update-price-form input:focus {
+.update-price-form input:focus,
+.update-price-form select:focus {
   border-color: #007bff;
   outline: none;
   background-color: #fff;
+}
+
+.update-price-form input[readonly] {
+  background-color: #e9ecef;
+  color: #555;
+  cursor: not-allowed;
 }
 
 .update-price-buttons {
@@ -51,6 +60,8 @@
   border: none;
   border-radius: 6px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-size: 15px;
 }
 
 .update-price-buttons .btn-blue {
@@ -58,7 +69,15 @@
   color: white;
 }
 
+.update-price-buttons .btn-blue:hover {
+  background-color: #e68900;
+}
+
 .update-price-buttons .btn-gray {
   background-color: #ccc;
   color: #333;
+}
+
+.update-price-buttons .btn-gray:hover {
+  background-color: #bbb;
 }

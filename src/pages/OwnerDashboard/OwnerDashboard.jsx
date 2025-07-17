@@ -6,7 +6,6 @@ const OwnerDashboard = () => {
     <div className="owner-dashboard">
       <h2>Owner Dashboard Features: Product Management</h2>
 
-
       <div className="button-row">
         <button>List of Products</button>
         <button className="secondary">Delete Product</button>
@@ -20,34 +19,18 @@ const OwnerDashboard = () => {
       </div>
 
       <div className="daily-report-header">
-        <button className="secondary">Daily Sale Report</button>
-        <input type="date" placeholder="calendar" />
+        <input type="date" />
+        <button className="secondary">View Daily Sales Report</button>
       </div>
 
-      <div className="pump-row">
-        <div>Pump 1</div>
-        <div>Pump 2</div>
-        <div>Pump 3</div>
-        <div>Pump 4</div>
-      </div>
-
-      <div className="sales-row">
-        <div>
-          <input type="text" placeholder="Open Reading" />
-          <input type="text" placeholder="Sale" />
-        </div>
-        <div>
-          <input type="text" placeholder="Open Reading" />
-          <input type="text" placeholder="Sale" />
-        </div>
-        <div>
-          <input type="text" placeholder="Open Reading" />
-          <input type="text" placeholder="Sale" />
-        </div>
-        <div>
-          <input type="text" placeholder="Open Reading" />
-          <input type="text" placeholder="Sale" />
-        </div>
+      <div className="pump-section">
+        {['Pump 1', 'Pump 2', 'Pump 3', 'Pump 4'].map((pump, index) => (
+          <div key={index} className="pump-column">
+            <div className="pump-label">{pump}</div>
+            <input type="text" placeholder="Open Reading" />
+            <input type="text" placeholder="Sale" />
+          </div>
+        ))}
       </div>
 
       <div className="form-full">

@@ -1,16 +1,43 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './UpdatePrice.css';
 
 const UpdatePrice = () => {
-  const initialValues = {
+  const [products, setProducts] = useState([]);
+  const [formData, setFormData] = useState({
     productName: '',
+    currentPrice: '',
     price: '',
     date: ''
+  });
+
+  // Fetch all products once
+  useEffect(() => {
+    axios.get('https://pulse-293050141084.asia-south1.run.app/inventory/latest')
+      .then(res => {
+        setProducts(res.data);
+      })
+      .catch(err => {
+        console.error('Error fetching products:', err);
+      });
+  }, []);
+
+  // On product select, update current price from already fetched list
+  const handleProductSelect = (e) => {
+    const selectedProduct = e.target.value;
+
+    const matchedProduct = products.find(prod => prod.productName === selectedProduct);
+    const currentPrice = matchedProduct ? matchedProduct.price : 'Not Found';
+
+    setFormData(prev => ({
+      ...prev,
+      productName: selectedProduct,
+      currentPrice: currentPrice,
+      price: ''
+    }));
   };
 
-  const [formData, setFormData] = useState(initialValues);
-
+  // Handle field changes
   const handleChange = (e) => {
     setFormData(prev => ({
       ...prev,
@@ -18,20 +45,33 @@ const UpdatePrice = () => {
     }));
   };
 
+  // Clear form
   const handleClear = () => {
-    setFormData(initialValues);
+    setFormData({
+      productName: '',
+      currentPrice: '',
+      price: '',
+      date: ''
+    });
   };
 
+  // Submit updated price
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    axios.post('https://pulse-293050141084.asia-south1.run.app/inventory/update-price', formData)
+    const payload = {
+      productName: formData.productName,
+      price: parseFloat(formData.price),
+      date: formData.date
+    };
+
+    axios.post('https://pulse-293050141084.asia-south1.run.app/inventory/update-price', payload)
       .then(() => {
         alert('Price updated successfully!');
         handleClear();
       })
       .catch(err => {
-        alert('Error: ' + err.message);
+        alert('Error updating price: ' + err.message);
       });
   };
 
@@ -39,13 +79,26 @@ const UpdatePrice = () => {
     <div className="update-price-container">
       <h2 className="update-price-heading">Update Product Price</h2>
       <form className="update-price-form" onSubmit={handleSubmit}>
-        <label>Product Name</label>
-        <input
-          type="text"
+
+        <label>Select Product</label>
+        <select
           name="productName"
           value={formData.productName}
-          onChange={handleChange}
+          onChange={handleProductSelect}
           required
+        >
+          <option value="">-- Select Product --</option>
+          {products.map((prod, idx) => (
+            <option key={idx} value={prod.productName}>{prod.productName}</option>
+          ))}
+        </select>
+
+        <label>Current Price (₹)</label>
+        <input
+          type="text"
+          name="currentPrice"
+          value={formData.currentPrice}
+          readOnly
         />
 
         <label>New Price (₹)</label>
