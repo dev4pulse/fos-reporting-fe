@@ -50,7 +50,7 @@ const Sidebar = () => {
         </NavLink>
 
         <NavLink to="/dashboard/borrowers" className="sidebar-nav-link">
-          <FaUsers className="icon" /> Borrowers Dashboard
+          <FaUsers className="icon" /> Customers
         </NavLink>
 
         <button className="sidebar-logout-btn" onClick={handleLogout}>

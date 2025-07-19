@@ -25,7 +25,7 @@ const AddProduct = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    axios.post('https://pulse-293050141084.asia-south1.run.app/inventory/add', formData)
+    axios.post('https://pulse-293050141084.asia-south1.run.app/inventory/', formData)
       .then(() => {
         alert('Product added successfully!');
         handleClear();

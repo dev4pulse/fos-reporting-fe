@@ -7,8 +7,7 @@ const UpdatePrice = () => {
   const [formData, setFormData] = useState({
     productName: '',
     currentPrice: '',
-    newPrice: '',
-    lastPriceUpdated: ''
+    newPrice: ''
   });
 
   // Fetch product list
@@ -30,9 +29,8 @@ const UpdatePrice = () => {
     setFormData(prev => ({
       ...prev,
       productName: selectedName,
-      currentPrice: selectedProduct?.price || '',
-      newPrice: '',
-      lastPriceUpdated: ''
+      currentPrice: selectedProduct?.price ?? '',
+      newPrice: ''
     }));
   };
 
@@ -50,8 +48,7 @@ const UpdatePrice = () => {
     setFormData({
       productName: '',
       currentPrice: '',
-      newPrice: '',
-      lastPriceUpdated: ''
+      newPrice: ''
     });
   };
 
@@ -59,13 +56,30 @@ const UpdatePrice = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    const { productName, newPrice } = formData;
+
+    // Validate inputs
+    if (!productName || !newPrice) {
+      alert('Please select a product and enter a new price.');
+      return;
+    }
+
+    const priceValue = parseFloat(newPrice);
+    if (isNaN(priceValue) || priceValue <= 0) {
+      alert('Please enter a valid new price.');
+      return;
+    }
+
     const payload = {
-      productName: formData.productName,
-      newPrice: parseFloat(formData.newPrice),
-      lastPriceUpdated: new Date(formData.lastPriceUpdated).toISOString()
+      productName,
+      newPrice: priceValue,
+      lastPriceUpdated: new Date().toISOString()
     };
 
-    axios.post('https://pulse-293050141084.asia-south1.run.app/inventory/update-price', payload)
+    axios.post(
+        'https://pulse-293050141084.asia-south1.run.app/inventory/update-price',
+        payload
+      )
       .then(() => {
         alert('Price updated successfully!');
         handleClear();
@@ -109,15 +123,9 @@ const UpdatePrice = () => {
           value={formData.newPrice}
           onChange={handleChange}
           required
-        />
-
-        <label>Last Price Updated</label>
-        <input
-          type="datetime-local"
-          name="lastPriceUpdated"
-          value={formData.lastPriceUpdated}
-          onChange={handleChange}
-          required
+          min="0"
+          step="0.01"
+          placeholder="Enter new price"
         />
 
         <div className="update-price-buttons">

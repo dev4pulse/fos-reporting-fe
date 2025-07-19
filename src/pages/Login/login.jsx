@@ -8,6 +8,7 @@ const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false); // <-- NEW
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -24,17 +25,12 @@ const Login = () => {
         password,
       });
 
-      // ✅ Example: Handle success response (adjust based on your API)
       if (response.status === 200) {
         const { token, role } = response.data;
-
-        // Save login details
         localStorage.setItem('isLoggedIn', 'true');
         localStorage.setItem('username', username);
         localStorage.setItem('token', token);
         localStorage.setItem('role', role);
-
-        // ✅ Redirect to dashboard
         navigate('/dashboard/home');
       }
     } catch (error) {
@@ -62,16 +58,41 @@ const Login = () => {
           />
         </div>
 
-        <div className="login-input">
+        <div className="login-input password-input">
           <label htmlFor="password">Password</label>
-          <input
-            id="password"
-            type="password"
-            placeholder="Enter your password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+          <div className="password-wrapper">
+            <input
+              id="password"
+              type={showPassword ? "text" : "password"}
+              placeholder="Enter your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              autoComplete="current-password"
+            />
+            <button
+              type="button"
+              className="eye-btn"
+              aria-label={showPassword ? "Hide password" : "Show password"}
+              onClick={() => setShowPassword((v) => !v)}
+              tabIndex={-1}
+            >
+              {showPassword ? (
+                // Eye Open SVG
+                <svg width="20" height="20" fill="none" viewBox="0 0 24 24">
+                  <path d="M1 12C2.73 7.61 7.21 4.5 12 4.5s9.27 3.11 11 7.5c-1.73 4.39-6.21 7.5-11 7.5S2.73 16.39 1 12z" stroke="#64748b" strokeWidth="2" fill="none"/>
+                  <circle cx="12" cy="12" r="3" stroke="#64748b" strokeWidth="2" fill="none"/>
+                </svg>
+              ) : (
+                // Eye Closed SVG
+                <svg width="20" height="20" fill="none" viewBox="0 0 24 24">
+                  <path d="M1 1l22 22" stroke="#64748b" strokeWidth="2"/>
+                  <path d="M21.17 21.17A11.41 11.41 0 0012 19.5c-4.79 0-9.27-3.11-11-7.5a11.55 11.55 0 013.73-4.77M7.17 7.17A6.94 6.94 0 0112 6c4 0 7.36 2.4 9 6-1.04 2.5-3.01 4.56-5.49 5.74" stroke="#64748b" strokeWidth="2" fill="none"/>
+                  <circle cx="12" cy="12" r="3" stroke="#64748b" strokeWidth="2" fill="none"/>
+                </svg>
+              )}
+            </button>
+          </div>
         </div>
 
         <button type="submit" className="login-button" disabled={loading}>

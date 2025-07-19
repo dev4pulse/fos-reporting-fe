@@ -6,6 +6,9 @@
   min-height: 100vh;
   background-color: #f1f5f9;
   padding: 20px;
+  box-sizing: border-box;  /* Ensure padding is included in width */
+  width: 100vw;            /* Prevent overflow on mobile */
+  overflow-x: hidden;
 }
 
 /* Login box */
@@ -19,6 +22,8 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
+  min-width: 0;           /* Prevent flex overflow */
+  box-sizing: border-box;
 }
 
 /* Heading */
@@ -27,12 +32,15 @@
   font-size: 24px;
   font-weight: 600;
   color: #1e293b;
+  margin: 0 0 10px 0;
+  line-height: 1.2;
 }
 
 /* Input fields */
 .login-input {
   display: flex;
   flex-direction: column;
+  gap: 0.25em;
 }
 
 .login-input label {
@@ -49,10 +57,12 @@
   border-radius: 8px;
   outline: none;
   transition: border-color 0.3s;
+  background: #f8fafc;
 }
 
 .login-input input:focus {
   border-color: #3b82f6;
+  background: #fff;
 }
 
 /* Login button */
@@ -66,7 +76,7 @@
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: background-color 0.2s;
 }
 
 .login-button:hover {
@@ -80,12 +90,15 @@
   gap: 10px;
   font-size: 14px;
   margin-top: 8px;
+  width: 100%;
 }
 
 /* Forgot links on same line */
 .forgot-row {
   display: flex;
   justify-content: space-between;
+  gap: 12px;
+  width: 100%;
 }
 
 .forgot-row a {
@@ -105,6 +118,7 @@
   align-items: center;
   gap: 6px;
   font-size: 14px;
+  flex-wrap: wrap; /* Helps avoid overflow */
 }
 
 .register-row span {
@@ -123,21 +137,55 @@
 
 /* Responsive tweaks */
 @media (max-width: 480px) {
+  .login-container {
+    padding: 10px;
+  }
   .login-box {
-    padding: 24px;
+    padding: 16px;
+    max-width: 100vw;
   }
-
   .login-box h2 {
-    font-size: 20px;
+    font-size: 18px;
   }
-
   .forgot-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+  }
+  .register-row {
     flex-direction: column;
     align-items: center;
     gap: 6px;
   }
+}
+/* For password field with eye button */
+.password-wrapper {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
 
-  .register-row {
-    flex-direction: column;
-  }
+.password-wrapper input {
+  flex: 1 1 0%;
+  padding-right: 40px; /* space for eye button */
+}
+
+.eye-btn {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  color: #64748b;
+}
+
+.eye-btn svg {
+  pointer-events: none;
 }
