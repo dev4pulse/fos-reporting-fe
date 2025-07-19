@@ -7,7 +7,7 @@ import Registration from './pages/Registration/Registration';
 
 // Layout
 import DashboardLayout from './pages/DashboardLayout/DashboardLayout';
-import DashboardHome from './components/DashboardHome';
+import DashboardHome from './Components/DashboardHome';
 
 // Dashboard pages
 import EmployeeDashboard from './pages/EmployeeDashboard/EmployeeDashboard';
