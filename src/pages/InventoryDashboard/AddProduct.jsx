@@ -57,10 +57,10 @@ const AddProduct = () => {
           required
         />
 
-        <label>Booking Limit (L)</label>
+        <label>Inventory</label>
         <input
           type="number"
-          name="Inventory"
+          name="bookingLimit"
           value={formData.bookingLimit}
           onChange={handleChange}
 
