@@ -1,10 +1,8 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { NavLink } from 'react-router-dom'; // Replace useNavigate with NavLink
 import './DashboardHome.css';
 
 const DashboardHome = () => {
-  const navigate = useNavigate();
-
   const cards = [
     {
       title: 'View Sales Data',
@@ -78,23 +76,21 @@ const DashboardHome = () => {
       <p className="subtitle">
         You have successfully logged in. This is your personalized dashboard where you can manage your petrol bunk operations.
       </p>
-
       <div className="card-grid">
         {cards.map((card, index) => (
           <div className="card" style={{ backgroundColor: card.bgColor }} key={index}>
             <h3>{card.title}</h3>
             <p>{card.description}</p>
-            <button
+            <NavLink
+              to={card.path}
+              className="dashboard-card-link"
               style={{ backgroundColor: card.btnColor }}
-              onClick={() => navigate(card.path)}
             >
               {card.buttonText}
-            </button>
+            </NavLink>
           </div>
         ))}
       </div>
-
-      <button className="logout-btn" onClick={() => navigate('/')}>Logout</button>
     </div>
   );
 };

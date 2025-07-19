@@ -120,6 +120,22 @@
     font-size: 1.46rem;
   }
 }
+.dashboard-card-link {
+  display: inline-block;
+  padding: 10px 20px;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 10px;
+  transition: background-color 0.2s;
+}
+
+.dashboard-card-link:hover {
+  opacity: 0.9;
+}
+
 
 /* Optional: button full-width on very narrow screens */
 @media (max-width: 400px) {

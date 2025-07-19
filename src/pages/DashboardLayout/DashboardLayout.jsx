@@ -7,7 +7,7 @@ const DashboardLayout = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    localStorage.clear(); // clear login/session info
+    localStorage.clear();
     navigate('/');
   };
 

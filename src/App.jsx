@@ -34,7 +34,17 @@ const App = () => {
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Registration />} />
 
-      {/* Protected Dashboard layout with nested routes */}
+      {/* Standalone Dashboard Home */}
+      <Route
+        path="/dashboard/home"
+        element={
+          <ProtectedRoute>
+            <DashboardHome />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Protected Dashboard Layout for all other dashboard pages */}
       <Route
         path="/dashboard/*"
         element={
@@ -43,20 +53,15 @@ const App = () => {
           </ProtectedRoute>
         }
       >
-        {/* Default page after login */}
-        <Route index element={<Navigate to="home" replace />} />
-        <Route path="home" element={<DashboardHome />} />
-
-        {/* Other dashboard pages */}
+        <Route index element={<Navigate to="home" />} />
         <Route path="employee" element={<EmployeeDashboard />} />
         <Route path="manager" element={<ManagerDashboard />} />
         <Route path="owner" element={<OwnerDashboard />} />
         <Route path="product" element={<ProductManagement />} />
         <Route path="sales-collections" element={<SalesCollections />} />
         <Route path="borrowers" element={<BorrowersDashboard />} />
-
         {/* Inventory subroutes */}
-        <Route path="inventory" element={<Navigate to="inventory/view" replace />} />
+        <Route path="inventory" element={<Navigate to="view" />} />
         <Route path="inventory/view" element={<ViewInventory />} />
         <Route path="inventory/add-product" element={<AddProduct />} />
         <Route path="inventory/update" element={<UpdateInventory />} />
