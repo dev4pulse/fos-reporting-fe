@@ -23,6 +23,10 @@ import AddProduct from './pages/InventoryDashboard/AddProduct';
 import UpdateInventory from './pages/InventoryDashboard/UpdateInventory';
 import UpdatePrice from './pages/InventoryDashboard/UpdatePrice';
 
+// Customers sub-pages
+import ViewCustomers from './pages/BorrowersDashboard/ViewCustomers';
+import AddNewCustomer from './pages/BorrowersDashboard/AddNewCustomer'; // Add this later
+
 // Route protection
 import ProtectedRoute from './Components/ProtectedRoute';
 
@@ -66,6 +70,10 @@ const App = () => {
         <Route path="inventory/add-product" element={<AddProduct />} />
         <Route path="inventory/update" element={<UpdateInventory />} />
         <Route path="inventory/price" element={<UpdatePrice />} />
+        {/* Customers subroutes */}
+        <Route path="customers" element={<Navigate to="view" />} />
+        <Route path="customers/view" element={<ViewCustomers />} />
+        <Route path="customers/add" element={<AddNewCustomer />} />
       </Route>
 
       {/* Redirect any unknown route to login */}

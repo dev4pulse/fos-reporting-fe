@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import {
   FaBox, FaTachometerAlt, FaSignOutAlt, FaCubes,
-  FaPlus, FaEdit, FaMoneyBillWave, FaUsers
+  FaPlus, FaEdit, FaMoneyBillWave, FaUsers, FaUser, FaUserPlus
 } from 'react-icons/fa';
 import './Sidebar.css';
 
 const Sidebar = () => {
   const [inventoryOpen, setInventoryOpen] = useState(false);
+  const [customersOpen, setCustomersOpen] = useState(false); // Initially closed
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -49,9 +50,21 @@ const Sidebar = () => {
           <FaMoneyBillWave className="icon" /> Sales & Collections
         </NavLink>
 
-        <NavLink to="/dashboard/borrowers" className="sidebar-nav-link">
+        {/* Customers Navigation */}
+        <div className="sidebar-nav-link sidebar-customers-header" onClick={() => setCustomersOpen(!customersOpen)}>
           <FaUsers className="icon" /> Customers
-        </NavLink>
+          <span className="toggle-icon">{customersOpen ? '−' : '+'}</span>
+        </div>
+        {customersOpen && (
+          <div className="sidebar-sub-nav">
+            <NavLink to="/dashboard/customers/view" className="sidebar-sub-link">
+              <FaUser className="icon" /> View Customers
+            </NavLink>
+            <NavLink to="/dashboard/customers/add" className="sidebar-sub-link">
+              <FaUserPlus className="icon" /> Add New Customer
+            </NavLink>
+          </div>
+        )}
 
         <button className="sidebar-logout-btn" onClick={handleLogout}>
           <FaSignOutAlt className="icon" /> Logout
