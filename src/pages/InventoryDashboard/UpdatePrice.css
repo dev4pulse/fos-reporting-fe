@@ -1,14 +1,16 @@
 .update-price-container {
-  padding: 32px 20px;
+  padding: 32px 24px;
   background-color: #fff;
   border-radius: 14px;
   box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
-  max-width: 480px;
   margin: 40px auto 0;
   transition: box-shadow 0.18s;
+  max-width: calc(min(1200px, 98vw)); /* Match dashboard width, fallback to 98vw on narrow screens */
+  width: 100%;
+  border: 1px solid rgba(0, 0, 0, 0.05); /* subtle border for depth, optional */
 }
 .update-price-container:hover {
-  box-shadow: 0 8px 32px rgba(0,0,0,0.13);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.13);
 }
 
 .update-price-heading {
@@ -80,7 +82,7 @@
   border-radius: 7px;
   cursor: pointer;
   transition: background 0.17s, color 0.15s, box-shadow 0.13s;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
 }
 
 .update-price-buttons .btn-blue {
@@ -92,7 +94,7 @@
 .update-price-buttons .btn-blue:focus {
   background-color: #e68900;
   color: #fff;
-  box-shadow: 0 1px 8px rgba(255,152,0,0.13);
+  box-shadow: 0 1px 8px rgba(255, 152, 0, 0.13);
 }
 
 .update-price-buttons .btn-blue:disabled,
@@ -121,13 +123,27 @@
 }
 
 /* Responsive Enhancements */
-@media (max-width: 600px) {
+@media (max-width: 1260px) {
   .update-price-container {
-    padding: 15px 3vw;
-    max-width: 97vw;
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+}
+@media (max-width: 768px) {
+  .update-price-container {
+    padding: 22px 18px;
+    margin: 32px 12px 0;
+  }
+}
+@media (max-width: 540px) {
+  .update-price-container {
+    padding: 18px 14px;
   }
   .update-price-buttons {
     flex-direction: column;
     gap: 10px;
+  }
+  .update-price-buttons .btn {
+    width: 100%;
   }
 }

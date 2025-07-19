@@ -1,14 +1,16 @@
 .add-product-container {
-  padding: 32px 20px;
   background-color: #fff;
+  padding: 32px 24px;
   border-radius: 14px;
-  box-shadow: 0 4px 18px rgba(0,0,0,0.08);
-  max-width: 500px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
   margin: 30px auto;
   transition: box-shadow 0.2s;
+  max-width: calc(min(1200px, 98vw));
+  width: 100%;
 }
+
 .add-product-container:hover {
-  box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
 }
 
 .add-product-heading {
@@ -59,12 +61,18 @@
   display: flex;
   gap: 14px;
   margin-top: 15px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap; /* Buttons always in one row, never wrap */
+  overflow-x: auto; /* For very narrow screens, allow sideways scroll */
+  scrollbar-width: none; /* Hide scrollbar in Firefox */
+  -ms-overflow-style: none; /* Hide scrollbar in IE/Edge */
+}
+.add-product-buttons::-webkit-scrollbar {
+  display: none; /* Hide scrollbar in Chrome, Safari, Opera */
 }
 
 .add-product-buttons .btn {
-  flex: 1 1 50%;
-  min-width: 100px;
+  flex: 1; /* Buttons share remaining space equally */
+  min-width: min-content; /* Let them shrink, but not break layout */
   padding: 11px 0;
   font-weight: 600;
   border: none;
@@ -72,7 +80,7 @@
   cursor: pointer;
   font-size: 1rem;
   transition: background 0.17s, box-shadow 0.13s, color 0.17s;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
 }
 
 .add-product-buttons .btn-blue {
@@ -84,7 +92,7 @@
 .add-product-buttons .btn-blue:focus {
   background-color: #0056b3;
   color: #fff;
-  box-shadow: 0 2px 8px rgba(0,123,255,0.16);
+  box-shadow: 0 2px 8px rgba(0, 123, 255, 0.16);
 }
 
 .add-product-buttons .btn-blue:disabled,
@@ -112,14 +120,28 @@
   cursor: not-allowed;
 }
 
-/* Responsive Enhancements */
+/* Responsive */
+@media (max-width: 1260px) {
+  .add-product-container {
+    margin-left: 24px;
+    margin-right: 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  .add-product-container {
+    padding: 24px 20px;
+  }
+}
+
 @media (max-width: 600px) {
   .add-product-container {
-    padding: 15px 5vw;
-    max-width: 97vw;
+    padding: 18px 16px;
   }
-  .add-product-buttons {
-    flex-direction: column;
-    gap: 10px;
+}
+
+@media (max-width: 400px) {
+  .add-product-heading {
+    font-size: 1.4rem;
   }
 }
