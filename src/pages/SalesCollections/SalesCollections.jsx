@@ -1,157 +1,186 @@
 import React, { useEffect, useState } from 'react';
-import Flatpickr from 'react-flatpickr';
-import 'flatpickr/dist/themes/light.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import './SalesCollections.css';
 
 const SalesCollections = () => {
   const [entryDate, setEntryDate] = useState(new Date());
   const [employeeId, setEmployeeId] = useState('');
   const [employees, setEmployees] = useState([]);
-
+  const [employeeFetchError, setEmployeeFetchError] = useState('');
   const [products, setProducts] = useState([]);
-  const [borrowers, setBorrowers] = useState([]);
-
-  const [cashReceived, setCashReceived] = useState(0);
-  const [phonePay, setPhonePay] = useState(0);
-  const [creditCard, setCreditCard] = useState(0);
+  const [cashReceived, setCashReceived] = useState('');
+  const [phonePay, setPhonePay] = useState('');
+  const [creditCard, setCreditCard] = useState('');
 
   useEffect(() => {
-    fetch('api/active')
-      .then(res => res.json())
+    fetch('https://pulse-293050141084.asia-south1.run.app/active')
+      .then(res => res.ok ? res.json() : Promise.reject(res.statusText))
       .then(setEmployees)
-      .catch(() => alert('Failed to load employees'));
+      .catch(err => {
+        setEmployeeFetchError('Failed to load employees.');
+        console.error(err);
+      });
   }, []);
 
   const handleAddProduct = () => {
     setProducts(prev => [...prev, {
-      productName: '',
-      gun: '',
-      opening: 0,
-      closing: 0,
-      price: 0,
-      testing: 0,
-      salesLiters: 0,
-      salesRupees: 0
+      productName: '', gun: '', opening: '', closing: '', price: '', testing: '',
+      salesLiters: 0, salesRupees: 0
     }]);
   };
 
-  const handleRemoveProduct = (index) => {
+  const handleRemoveProduct = index => {
     setProducts(prev => prev.filter((_, i) => i !== index));
+  };
+
+  const calculateSales = row => {
+    const opening = parseFloat(row.opening) || 0;
+    const closing = parseFloat(row.closing) || 0;
+    const testing = parseFloat(row.testing) || 0;
+    const price = parseFloat(row.price) || 0;
+    const liters = Math.max(closing - opening - testing, 0);
+    row.salesLiters = liters;
+    row.salesRupees = parseFloat((liters * price).toFixed(2));
   };
 
   const handleProductChange = (index, field, value) => {
     const updated = [...products];
     updated[index][field] = value;
 
-    if (['productName', 'gun'].includes(field)) {
-      const { productName, gun } = updated[index];
-      if (productName && gun) {
-        fetch(`api/sales/last?productName=${encodeURIComponent(productName)}&gun=${encodeURIComponent(gun)}`)
-          .then(r => r.json())
-          .then(data => {
-            updated[index].opening = data.lastClosing || 0;
-            return fetch(`api/sales/price?productName=${encodeURIComponent(productName)}&gun=${encodeURIComponent(gun)}`);
-          })
-          .then(r => r.json())
-          .then(price => {
-            updated[index].price = price || 0;
-            calculateSales(updated[index]);
-            setProducts([...updated]);
-          })
-          .catch(console.error);
-      }
+    const { productName, gun } = updated[index];
+
+    if (field === 'productName') {
+      fetch(`https://pulse-293050141084.asia-south1.run.app/inventory/price?productName=${value}`)
+        .then(res => res.ok ? res.json() : Promise.reject(res.statusText))
+        .then(price => {
+          updated[index].price = price;
+          calculateSales(updated[index]);
+          setProducts(updated);
+        })
+        .catch(err => {
+          alert(`Failed to fetch price for ${value}`);
+          console.error(err);
+        });
+    }
+
+    if ((field === 'productName' || field === 'gun') && productName && gun) {
+      fetch(`https://pulse-293050141084.asia-south1.run.app/sales/last?productName=${productName}&gun=${gun}`)
+        .then(res => res.ok ? res.json() : Promise.reject(res.statusText))
+        .then(data => {
+          updated[index].opening = data.lastClosing || 0;
+          calculateSales(updated[index]);
+          setProducts(updated);
+        })
+        .catch(err => {
+          alert(`Error fetching last closing for ${productName} - ${gun}`);
+          console.error(err);
+        });
     } else {
       calculateSales(updated[index]);
-      setProducts([...updated]);
+      setProducts(updated);
     }
   };
 
-  const calculateSales = (row) => {
-    const liters = Math.max((row.closing - row.opening - row.testing), 0);
-    row.salesLiters = liters;
-    row.salesRupees = parseFloat((liters * row.price).toFixed(2));
-  };
-
-  const handleAddBorrower = () => {
-    setBorrowers(prev => [...prev, { name: '', amount: 0 }]);
-  };
-
-  const handleRemoveBorrower = (index) => {
-    setBorrowers(prev => prev.filter((_, i) => i !== index));
-  };
-
-  const handleBorrowerChange = (index, field, value) => {
-    const updated = [...borrowers];
-    updated[index][field] = value;
-    setBorrowers(updated);
-  };
-
   const totalSales = products.reduce((sum, p) => sum + (parseFloat(p.salesRupees) || 0), 0);
-  const totalCollection = parseFloat(cashReceived) + parseFloat(phonePay) + parseFloat(creditCard);
+  const totalCollection = (parseFloat(cashReceived) || 0) + (parseFloat(phonePay) || 0) + (parseFloat(creditCard) || 0);
   const shortCollections = (totalCollection - totalSales).toFixed(2);
 
-  const handleSubmit = (e) => {
+  const formatDate = (date) => {
+    const pad = (n) => (n < 10 ? '0' + n : n);
+    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!employeeId) return alert('Please select employee');
+    if (!employeeId) return alert("Select employee");
+
+    const hasInvalidClosing = products.some(
+      (p) => parseFloat(p.closing) < parseFloat(p.opening)
+    );
+    if (hasInvalidClosing) {
+      alert('One or more products have Closing less than Opening. Please correct them.');
+      return;
+    }
+
+    if (parseFloat(shortCollections) < -10) {
+      alert('Short Collections cannot be less than -10');
+      return;
+    }
+
     const payloadSales = {
-      date: entryDate,
+      date: formatDate(entryDate),
       employeeId: parseInt(employeeId),
-      products
-    };
-    const payloadCollections = {
-      date: entryDate,
-      employeeId: parseInt(employeeId),
-      cashReceived: parseFloat(cashReceived || 0),
-      phonePay: parseFloat(phonePay || 0),
-      creditCard: parseFloat(creditCard || 0),
-      shortCollections: parseFloat(shortCollections),
-      borrowers
+      products: products.map(p => ({
+        ...p,
+        opening: parseFloat(p.opening) || 0,
+        closing: parseFloat(p.closing) || 0,
+        price: parseFloat(p.price) || 0,
+        testing: parseFloat(p.testing) || 0,
+        salesLiters: parseFloat(p.salesLiters) || 0,
+        salesRupees: parseFloat(p.salesRupees) || 0,
+      }))
     };
 
-    Promise.all([
-      fetch('api/sales', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payloadSales)
-      }),
-      fetch('api/collections', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payloadCollections)
-      })
-    ])
-      .then(responses => Promise.all(responses.map(r => r.text())))
-      .then(([salesMsg, collectionsMsg]) => {
-        alert(` Sales: ${salesMsg}\n Collections: ${collectionsMsg}`);
-        window.location.reload();
-      })
-      .catch(err => alert('Error: ' + err.message));
+    const payloadCollections = {
+      date: formatDate(entryDate),
+      employeeId: parseInt(employeeId),
+      cashReceived: parseFloat(cashReceived) || 0,
+      phonePay: parseFloat(phonePay) || 0,
+      creditCard: parseFloat(creditCard) || 0,
+      shortCollections: parseFloat(shortCollections)
+      // borrowers removed
+    };
+
+    try {
+      const [res1, res2] = await Promise.all([
+        fetch('https://pulse-293050141084.asia-south1.run.app/sales', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payloadSales)
+        }),
+        fetch('https://pulse-293050141084.asia-south1.run.app/collections', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payloadCollections)
+        })
+      ]);
+
+      const msg1 = await res1.text();
+      const msg2 = await res2.text();
+
+      if (!res1.ok || !res2.ok) throw new Error(`${msg1}\n${msg2}`);
+
+      alert(`Submitted!\nSales: ${msg1}\nCollections: ${msg2}`);
+      window.location.reload();
+    } catch (err) {
+      alert('Error submitting form');
+      console.error(err);
+    }
   };
 
   return (
-    <div className="container mt-4">
-      <h2 className="text-center mb-4">Sales & Collections Dashboard</h2>
+    <div className="sales-collections-container">
+      <h2 className="section-title">Sales & Collections</h2>
       <form onSubmit={handleSubmit}>
-        <div className="row mb-3">
-          <div className="col-md-6">
-            <label htmlFor="entryDate" className="form-label">Entry Date & Time</label>
-            <Flatpickr
-              id="entryDate"
-              className="form-control"
-              value={entryDate}
-              options={{ enableTime: true, dateFormat: "Y-m-d H:i:S" }}
-              onChange={([date]) => setEntryDate(date)}
+        <div className="sales-form">
+          <div className="form-group">
+            <label>Entry Date & Time</label>
+            <DatePicker
+              selected={entryDate}
+              onChange={setEntryDate}
+              showTimeSelect
+              timeFormat="HH:mm"
+              timeIntervals={15}
+              dateFormat="dd-MM-yyyy HH:mm"
+              placeholderText="Select date and time"
+              className="datetime-input"
             />
           </div>
-          <div className="col-md-6">
-            <label htmlFor="employeeDropdown" className="form-label">Employee</label>
-            <select
-              id="employeeDropdown"
-              className="form-select"
-              value={employeeId}
-              onChange={(e) => setEmployeeId(e.target.value)}
-              required
-            >
+
+          <div className="form-group">
+            <label>Employee</label>
+            <select value={employeeId} onChange={e => setEmployeeId(e.target.value)} required>
               <option value="">Select Employee</option>
               {employees.map(emp => (
                 <option key={emp.employeeId} value={emp.employeeId}>
@@ -159,91 +188,72 @@ const SalesCollections = () => {
                 </option>
               ))}
             </select>
+            {employeeFetchError && <small>{employeeFetchError}</small>}
           </div>
         </div>
 
-        <h4 className="mt-4">Sales Entry</h4>
+        <h4 className="section-title">Sales</h4>
         {products.map((p, i) => (
-          <div key={i} className="row g-3 border rounded p-3 mb-3">
-            {['Product Name', 'Gun', 'Opening', 'Closing', 'Price', 'Testing', 'Sales Liters', 'Sales Rupees'].map((label, j) => {
-              const fieldMap = ['productName', 'gun', 'opening', 'closing', 'price', 'testing', 'salesLiters', 'salesRupees'];
-              const field = fieldMap[j];
-              const isReadOnly = field === 'salesLiters' || field === 'salesRupees';
-              const value = p[field];
-
-              return (
-                <div key={j} className="col-md-3">
-                  <label className="form-label">{label}</label>
-                  {['productName', 'gun'].includes(field) ? (
-                    <select className="form-select" value={value} onChange={e => handleProductChange(i, field, e.target.value)}>
-                      <option value="">Select</option>
-                      {field === 'productName' && ['Petrol', 'Diesel', 'Other'].map(opt => (
-                        <option key={opt} value={opt}>{opt}</option>
-                      ))}
-                      {field === 'gun' && ['G1', 'G2', 'G3'].map(opt => (
-                        <option key={opt} value={opt}>{opt}</option>
-                      ))}
-                    </select>
-                  ) : (
-                    <input
-                      type="number"
-                      className="form-control"
-                      value={value}
-                      readOnly={isReadOnly}
-                      onChange={e => handleProductChange(i, field, +e.target.value)}
-                    />
-                  )}
-                </div>
-              );
-            })}
-            <div className="col-md-3 d-flex align-items-end">
-              <button type="button" className="btn btn-outline-danger w-100" onClick={() => handleRemoveProduct(i)}>Remove</button>
-            </div>
+          <div className="sales-form" key={i}>
+            {['productName', 'gun', 'opening', 'closing', 'price', 'testing', 'salesLiters', 'salesRupees'].map((field, j) => (
+              <div className="form-group" key={j}>
+                <label>{field.replace(/([A-Z])/g, ' $1')}</label>
+                {['productName', 'gun'].includes(field) ? (
+                  <select
+                    value={p[field]}
+                    onChange={e => handleProductChange(i, field, e.target.value)}
+                    required
+                  >
+                    <option value="">Select</option>
+                    {field === 'productName' && ['Petrol', 'Diesel'].map(opt => <option key={opt}>{opt}</option>)}
+                    {field === 'gun' && ['G1', 'G2', 'G3'].map(opt => <option key={opt}>{opt}</option>)}
+                  </select>
+                ) : (
+                  <input
+                    type="number"
+                    value={p[field]}
+                    onChange={e => handleProductChange(i, field, e.target.value)}
+                    readOnly={['salesLiters', 'salesRupees', 'price', 'opening'].includes(field)}
+                    className={field === 'closing' && parseFloat(p.closing) < parseFloat(p.opening) ? 'input-error' : ''}
+                  />
+                )}
+              </div>
+            ))}
+            <button type="button" className="clear-btn" onClick={() => handleRemoveProduct(i)}>Remove</button>
           </div>
         ))}
-        <button type="button" className="btn btn-primary mb-3" onClick={handleAddProduct}>Add Product</button>
+        <button type="button" className="submit-btn" onClick={handleAddProduct}>Add Product</button>
 
-        <h4 className="mt-4">Collections</h4>
-        <div className="row mb-3">
+        <h4 className="section-title">Collections</h4>
+        <div className="sales-form">
           {[
             { label: 'Cash Received', value: cashReceived, setter: setCashReceived },
             { label: 'Phone Pay', value: phonePay, setter: setPhonePay },
             { label: 'Credit Card', value: creditCard, setter: setCreditCard },
-            { label: 'Short Collections', value: shortCollections, readOnly: true },
             { label: 'Total Collection', value: totalCollection.toFixed(2), readOnly: true },
+            { label: 'Short Collections', value: shortCollections, readOnly: true }
           ].map(({ label, value, setter, readOnly }, i) => (
-            <div key={i} className="col-md-3">
-              <label className="form-label">{label}</label>
+            <div className="form-group" key={i}>
+              <label>{label}</label>
               <input
                 type="number"
-                className="form-control"
                 value={value}
-                onChange={e => setter?.(e.target.value)}
                 readOnly={readOnly}
+                onChange={e => setter?.(e.target.value)}
+                className={label === 'Short Collections' && parseFloat(shortCollections) < -10 ? 'short-collection-error' : ''}
               />
+              {label === 'Short Collections' && parseFloat(shortCollections) < -10 && (
+                <small>Short collections cannot be less than -10</small>
+              )}
             </div>
           ))}
         </div>
 
-        <h4 className="mt-4">Borrowers</h4>
-        {borrowers.map((b, i) => (
-          <div key={i} className="row g-3 border p-3 mb-2">
-            <div className="col-md-6">
-              <label className="form-label">Borrower Name</label>
-              <input type="text" className="form-control" value={b.name} onChange={e => handleBorrowerChange(i, 'name', e.target.value)} />
-            </div>
-            <div className="col-md-4">
-              <label className="form-label">Amount</label>
-              <input type="number" className="form-control" value={b.amount} onChange={e => handleBorrowerChange(i, 'amount', +e.target.value)} />
-            </div>
-            <div className="col-md-2 d-flex align-items-end">
-              <button type="button" className="btn btn-outline-danger w-100" onClick={() => handleRemoveBorrower(i)}>Remove</button>
-            </div>
-          </div>
-        ))}
-        <button type="button" className="btn btn-secondary mb-4" onClick={handleAddBorrower}>Add Borrower</button>
+        {/* Borrowers section REMOVED */}
 
-        <button type="submit" className="btn btn-success w-100">Submit All</button>
+        <div className="sales-actions">
+          <button type="submit" className="submit-btn">Submit All</button>
+        </div>
       </form>
     </div>
   );

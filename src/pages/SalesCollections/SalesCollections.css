@@ -1,0 +1,140 @@
+.sales-collections-container {
+  padding: 24px;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  max-width: 960px;
+  margin: 32px auto;
+}
+
+.section-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-top: 30px;
+  margin-bottom: 15px;
+  color: #222;
+  letter-spacing: 0.2px;
+}
+
+.sales-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-weight: 500;
+  margin-bottom: 6px;
+  color: #333;
+}
+
+.form-group input,
+.form-group select,
+.datetime-input {
+  padding: 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 14px;
+  background: #f8fafc;
+  transition: border 0.18s, box-shadow 0.14s;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.datetime-input:focus {
+  border-color: #10b981;
+  outline: none;
+  background: #fff;
+}
+
+.datetime-input {
+  width: 100%;
+  cursor: pointer;
+}
+
+input[readonly] {
+  background-color: #f3f4f6;
+  cursor: not-allowed;
+  color: #6b7280;
+}
+
+.input-error,
+.short-collection-error {
+  border-color: #ef4444 !important;
+  background-color: #fff5f5;
+  color: #b91c1c;
+  font-weight: bold;
+}
+
+.sales-actions {
+  margin-top: 30px;
+  text-align: center;
+}
+
+.submit-btn,
+.clear-btn {
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: none;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.17s, color 0.14s, box-shadow 0.12s;
+}
+
+.submit-btn {
+  background-color: #10b981;
+  color: #fff;
+  margin-right: 10px;
+  box-shadow: 0 1px 4px rgba(16, 185, 129, 0.09);
+}
+
+.submit-btn:hover:not(:disabled) {
+  background-color: #059669;
+}
+
+.clear-btn {
+  background-color: #ef4444;
+  color: #fff;
+  margin-top: auto;
+  align-self: flex-end;
+  height: fit-content;
+  box-shadow: 0 1px 4px rgba(239, 68, 68, 0.10);
+}
+
+.clear-btn:hover:not(:disabled) {
+  background-color: #b91c1c;
+}
+
+small {
+  color: #b91c1c;
+  margin-top: 4px;
+  font-size: 12px;
+}
+
+@media (max-width: 600px) {
+  .sales-collections-container {
+    padding: 12px 4vw;
+  }
+  .sales-form {
+    grid-template-columns: 1fr;
+  }
+  .section-title {
+    font-size: 18px;
+    margin-top: 22px;
+    margin-bottom: 11px;
+  }
+  .submit-btn,
+  .clear-btn {
+    width: 100%;
+    margin-right: 0;
+    margin-left: 0;
+    margin-bottom: 12px;
+  }
+}

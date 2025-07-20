@@ -1,0 +1,176 @@
+.add-new-customer-container {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.0625);
+  margin: 40px auto 80px;
+  max-width: calc(min(1200px, 98vw)); /* Match dashboard width */
+  width: 100%;
+  padding: 32px 24px;
+}
+
+.add-new-customer-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.add-new-customer-form h2 {
+  text-align: center;
+  margin-bottom: 8px;
+  color: #333;
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.add-new-customer-form .subtext {
+  text-align: center;
+  color: #555;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  font-weight: 500;
+  color: #444;
+  font-size: 14px;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 12px 14px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
+  outline: none;
+}
+
+/* === BUTTONS (now match your add-product CSS) === */
+.form-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.form-actions::-webkit-scrollbar {
+  display: none;
+}
+
+.cancel-btn,
+.save-btn {
+  flex: 1; /* Buttons share remaining space equally */
+    min-width: min-content; /* Let them shrink, but not break layout */
+    padding: 11px 0;
+    font-weight: 600;
+    border: none;
+    border-radius: 7px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background 0.17s, box-shadow 0.13s, color 0.17s;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
+}
+.save-btn {
+  background: #007bff;
+  color: #fff;
+}
+.save-btn:hover:not(:disabled),
+.save-btn:focus {
+  background: #0056b3;
+  box-shadow: 0 2px 8px rgba(0, 123, 255, 0.16);
+}
+.save-btn:disabled,
+.cancel-btn:disabled {
+  background: #bbd0ee;
+  color: #eaeaea;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+.cancel-btn {
+  background: #6c757d;
+  color: #fff;
+}
+.cancel-btn:hover:not(:disabled),
+.cancel-btn:focus {
+  background: #50555b;
+}
+.cancel-btn:disabled {
+  background: #e2e2e2;
+  color: #aaaaaa;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.form-error {
+  color: #b30000;
+  font-size: 14px;
+  margin-top: 2px;
+  margin-bottom: 9px;
+  text-align: center;
+}
+
+/* Responsive: stack on small screens */
+@media (max-width: 600px) {
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+}
+
+/* Prevent buttons from stacking/wrapping on mobile */
+@media (max-width: 600px) {
+  .form-actions {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+  }
+  .cancel-btn,
+  .save-btn {
+    flex: 1;
+    width: auto;
+  }
+}
+
+/* Responsive container padding */
+@media (max-width: 1260px) {
+  .add-new-customer-container {
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+}
+@media (max-width: 900px) {
+  .add-new-customer-container {
+    padding: 28px 20px;
+  }
+}
+@media (max-width: 600px) {
+  .add-new-customer-container {
+    padding: 24px 16px;
+  }
+}

@@ -1,82 +1,110 @@
-/* Sidebar base layout */
+/* Sidebar Container */
 .sidebar {
-  width: 220px;
-  height: 100vh;
-  position: fixed;
-  top: 0;
-  left: 0;
-  background-color: #ffffff;
-  border-right: 1px solid #ddd;
-  padding: 20px 0;
-  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.04);
+  width: 250px;
+  background-color: #1f2d3d;
+  color: white;
+  min-height: 100vh;
+  padding-top: 20px;
   display: flex;
   flex-direction: column;
-  z-index: 1000;
+  position: sticky;
+  top: 0;
 }
 
-/* Navigation links */
-.nav-links {
+/* Nav links container */
+.sidebar-nav-links {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 0 15px;
+}
+
+/* Main NavLink styling */
+.sidebar-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 15px;
+  border-radius: 8px;
+  color: white;
+  text-decoration: none;
+  font-size: 15px;
+  transition: background-color 0.3s ease;
+}
+
+.sidebar-nav-link:hover,
+.sidebar-nav-link.active {
+  background-color: #3b82f6;
+  color: white;
+}
+
+/* Sub Navigation */
+.sidebar-sub-nav {
+  margin-left: 25px;
   display: flex;
   flex-direction: column;
   gap: 6px;
-  padding: 0 16px;
+  margin-top: 5px;
 }
 
-.nav-link {
-  padding: 12px 16px;
+/* Sub-links */
+.sidebar-sub-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #cbd5e1;
   text-decoration: none;
-  color: #333;
-  border-radius: 4px;
-  font-size: 15px;
-  transition: background-color 0.2s;
+  font-size: 14px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  transition: background-color 0.3s ease;
 }
 
-.nav-link:hover {
-  background-color: #f2f2f2;
-}
-
-.nav-link.active {
-  background-color: #e0f0ff;
-  font-weight: bold;
-  color: #007bff;
-}
-
-/* Logout button */
-.logout-btn {
-  margin-top: auto;
-  margin-inline: 16px;
-  padding: 12px;
-  border: none;
-  background-color: #f44336;
+.sidebar-sub-link:hover,
+.sidebar-sub-link.active {
+  background-color: #334155;
   color: white;
-  border-radius: 4px;
-  font-weight: bold;
+}
+
+/* Product Toggle */
+.sidebar-inventory-toggle {
   cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 15px;
+  border-radius: 8px;
+  background-color: transparent;
+  color: white;
   transition: background-color 0.3s;
 }
 
-.logout-btn:hover {
-  background-color: #d32f2f;
+.sidebar-inventory-toggle:hover {
+  background-color: #334155;
 }
 
-/* Responsive: stack sidebar */
-@media (max-width: 768px) {
-  .sidebar {
-    width: 100%;
-    height: auto;
-    position: relative;
-    border-right: none;
-    border-bottom: 1px solid #ddd;
-  }
+/* Logout Button */
+.sidebar-logout-btn {
+  margin-top: auto;
+  margin: 20px 15px;
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  background-color: #ef4444;
+  color: white;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
 
-  .nav-links {
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: space-around;
-  }
+.sidebar-logout-btn:hover {
+  background-color: #dc2626;
+}
 
-  .logout-btn {
-    width: 100%;
-    margin: 10px 0;
-  }
+/* Icon */
+.icon {
+  font-size: 16px;
 }

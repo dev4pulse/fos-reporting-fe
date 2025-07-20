@@ -1,21 +1,15 @@
-.dashboard-container {
+/* Full height layout */
+.dashboard-layout {
   display: flex;
+  min-height: 100vh;
+  background-color: #f4f6f8;
 }
 
-/* Leave space for fixed sidebar */
-.dashboard-main {
+/* Main content area */
+.dashboard-content {
   flex: 1;
   padding: 20px;
-  margin-left: 220px; /* equal to sidebar width */
-  min-height: 100vh;
+  overflow-y: auto;
   background-color: #f9f9f9;
-  box-sizing: border-box;
-}
-
-/* Responsive: collapse sidebar */
-@media (max-width: 768px) {
-  .dashboard-main {
-    margin-left: 0;
-    margin-top: 220px; /* if sidebar becomes top bar on small screen */
-  }
+  min-height: 100vh;
 }

@@ -1,0 +1,147 @@
+.add-product-container {
+  background-color: #fff;
+  padding: 32px 24px;
+  border-radius: 14px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+  margin: 30px auto;
+  transition: box-shadow 0.2s;
+  max-width: calc(min(1200px, 98vw));
+  width: 100%;
+}
+
+.add-product-container:hover {
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+}
+
+.add-product-heading {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 28px;
+  color: #23272c;
+  text-align: center;
+  letter-spacing: 0.3px;
+}
+
+.add-product-form label {
+  display: block;
+  margin-bottom: 7px;
+  font-weight: 600;
+  color: #212121;
+  font-size: 1rem;
+  letter-spacing: 0.02em;
+}
+
+.add-product-form input {
+  display: block;
+  width: 100%;
+  padding: 11px 14px;
+  margin-bottom: 20px;
+  border: 1.4px solid #cccccc;
+  border-radius: 8px;
+  background-color: #f9fafd;
+  font-size: 1rem;
+  transition: border-color 0.2s, background-color 0.2s, box-shadow 0.15s;
+}
+
+.add-product-form input:focus {
+  border-color: #007bff;
+  outline: none;
+  background-color: #fff;
+  box-shadow: 0 0 4px 0 #d1e7fd;
+}
+
+.add-product-form input:disabled {
+  background-color: #f3f3f3;
+  border-color: #e0e0e0;
+  color: #aaa;
+  cursor: not-allowed;
+}
+
+.add-product-buttons {
+  display: flex;
+  gap: 14px;
+  margin-top: 15px;
+  flex-wrap: nowrap; /* Buttons always in one row, never wrap */
+  overflow-x: auto; /* For very narrow screens, allow sideways scroll */
+  scrollbar-width: none; /* Hide scrollbar in Firefox */
+  -ms-overflow-style: none; /* Hide scrollbar in IE/Edge */
+}
+.add-product-buttons::-webkit-scrollbar {
+  display: none; /* Hide scrollbar in Chrome, Safari, Opera */
+}
+
+.add-product-buttons .btn {
+  flex: 1; /* Buttons share remaining space equally */
+  min-width: min-content; /* Let them shrink, but not break layout */
+  padding: 11px 0;
+  font-weight: 600;
+  border: none;
+  border-radius: 7px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.17s, box-shadow 0.13s, color 0.17s;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
+}
+
+.add-product-buttons .btn-blue {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.add-product-buttons .btn-blue:hover,
+.add-product-buttons .btn-blue:focus {
+  background-color: #0056b3;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(0, 123, 255, 0.16);
+}
+
+.add-product-buttons .btn-blue:disabled,
+.add-product-buttons .btn-blue[disabled] {
+  background-color: #bbd0ee;
+  color: #eaeaea;
+  cursor: not-allowed;
+}
+
+.add-product-buttons .btn-gray {
+  background-color: #868e96;
+  color: #fff;
+}
+
+.add-product-buttons .btn-gray:hover,
+.add-product-buttons .btn-gray:focus {
+  background-color: #50555b;
+  color: #fff;
+}
+
+.add-product-buttons .btn-gray:disabled,
+.add-product-buttons .btn-gray[disabled] {
+  background-color: #e2e2e2;
+  color: #aaaaaa;
+  cursor: not-allowed;
+}
+
+/* Responsive */
+@media (max-width: 1260px) {
+  .add-product-container {
+    margin-left: 24px;
+    margin-right: 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  .add-product-container {
+    padding: 24px 20px;
+  }
+}
+
+@media (max-width: 600px) {
+  .add-product-container {
+    padding: 18px 16px;
+  }
+}
+
+@media (max-width: 400px) {
+  .add-product-heading {
+    font-size: 1.4rem;
+  }
+}
