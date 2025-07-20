@@ -1,0 +1,215 @@
+/* Full-page container */
+.registration-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f1f5f9;
+  padding: 20px;
+  box-sizing: border-box;
+  width: 100vw;
+  overflow-x: hidden;
+}
+
+/* Registration box */
+.registration-box {
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+/* Heading */
+.registration-box h2 {
+  text-align: center;
+  font-size: 24px;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0 0 12px 0;
+  line-height: 1.2;
+}
+
+/* Form row for 2 fields */
+.registration-row {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+  align-items: flex-start;
+}
+
+.registration-row .registration-input {
+  flex: 1;
+}
+
+/* Default input styles */
+.registration-input {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25em;
+}
+
+.registration-input label {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 6px;
+  color: #334155;
+}
+
+.registration-input input {
+  width: 100%;
+  padding: 12px;
+  font-size: 15px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.3s;
+  background: #f8fafc;
+  box-sizing: border-box;
+}
+
+.registration-input input:focus {
+  border-color: #3b82f6;
+  background: #fff;
+}
+
+/* Password field with eye button */
+.password-wrapper {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.password-wrapper input {
+  flex: 1;
+  padding-right: 40px;
+}
+
+.eye-btn {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  color: #64748b;
+}
+
+.eye-btn svg {
+  pointer-events: none;
+}
+
+/* Registration button */
+.registration-button {
+  width: 100%;
+  padding: 12px;
+  background-color: #3b82f6;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-top: 8px;
+}
+
+.registration-button:hover:not(:disabled) {
+  background-color: #2563eb;
+}
+
+.registration-button:disabled {
+  background-color: #93c5fd;
+  cursor: not-allowed;
+}
+
+/* Auth error/success */
+.auth-error {
+  background: #fee2e2;
+  color: #b91c1c;
+  padding: 10px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  text-align: center;
+  margin: 0 0 12px 0;
+}
+
+.auth-success {
+  background: #dcfce7;
+  color: #15803d;
+  padding: 10px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  text-align: center;
+  margin: 0 0 12px 0;
+}
+
+/* Auth links container */
+.auth-links {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 14px;
+  margin-top: 8px;
+  width: 100%;
+  text-align: center;
+}
+
+.login-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  flex-wrap: wrap;
+}
+
+.login-row span {
+  color: #64748b;
+}
+
+.login-row a {
+  color: #3b82f6;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.login-row a:hover {
+  color: #1d4ed8;
+}
+
+/* Responsive: stack on mobile */
+@media (max-width: 640px) {
+  .registration-row {
+    flex-direction: column;
+    gap: 16px;
+  }
+  .registration-container {
+    padding: 14px;
+  }
+  .registration-box {
+    padding: 16px;
+    max-width: 100vw;
+  }
+  .registration-box h2 {
+    font-size: 18px;
+  }
+  .registration-input input {
+    padding: 10px 12px;
+  }
+  .registration-button {
+    padding: 10px;
+  }
+}

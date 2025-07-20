@@ -1,0 +1,146 @@
+.dashboard-container {
+  padding: 36px 18px 30px 18px;
+  max-width: 1250px;
+  margin: 0 auto;
+  text-align: center;
+  background: #f9fafc;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+.dashboard-container h1 {
+  font-size: 2.1rem;
+  margin-bottom: 11px;
+  color: #21272b;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.subtitle {
+  margin-bottom: 30px;
+  color: #687587;
+  font-size: 1.13rem;
+  font-weight: 500;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 26px;
+  margin-bottom: 48px;
+}
+
+.card {
+  padding: 24px 18px;
+  border-radius: 14px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.09);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 230px;
+  background: #fff;
+  transition: box-shadow 0.18s, transform 0.16s;
+}
+.card:hover, .card:focus-within {
+  box-shadow: 0 8px 24px rgba(27, 65, 115, 0.14);
+  transform: translateY(-2px) scale(1.03);
+}
+
+.card h3 {
+  font-size: 1.18rem;
+  margin-bottom: 13px;
+  color: #1d2435;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+.card p {
+  font-size: 1rem;
+  flex-grow: 1;
+  color: #3d4857;
+  line-height: 1.45;
+  margin-bottom: 15px;
+}
+
+.card button {
+  padding: 9px 18px;
+  color: #fff;
+  background: #007bff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: background 0.18s, color 0.13s;
+  margin-top: auto;
+}
+.card button:hover,
+.card button:focus {
+  background: #0056b3;
+}
+
+.logout-btn {
+  padding: 12px 28px;
+  background-color: #444;
+  color: white;
+  border: none;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-size: 1rem;
+  font-weight: 600;
+}
+.logout-btn:hover,
+.logout-btn:focus {
+  background-color: #222;
+}
+
+@media (max-width: 1024px) {
+  .card-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 22px;
+  }
+}
+
+@media (max-width: 700px) {
+  .dashboard-container {
+    padding: 10px 4vw 20px 4vw;
+    border-radius: 9px;
+  }
+  .card-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  .card {
+    height: auto;
+    min-height: 180px;
+    padding: 17px 10px;
+  }
+  .dashboard-container h1 {
+    font-size: 1.46rem;
+  }
+}
+.dashboard-card-link {
+  display: inline-block;
+  padding: 10px 20px;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 10px;
+  transition: background-color 0.2s;
+}
+
+.dashboard-card-link:hover {
+  opacity: 0.9;
+}
+
+
+/* Optional: button full-width on very narrow screens */
+@media (max-width: 400px) {
+  .card button, .logout-btn {
+    width: 100%;
+    font-size: 0.98rem;
+  }
+}

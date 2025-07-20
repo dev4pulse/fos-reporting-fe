@@ -1,0 +1,191 @@
+/* Full-page container */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f1f5f9;
+  padding: 20px;
+  box-sizing: border-box;  /* Ensure padding is included in width */
+  width: 100vw;            /* Prevent overflow on mobile */
+  overflow-x: hidden;
+}
+
+/* Login box */
+.login-box {
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;           /* Prevent flex overflow */
+  box-sizing: border-box;
+}
+
+/* Heading */
+.login-box h2 {
+  text-align: center;
+  font-size: 24px;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0 0 10px 0;
+  line-height: 1.2;
+}
+
+/* Input fields */
+.login-input {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25em;
+}
+
+.login-input label {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 6px;
+  color: #334155;
+}
+
+.login-input input {
+  padding: 12px;
+  font-size: 15px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.3s;
+  background: #f8fafc;
+}
+
+.login-input input:focus {
+  border-color: #3b82f6;
+  background: #fff;
+}
+
+/* Login button */
+.login-button {
+  width: 100%;
+  padding: 12px;
+  background-color: #3b82f6;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.login-button:hover {
+  background-color: #2563eb;
+}
+
+/* Auth links container */
+.auth-links {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 14px;
+  margin-top: 8px;
+  width: 100%;
+}
+
+/* Forgot links on same line */
+.forgot-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+}
+
+.forgot-row a {
+  color: #3b82f6;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.forgot-row a:hover {
+  color: #1d4ed8;
+}
+
+/* Register link with label */
+.register-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  flex-wrap: wrap; /* Helps avoid overflow */
+}
+
+.register-row span {
+  color: #64748b;
+}
+
+.register-row a {
+  color: #3b82f6;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.register-row a:hover {
+  color: #1d4ed8;
+}
+
+/* Responsive tweaks */
+@media (max-width: 480px) {
+  .login-container {
+    padding: 10px;
+  }
+  .login-box {
+    padding: 16px;
+    max-width: 100vw;
+  }
+  .login-box h2 {
+    font-size: 18px;
+  }
+  .forgot-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+  }
+  .register-row {
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+}
+/* For password field with eye button */
+.password-wrapper {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.password-wrapper input {
+  flex: 1 1 0%;
+  padding-right: 40px; /* space for eye button */
+}
+
+.eye-btn {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  color: #64748b;
+}
+
+.eye-btn svg {
+  pointer-events: none;
+}

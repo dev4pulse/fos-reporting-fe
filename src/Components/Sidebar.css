@@ -1,0 +1,110 @@
+/* Sidebar Container */
+.sidebar {
+  width: 250px;
+  background-color: #1f2d3d;
+  color: white;
+  min-height: 100vh;
+  padding-top: 20px;
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+}
+
+/* Nav links container */
+.sidebar-nav-links {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 0 15px;
+}
+
+/* Main NavLink styling */
+.sidebar-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 15px;
+  border-radius: 8px;
+  color: white;
+  text-decoration: none;
+  font-size: 15px;
+  transition: background-color 0.3s ease;
+}
+
+.sidebar-nav-link:hover,
+.sidebar-nav-link.active {
+  background-color: #3b82f6;
+  color: white;
+}
+
+/* Sub Navigation */
+.sidebar-sub-nav {
+  margin-left: 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 5px;
+}
+
+/* Sub-links */
+.sidebar-sub-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #cbd5e1;
+  text-decoration: none;
+  font-size: 14px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  transition: background-color 0.3s ease;
+}
+
+.sidebar-sub-link:hover,
+.sidebar-sub-link.active {
+  background-color: #334155;
+  color: white;
+}
+
+/* Product Toggle */
+.sidebar-inventory-toggle {
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 15px;
+  border-radius: 8px;
+  background-color: transparent;
+  color: white;
+  transition: background-color 0.3s;
+}
+
+.sidebar-inventory-toggle:hover {
+  background-color: #334155;
+}
+
+/* Logout Button */
+.sidebar-logout-btn {
+  margin-top: auto;
+  margin: 20px 15px;
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  background-color: #ef4444;
+  color: white;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sidebar-logout-btn:hover {
+  background-color: #dc2626;
+}
+
+/* Icon */
+.icon {
+  font-size: 16px;
+}
