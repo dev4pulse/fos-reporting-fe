@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import './ViewCustomers.css'
 import {
   Box,
   TextField,
@@ -20,19 +19,18 @@ const ViewCustomers = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Fetch all customers on component mount
+  // Fetch customers
   useEffect(() => {
     const fetchCustomers = async () => {
       try {
         setLoading(true);
         setError(null);
-        // Adjust API endpoint as per your backend
-        const response = await fetch('https://your-api.com/api/customers', {
+        const response = await fetch('http://localhost:8080/api/borrowers', {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`,
           },
         });
-        if (!response.ok) throw new Error('Failed to load customers');
+        if (!response.ok) throw new Error('Failed to load customer records');
         const data = await response.json();
         setCustomers(data);
       } catch (err) {
@@ -44,22 +42,24 @@ const ViewCustomers = () => {
     fetchCustomers();
   }, []);
 
-  // Filter customers by customer_id or phone_number
+  // Filter customers by ID, name, phone, or email
   const filteredCustomers = customers.filter((customer) => {
     const search = searchTerm.toLowerCase();
     return (
       String(customer.customer_id).toLowerCase().includes(search) ||
-      String(customer.phone_number).toLowerCase().includes(search)
+      customer.name.toLowerCase().includes(search) ||
+      customer.phone.toLowerCase().includes(search) ||
+      (customer.email && customer.email.toLowerCase().includes(search))
     );
   });
 
   return (
     <Box sx={{ p: 3 }}>
       <Typography variant="h4" gutterBottom>
-        Customers
+        Customers Records
       </Typography>
       <TextField
-        label="Search by ID or Phone"
+        label="Search by ID, Name, Phone, or Email"
         variant="outlined"
         fullWidth
         margin="normal"
@@ -73,28 +73,34 @@ const ViewCustomers = () => {
       ) : error ? (
         <Typography color="error">{error}</Typography>
       ) : customers.length === 0 ? (
-        <Typography>No customers found</Typography>
+        <Typography>No customer records found</Typography>
       ) : (
         <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650 }}>
+          <Table sx={{ minWidth: 650 }} aria-label="customers">
             <TableHead>
               <TableRow>
+                <TableCell>#</TableCell>
                 <TableCell>Customer ID</TableCell>
                 <TableCell>Name</TableCell>
+                <TableCell>Address</TableCell>
                 <TableCell>Phone</TableCell>
                 <TableCell>Email</TableCell>
                 <TableCell>Date Joined</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {filteredCustomers.map((customer) => (
+              {filteredCustomers.map((customer, index) => (
                 <TableRow key={customer.customer_id}>
+                  <TableCell>{index + 1}</TableCell>
                   <TableCell>{customer.customer_id}</TableCell>
                   <TableCell>{customer.name}</TableCell>
-                  <TableCell>{customer.phone_number}</TableCell>
-                  <TableCell>{customer.email || '-'}</TableCell>
+                  <TableCell>{customer.address}</TableCell>
+                  <TableCell>{customer.phone}</TableCell>
+                  <TableCell>{customer.email || '—'}</TableCell>
                   <TableCell>
-                    {new Date(customer.created_at).toLocaleDateString()}
+                    {customer.date_joined
+                      ? new Date(customer.date_joined).toLocaleDateString()
+                      : '—'}
                   </TableCell>
                 </TableRow>
               ))}

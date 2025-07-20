@@ -9,7 +9,6 @@ const SalesCollections = () => {
   const [employees, setEmployees] = useState([]);
   const [employeeFetchError, setEmployeeFetchError] = useState('');
   const [products, setProducts] = useState([]);
-  const [borrowers, setBorrowers] = useState([]);
   const [cashReceived, setCashReceived] = useState('');
   const [phonePay, setPhonePay] = useState('');
   const [creditCard, setCreditCard] = useState('');
@@ -83,20 +82,6 @@ const SalesCollections = () => {
     }
   };
 
-  const handleAddBorrower = () => {
-    setBorrowers(prev => [...prev, { name: '', amount: '' }]);
-  };
-
-  const handleRemoveBorrower = index => {
-    setBorrowers(prev => prev.filter((_, i) => i !== index));
-  };
-
-  const handleBorrowerChange = (index, field, value) => {
-    const updated = [...borrowers];
-    updated[index][field] = value;
-    setBorrowers(updated);
-  };
-
   const totalSales = products.reduce((sum, p) => sum + (parseFloat(p.salesRupees) || 0), 0);
   const totalCollection = (parseFloat(cashReceived) || 0) + (parseFloat(phonePay) || 0) + (parseFloat(creditCard) || 0);
   const shortCollections = (totalCollection - totalSales).toFixed(2);
@@ -143,11 +128,8 @@ const SalesCollections = () => {
       cashReceived: parseFloat(cashReceived) || 0,
       phonePay: parseFloat(phonePay) || 0,
       creditCard: parseFloat(creditCard) || 0,
-      shortCollections: parseFloat(shortCollections),
-      borrowers: borrowers.map(b => ({
-        ...b,
-        amount: parseFloat(b.amount) || 0,
-      }))
+      shortCollections: parseFloat(shortCollections)
+      // borrowers removed
     };
 
     try {
@@ -267,21 +249,7 @@ const SalesCollections = () => {
           ))}
         </div>
 
-        <h4 className="section-title">Borrowers</h4>
-        {borrowers.map((b, i) => (
-          <div className="sales-form" key={i}>
-            <div className="form-group">
-              <label>Name</label>
-              <input type="text" value={b.name} onChange={e => handleBorrowerChange(i, 'name', e.target.value)} />
-            </div>
-            <div className="form-group">
-              <label>Amount</label>
-              <input type="number" value={b.amount} onChange={e => handleBorrowerChange(i, 'amount', e.target.value)} />
-            </div>
-            <button type="button" className="clear-btn" onClick={() => handleRemoveBorrower(i)}>Remove</button>
-          </div>
-        ))}
-        <button type="button" className="submit-btn" onClick={handleAddBorrower}>Add Borrower</button>
+        {/* Borrowers section REMOVED */}
 
         <div className="sales-actions">
           <button type="submit" className="submit-btn">Submit All</button>

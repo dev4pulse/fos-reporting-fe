@@ -100,7 +100,7 @@ const Login = () => {
           </div>
           <div className="register-row">
             <span>Don't have an account?</span>
-            <a href="#">Register</a>
+            <a href="/signup">Register</a>
           </div>
         </div>
       </form>
