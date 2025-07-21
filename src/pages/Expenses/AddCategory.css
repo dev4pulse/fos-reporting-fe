@@ -88,3 +88,6 @@ h3 {
   font-style: italic;
   margin-top: 10px;
 }
+.success-message{
+  color: #07840b;
+}

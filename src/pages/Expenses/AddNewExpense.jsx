@@ -3,12 +3,7 @@ import axios from 'axios';
 import './AddNewExpense.css';
 
 const AddNewExpense = () => {
-  const [categories, setCategories] = useState([
-    'Food',
-    'Travel',
-    'Power Bill',
-    'Salaries'
-  ]);
+  const [categories, setCategories] = useState([]);
   const [employeeIds, setEmployeeIds] = useState([]);
   const [form, setForm] = useState({
     category: '',
@@ -22,9 +17,20 @@ const AddNewExpense = () => {
   const [error, setError] = useState('');
 
   useEffect(() => {
+    fetchCategories();
     fetchEmployeeIds();
-    // To fetch categories dynamically, add another fetch call here.
   }, []);
+
+  const fetchCategories = async () => {
+    try {
+      const res = await axios.get('http://localhost:8080/categoryList');
+      // Adjust according to API response shape
+      setCategories(res.data || []);
+    } catch (err) {
+      console.error('Failed to fetch categories:', err);
+      setError('Failed to fetch categories.');
+    }
+  };
 
   const fetchEmployeeIds = async () => {
     try {
@@ -32,7 +38,8 @@ const AddNewExpense = () => {
         'https://pulse-293050141084.asia-south1.run.app/active'
       );
       setEmployeeIds(res.data);
-    } catch {
+    } catch (err) {
+      console.error('Failed to fetch employee list:', err);
       setError('Failed to fetch employee list.');
     }
   };
@@ -52,7 +59,7 @@ const AddNewExpense = () => {
         amount: parseFloat(form.amount),
         category: form.category,
         expenseDate: form.expenseDate,
-        employeeId: form.employeeId // always a string (ids from dropdown)
+        employeeId: form.employeeId
       };
       await axios.post('http://localhost:8080/expensesPost', payload);
       setMessage('Expense added successfully.');
@@ -63,7 +70,8 @@ const AddNewExpense = () => {
         description: '',
         amount: ''
       });
-    } catch {
+    } catch (err) {
+      console.error('Failed to add expense:', err);
       setError('Failed to add expense. Please try again.');
     } finally {
       setLoading(false);
@@ -84,9 +92,9 @@ const AddNewExpense = () => {
             required
           >
             <option value="">Select</option>
-            {categories.map(cat => (
-              <option value={cat} key={cat}>
-                {cat}
+            {categories.map((cat, idx) => (
+              <option value={cat.name || cat} key={idx}>
+                {cat.name || cat}
               </option>
             ))}
           </select>
@@ -101,9 +109,9 @@ const AddNewExpense = () => {
             required
           >
             <option value="">Select</option>
-            {employeeIds.map(emp => {
+            {employeeIds.map((emp) => {
               let id = emp.id || emp.employeeId || emp._id || emp;
-              let name = emp.name || emp.employeeName || "";
+              let name = emp.name || emp.employeeName || '';
               let label = name ? `${name} (${id})` : id;
               return (
                 <option value={id} key={id}>
