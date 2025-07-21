@@ -1,0 +1,90 @@
+/* AddCategory.css */
+.add-category-container, .view-expenses-container {
+  background-color: #fff;
+  padding: 34px 24px;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.09);
+  margin: 24px auto;
+  transition: box-shadow 0.2s;
+  max-width: calc(min(1200px, 98vw));
+  width: 100%;
+}
+
+.add-category-container h2 {
+  display: flex;
+  align-items: center;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+form {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  margin-bottom: 30px;
+}
+
+form input {
+  width: 300px;
+  padding: 8px 14px;
+  margin-right: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+form button {
+  padding: 8px 18px;
+  background: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+h3 {
+  margin: 25px 0 10px;
+  font-size: 18px;
+  color: #444;
+}
+
+.category-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  overflow: hidden;
+}
+
+.category-list li {
+  padding: 12px 20px;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.category-list li:last-child {
+  border-bottom: none;
+}
+
+.delete-icon {
+  color: #dc3545;
+  cursor: pointer;
+  font-size: 18px;
+  transition: color 0.2s;
+}
+
+.delete-icon:hover {
+  color: #c82333;
+}
+
+.loading, .error {
+  color: #666;
+  font-style: italic;
+  margin-top: 10px;
+}

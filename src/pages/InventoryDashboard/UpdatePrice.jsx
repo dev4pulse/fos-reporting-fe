@@ -7,130 +7,175 @@ const UpdatePrice = () => {
   const [formData, setFormData] = useState({
     productName: '',
     currentPrice: '',
-    newPrice: ''
+    newPrice: '',
   });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
-  // Fetch product list
+  // Fetch all products for the dropdown
   useEffect(() => {
     axios.get('https://pulse-293050141084.asia-south1.run.app/inventory/latest')
       .then(res => {
         setProducts(res.data);
       })
       .catch(err => {
-        console.error('Error fetching products:', err);
+        setError('Failed to load products. See console for details.');
+        console.error('Failed to fetch products:', err);
       });
   }, []);
 
-  // On selecting product, update currentPrice
+  // Update current price when product is selected
   const handleProductSelect = (e) => {
-    const selectedName = e.target.value;
-    const selectedProduct = products.find(p => p.productName === selectedName);
-
-    setFormData(prev => ({
-      ...prev,
-      productName: selectedName,
-      currentPrice: selectedProduct?.price ?? '',
-      newPrice: ''
-    }));
+    const productName = e.target.value;
+    const selectedProduct = products.find(p => p.productName === productName);
+    setFormData({
+      productName,
+      currentPrice: selectedProduct?.price || '',
+      newPrice: '',
+    });
+    setError('');
+    setSuccess('');
   };
 
-  // Handle field change
+  // Handle field changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
+    setError('');
   };
 
-  // Clear form
+  // Clear the form
   const handleClear = () => {
     setFormData({
       productName: '',
       currentPrice: '',
-      newPrice: ''
+      newPrice: '',
     });
+    setError('');
+    setSuccess('');
   };
 
-  // Submit updated price
-  const handleSubmit = (e) => {
+  // Submit new price to backend
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setError('');
+    setSuccess('');
 
     const { productName, newPrice } = formData;
 
-    // Validate inputs
-    if (!productName || !newPrice) {
-      alert('Please select a product and enter a new price.');
+    // Validation
+    if (!productName) {
+      setError('Please select a product.');
+      setLoading(false);
+      return;
+    }
+    if (!newPrice) {
+      setError('Please enter a new price.');
+      setLoading(false);
+      return;
+    }
+    const price = parseFloat(newPrice);
+    if (isNaN(price) || price <= 0) {
+      setError('Please enter a valid positive price.');
+      setLoading(false);
       return;
     }
 
-    const priceValue = parseFloat(newPrice);
-    if (isNaN(priceValue) || priceValue <= 0) {
-      alert('Please enter a valid new price.');
-      return;
-    }
-
-    const payload = {
-      productName,
-      newPrice: priceValue,
-      lastPriceUpdated: new Date().toISOString()
-    };
-
-    axios.post(
+    try {
+      const response = await axios.put(
         'https://pulse-293050141084.asia-south1.run.app/inventory/update-price',
-        payload
-      )
-      .then(() => {
-        alert('Price updated successfully!');
+        { productName, newPrice: price }
+      );
+      if (response.status === 200) {
+        setSuccess('Price updated successfully!'); // <-- Green success message
         handleClear();
-      })
-      .catch(err => {
-        console.error('Error updating price:', err);
-        alert('Failed to update price');
-      });
+      } else {
+        setError(response.data || 'Update failed.');
+      }
+    } catch (err) {
+      console.error('Error updating price:', err);
+      setError(err.response?.data || 'Failed to update price. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="update-price-container">
       <h2 className="update-price-heading">Update Product Price</h2>
+      {success && (
+        <div className="update-success-message">
+          {success}
+        </div>
+      )}
+      {error && (
+        <div className="update-error-message">
+          {error}
+        </div>
+      )}
       <form className="update-price-form" onSubmit={handleSubmit}>
-
-        <label>Select Product</label>
+        <label htmlFor="productName">Select Product</label>
         <select
+          id="productName"
           name="productName"
           value={formData.productName}
           onChange={handleProductSelect}
           required
+          disabled={loading}
         >
           <option value="">-- Select Product --</option>
-          {products.map((prod, idx) => (
-            <option key={idx} value={prod.productName}>{prod.productName}</option>
+          {products.map((p) => (
+            <option key={p.productID} value={p.productName}>
+              {p.productName}
+            </option>
           ))}
         </select>
 
-        <label>Current Price (₹)</label>
+        <label htmlFor="currentPrice">Current Price (₹)</label>
         <input
+          id="currentPrice"
           type="text"
           name="currentPrice"
           value={formData.currentPrice}
           readOnly
+          disabled={loading}
         />
 
-        <label>New Price (₹)</label>
+        <label htmlFor="newPrice">New Price (₹)</label>
         <input
+          id="newPrice"
           type="number"
           name="newPrice"
           value={formData.newPrice}
           onChange={handleChange}
-          required
           min="0"
           step="0.01"
           placeholder="Enter new price"
+          required
+          disabled={loading}
         />
 
         <div className="update-price-buttons">
-          <button type="submit" className="btn btn-blue">Update Price</button>
-          <button type="button" className="btn btn-gray" onClick={handleClear}>Clear</button>
+          <button
+            type="submit"
+            className="btn btn-blue"
+            disabled={!formData.productName || !formData.newPrice || loading}
+          >
+            {loading ? 'Updating...' : 'Update Price'}
+          </button>
+          <button
+            type="button"
+            className="btn btn-gray"
+            onClick={handleClear}
+            disabled={loading}
+          >
+            Clear
+          </button>
         </div>
       </form>
     </div>

@@ -1,0 +1,125 @@
+.view-expenses-container {
+  background-color: #fff;
+  padding: 34px 24px;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.09);
+  margin: 24px auto;
+  transition: box-shadow 0.2s;
+  max-width: calc(min(1200px, 98vw));
+  width: 100%;
+}
+
+/* Header section with title and add button */
+.expenses-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.expenses-header h2 {
+  font-size: 24px;
+  color: #333;
+  margin: 0;
+  display: flex;
+  align-items: center;
+}
+
+.expenses-header h2 .icon {
+  margin-right: 10px;
+  color: #666;
+}
+
+.btn-add-expense {
+  background: #28a745;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.2s;
+}
+
+.btn-add-expense:hover {
+  background: #218838;
+}
+
+/* Loading and error states */
+.loading, .error {
+  text-align: center;
+  padding: 20px;
+  font-size: 16px;
+  color: #666;
+}
+
+.error {
+  color: #dc3545;
+}
+
+/* Table container for horizontal scroll on small screens */
+.expenses-table-container {
+  width: 100%;
+  overflow-x: auto;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  padding: 0;
+}
+
+.expenses-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 600px;
+}
+
+.expenses-table th, .expenses-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.expenses-table th {
+  background: #f1f1f1;
+  font-weight: 500;
+  color: #444;
+  text-transform: uppercase;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+}
+
+.expenses-table tr:hover {
+  background-color: #f8f9fa;
+}
+
+/* Actions cell */
+.actions-cell {
+  display: flex;
+  gap: 10px;
+}
+
+.action-icon {
+  cursor: pointer;
+  font-size: 18px;
+  transition: color 0.2s;
+}
+
+.edit-icon {
+  color: #17a2b8;
+}
+
+.edit-icon:hover {
+  color: #138496;
+}
+
+.delete-icon {
+  color: #dc3545;
+}
+
+.delete-icon:hover {
+  color: #c82333;
+}

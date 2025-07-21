@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import './ViewCustomers.css'
 import {
   Box,
   TextField,
@@ -14,14 +15,14 @@ import {
 } from '@mui/material';
 
 const ViewCustomers = () => {
-  const [customers, setCustomers] = useState([]);
+  const [borrowers, setBorrowers] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Fetch customers
+  // Fetch all borrowers
   useEffect(() => {
-    const fetchCustomers = async () => {
+    const fetchBorrowers = async () => {
       try {
         setLoading(true);
         setError(null);
@@ -30,33 +31,34 @@ const ViewCustomers = () => {
             'Authorization': `Bearer ${localStorage.getItem('token')}`,
           },
         });
-        if (!response.ok) throw new Error('Failed to load customer records');
+        if (!response.ok) throw new Error('Failed to load borrower records');
         const data = await response.json();
-        setCustomers(data);
+        setBorrowers(data);
       } catch (err) {
         setError(err.message);
       } finally {
         setLoading(false);
       }
     };
-    fetchCustomers();
+    fetchBorrowers();
   }, []);
 
-  // Filter customers by ID, name, phone, or email
-  const filteredCustomers = customers.filter((customer) => {
+  // Filter borrowers by any searchable field
+  const filteredBorrowers = borrowers.filter((borrower) => {
     const search = searchTerm.toLowerCase();
     return (
-      String(customer.customer_id).toLowerCase().includes(search) ||
-      customer.name.toLowerCase().includes(search) ||
-      customer.phone.toLowerCase().includes(search) ||
-      (customer.email && customer.email.toLowerCase().includes(search))
+      String(borrower.borrowId).toLowerCase().includes(search) ||
+      String(borrower.customerId).toLowerCase().includes(search) ||
+      String(borrower.customerName).toLowerCase().includes(search) ||
+      String(borrower.customerPhone).toLowerCase().includes(search) ||
+      (borrower.customerEmail && borrower.customerEmail.toLowerCase().includes(search))
     );
   });
 
   return (
     <Box sx={{ p: 3 }}>
       <Typography variant="h4" gutterBottom>
-        Customers Records
+        Borrowers
       </Typography>
       <TextField
         label="Search by ID, Name, Phone, or Email"
@@ -65,6 +67,7 @@ const ViewCustomers = () => {
         margin="normal"
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
+        disabled={loading}
       />
       {loading ? (
         <Box display="flex" justifyContent="center" my={4}>
@@ -72,36 +75,44 @@ const ViewCustomers = () => {
         </Box>
       ) : error ? (
         <Typography color="error">{error}</Typography>
-      ) : customers.length === 0 ? (
-        <Typography>No customer records found</Typography>
+      ) : borrowers.length === 0 ? (
+        <Typography>No borrower records found</Typography>
       ) : (
-        <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650 }} aria-label="customers">
+        <TableContainer component={Paper} elevation={3}>
+          <Table sx={{ minWidth: 650 }} aria-label="borrowers">
             <TableHead>
               <TableRow>
                 <TableCell>#</TableCell>
+                <TableCell>Borrow ID</TableCell>
                 <TableCell>Customer ID</TableCell>
-                <TableCell>Name</TableCell>
-                <TableCell>Address</TableCell>
+                <TableCell>Customer Name</TableCell>
+                <TableCell>Customer Vehicle</TableCell>
+                <TableCell>Amount (₹)</TableCell>
+                <TableCell>Borrow Date</TableCell>
+                <TableCell>Due Date</TableCell>
+                <TableCell>Status</TableCell>
+                <TableCell>Notes</TableCell>
                 <TableCell>Phone</TableCell>
                 <TableCell>Email</TableCell>
-                <TableCell>Date Joined</TableCell>
+                <TableCell>Address</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {filteredCustomers.map((customer, index) => (
-                <TableRow key={customer.customer_id}>
+              {filteredBorrowers.map((borrower, index) => (
+                <TableRow key={borrower.borrowId}>
                   <TableCell>{index + 1}</TableCell>
-                  <TableCell>{customer.customer_id}</TableCell>
-                  <TableCell>{customer.name}</TableCell>
-                  <TableCell>{customer.address}</TableCell>
-                  <TableCell>{customer.phone}</TableCell>
-                  <TableCell>{customer.email || '—'}</TableCell>
-                  <TableCell>
-                    {customer.date_joined
-                      ? new Date(customer.date_joined).toLocaleDateString()
-                      : '—'}
-                  </TableCell>
+                  <TableCell>{borrower.borrowId}</TableCell>
+                  <TableCell>{borrower.customerId}</TableCell>
+                  <TableCell>{borrower.customerName}</TableCell>
+                  <TableCell>{borrower.customerVehicle}</TableCell>
+                  <TableCell>{borrower.amountBorrowed.toLocaleString('en-IN')}</TableCell>
+                  <TableCell>{new Date(borrower.borrowDate).toLocaleDateString()}</TableCell>
+                  <TableCell>{new Date(borrower.dueDate).toLocaleDateString()}</TableCell>
+                  <TableCell>{borrower.status}</TableCell>
+                  <TableCell>{borrower.notes || '—'}</TableCell>
+                  <TableCell>{borrower.customerPhone}</TableCell>
+                  <TableCell>{borrower.customerEmail || '—'}</TableCell>
+                  <TableCell>{borrower.customerAddress}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

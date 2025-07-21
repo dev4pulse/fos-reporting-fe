@@ -25,7 +25,12 @@ import UpdatePrice from './pages/InventoryDashboard/UpdatePrice';
 
 // Customers sub-pages
 import ViewCustomers from './pages/BorrowersDashboard/ViewCustomers';
-import AddNewCustomer from './pages/BorrowersDashboard/AddNewCustomer'; // Add this later
+import AddNewCustomer from './pages/BorrowersDashboard/AddNewCustomer';
+
+// Expenses pages
+import ViewExpenses from './pages/Expenses/ViewExpenses';
+import AddNewExpense from './pages/Expenses/AddNewExpense';
+import AddCategory from './pages/Expenses/AddCategory';
 
 // Route protection
 import ProtectedRoute from './Components/ProtectedRoute';
@@ -64,16 +69,23 @@ const App = () => {
         <Route path="product" element={<ProductManagement />} />
         <Route path="sales-collections" element={<SalesCollections />} />
         <Route path="borrowers" element={<BorrowersDashboard />} />
+
         {/* Inventory subroutes */}
         <Route path="inventory" element={<Navigate to="view" />} />
         <Route path="inventory/view" element={<ViewInventory />} />
         <Route path="inventory/add-product" element={<AddProduct />} />
         <Route path="inventory/update" element={<UpdateInventory />} />
         <Route path="inventory/price" element={<UpdatePrice />} />
+
         {/* Customers subroutes */}
         <Route path="customers" element={<Navigate to="view" />} />
         <Route path="customers/view" element={<ViewCustomers />} />
         <Route path="customers/add" element={<AddNewCustomer />} />
+
+        {/* Expenses subroutes */}
+        <Route path="expenses/view" element={<ViewExpenses />} />
+        <Route path="expenses/add" element={<AddNewExpense />} />
+        <Route path="expenses/add-category" element={<AddCategory />} />
       </Route>
 
       {/* Redirect any unknown route to login */}
