@@ -41,7 +41,7 @@ const AddNewCustomer = () => {
     setError('');
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:8080/api/borrowers', {
+      const response = await fetch('https://pulse-293050141084.asia-south1.run.app/api/borrowers', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
