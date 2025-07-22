@@ -36,7 +36,7 @@ const UploadDocument = () => {
         data.append('file', file);
       }
 
-      await axios.post('http://localhost:8080/api/documents', data, {
+      await axios.post('https://pulse-293050141084.asia-south1.run.app/api/documents', data, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
 
