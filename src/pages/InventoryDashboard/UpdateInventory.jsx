@@ -10,140 +10,255 @@ const UpdateInventory = () => {
     currentQty: '',
     newQty: '',
     tankCapacity: '',
-    refillCapacity: '',
+    currentPrice: '',
+    refillSpace: ''
   });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
-  // Fetch products
+  // Fetch available products for dropdown
   useEffect(() => {
     axios
       .get('https://pulse-293050141084.asia-south1.run.app/inventory/latest')
       .then((res) => setProducts(res.data))
-      .catch((err) => console.error('Failed to fetch products:', err));
+      .catch((err) => {
+        setError('Failed to load products. See console for details.');
+        console.error('Failed to fetch products:', err);
+      });
   }, []);
 
-  // Handle product selection
-  const handleProductSelect = (e) => {
-    const selectedID = e.target.value;
-    const selectedProduct = products.find((p) => p.productID.toString() === selectedID);
-
-    if (selectedProduct) {
-      const currentQty = selectedProduct.quantity;
-      const tankCapacity = selectedProduct.tankCapacity;
-      const refillCapacity = tankCapacity - currentQty;
-
-      setFormData({
-        productID: selectedProduct.productID.toString(),
-        productName: selectedProduct.productName,
-        currentQty: currentQty.toString(),
-        newQty: '',
-        tankCapacity: tankCapacity.toString(),
-        refillCapacity: refillCapacity.toString(),
-      });
+  // Handle product selection and fetch details by name if necessary
+  const handleProductSelect = async (e) => {
+    const productName = e.target.value;
+    if (!productName) {
+      resetForm();
+      return;
     }
+
+    let product = products.find((p) => p.productName === productName);
+
+    if (!product) {
+      try {
+        const res = await axios.get(
+          `https://pulse-293050141084.asia-south1.run.app/inventory/by-name?productName=${encodeURIComponent(productName)}`
+        );
+        product = res.data;
+      } catch (err) {
+        setError('Product not found or API error.');
+        return;
+      }
+    }
+
+    setFormData({
+      productID: product.productID || '',
+      productName: product.productName || '',
+      currentQty: product.quantity?.toString() || '',
+      tankCapacity: product.tankCapacity?.toString() || '',
+      currentPrice: product.price?.toString() || '',
+      newQty: '',
+      refillSpace: (product.tankCapacity && product.quantity != null)
+        ? (Number(product.tankCapacity) - Number(product.quantity)).toString()
+        : ''
+    });
+    setError('');
+    setSuccess('');
   };
 
-  // Handle input change
+  // Handle changes in 'New Quantity' and calculate refill space
   const handleChange = (e) => {
+    const { name, value } = e.target;
+    let refillSpace = formData.refillSpace;
+
+    if (name === 'newQty' && formData.tankCapacity && value !== '') {
+      refillSpace = (Number(formData.tankCapacity) - Number(value)).toString();
+    }
+
     setFormData((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value,
+      [name]: value,
+      refillSpace: name === 'newQty' ? refillSpace : prev.refillSpace
     }));
+    setError('');
   };
 
-  // Clear form
-  const handleClear = () => {
+  // Reset the form state
+  const resetForm = () => {
     setFormData({
       productID: '',
       productName: '',
       currentQty: '',
       newQty: '',
       tankCapacity: '',
-      refillCapacity: '',
+      currentPrice: '',
+      refillSpace: ''
     });
+    setError('');
+    setSuccess('');
   };
 
-  // Submit updated inventory
+  // Submit the inventory addition
   const handleSubmit = (e) => {
     e.preventDefault();
+    setLoading(true);
+    setError('');
+    setSuccess('');
+
+    const { productID, productName, newQty, tankCapacity, currentPrice } = formData;
+
+    // Validation checks
+    if (!productName || !newQty || isNaN(Number(newQty))) {
+      setError('Please select a product and enter a valid quantity.');
+      setLoading(false);
+      return;
+    }
+
+    const payload = {
+      productID: Number(productID),
+      productName,
+      quantity: Number(newQty),
+      tankCapacity: Number(tankCapacity),
+      price: Number(currentPrice),
+    };
 
     axios
-      .post('https://pulse-293050141084.asia-south1.run.app/inventory/update', {
-        productName: formData.productName,
-        currentLevel: formData.newQty,
-        // Date is no longer included in the payload
-      })
-      .then(() => {
-        alert('Inventory updated successfully!');
-        handleClear();
+      .post('https://pulse-293050141084.asia-south1.run.app/inventory', payload)
+      .then((res) => {
+        if (res.status === 200 && res.data === "added to inventory") {
+          setSuccess('Entry added to inventory!');
+          resetForm();
+        } else {
+          setError(res.data || 'Failed to add entry.');
+        }
       })
       .catch((err) => {
-        alert('Update failed: ' + err.message);
+        setError(err.response?.data || 'Add failed. See console for details.');
+        console.error('Add failed:', err);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
   return (
     <div className="dashboard-content">
       <div className="update-inventory-container">
-        <h2 className="update-inventory-heading">Update Inventory</h2>
+        {success && (<div className="update-success-message">{success}</div>)}
+        {error && (<div className="update-error-message">{error}</div>)}
+
+        <h2 className="update-inventory-heading">Add Inventory Entry</h2>
+
         <form className="update-inventory-form" onSubmit={handleSubmit}>
-          {/* Product Select */}
           <div className="form-row">
             <div className="form-group full-width">
               <label>Select Product</label>
               <select
-                name="productID"
-                value={formData.productID}
+                name="productName"
+                value={formData.productName}
                 onChange={handleProductSelect}
                 required
+                disabled={loading}
               >
                 <option value="">-- Select --</option>
-                {products.map((prod) => (
-                  <option key={prod.productID} value={prod.productID}>
-                    {prod.productName}
+                {products.map((p) => (
+                  <option key={p.productID} value={p.productName}>
+                    {p.productName}
                   </option>
                 ))}
               </select>
             </div>
           </div>
 
-          {/* Product Info */}
           <div className="form-row">
             <div className="form-group">
-              <label>Current Quantity (L)</label>
-              <input type="number" name="currentQty" value={formData.currentQty} readOnly />
+              <label>Product ID</label>
+              <input
+                type="text"
+                name="productID"
+                value={formData.productID}
+                readOnly
+                disabled={loading}
+              />
             </div>
-
             <div className="form-group">
-              <label>New Quantity (L)</label>
+              <label>Current Quantity (L)</label>
               <input
                 type="number"
-                name="newQty"
-                value={formData.newQty}
-                onChange={handleChange}
-                required
+                name="currentQty"
+                value={formData.currentQty}
+                readOnly
+                disabled={loading}
               />
             </div>
           </div>
 
           <div className="form-row">
             <div className="form-group">
-              <label>Total Tank Capacity (L)</label>
-              <input type="number" name="tankCapacity" value={formData.tankCapacity} readOnly />
-            </div>
-
-            <div className="form-group">
-              <label>Refill Capacity (L)</label>
-              <input type="number" name="refillCapacity" value={formData.refillCapacity} readOnly />
+              <label>New Quantity (L)*</label>
+              <input
+                type="number"
+                name="newQty"
+                value={formData.newQty}
+                onChange={handleChange}
+                required
+                disabled={loading}
+                min="0"
+                step="0.01"
+              />
             </div>
           </div>
 
-          {/* Buttons */}
+          <div className="form-row">
+            <div className="form-group">
+              <label>Tank Capacity (L)</label>
+              <input
+                type="number"
+                name="tankCapacity"
+                value={formData.tankCapacity}
+                readOnly
+                disabled={loading}
+              />
+            </div>
+            <div className="form-group">
+              <label>Current Price (₹)</label>
+              <input
+                type="number"
+                name="currentPrice"
+                value={formData.currentPrice}
+                readOnly
+                disabled={loading}
+              />
+            </div>
+          </div>
+
+          <div className="form-row">
+            <div className="form-group">
+              <label>Refill Space (L)</label>
+              <input
+                type="number"
+                name="refillSpace"
+                value={formData.refillSpace}
+                readOnly
+                disabled={loading}
+              />
+            </div>
+          </div>
+
           <div className="form-buttons">
-            <button type="button" className="btn btn-gray" onClick={handleClear}>
+            <button
+              type="button"
+              className="btn btn-gray"
+              onClick={resetForm}
+              disabled={loading}
+            >
               Clear
             </button>
-            <button type="submit" className="btn btn-blue">
-              Update
+            <button
+              type="submit"
+              className="btn btn-blue"
+              disabled={!formData.productName || !formData.newQty || loading}
+            >
+              {loading ? 'Adding...' : 'Add Entry'}
             </button>
           </div>
         </form>

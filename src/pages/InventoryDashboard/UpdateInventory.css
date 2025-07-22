@@ -1,3 +1,4 @@
+/* Update Inventory Main Container */
 .update-inventory-container {
   background-color: #fff;
   padding: 34px 24px;
@@ -12,6 +13,7 @@
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.13);
 }
 
+/* Heading */
 .update-inventory-heading {
   font-size: 2rem;
   font-weight: 700;
@@ -21,7 +23,7 @@
   letter-spacing: 0.2px;
 }
 
-/* Form layout */
+/* Form Layout */
 .update-inventory-form {
   display: flex;
   flex-direction: column;
@@ -31,11 +33,12 @@
 .form-row {
   display: flex;
   gap: 18px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap; /* Keep two fields per row */
 }
 
 .form-group {
-  flex: 1;
+  flex: 1 1 50%; /* Each field takes half of the row */
+  min-width: calc(50% - 9px);
   display: flex;
   flex-direction: column;
 }
@@ -44,6 +47,7 @@
   flex: 1 1 100%;
 }
 
+/* Labels */
 label {
   margin-bottom: 7px;
   font-weight: 500;
@@ -51,6 +55,7 @@ label {
   font-size: 1rem;
 }
 
+/* Inputs & Selects */
 input,
 select {
   padding: 11px 13px;
@@ -60,7 +65,6 @@ select {
   background-color: #f8faff;
   transition: border-color 0.2s, background-color 0.2s, box-shadow 0.15s;
 }
-
 input:focus,
 select:focus {
   outline: none;
@@ -68,8 +72,20 @@ select:focus {
   background-color: #fff;
   box-shadow: 0 0 3px 1px #e8f0fe;
 }
+input[readonly] {
+  background-color: #f3f4f6;
+  color: #a6a6a6;
+  cursor: not-allowed;
+}
+input:disabled,
+select:disabled {
+  background-color: #f4f4f4;
+  border-color: #e0e0e0;
+  color: #a6a6a6;
+  cursor: not-allowed;
+}
 
-/* Button row: always single row, no wrapping, horizontal scroll if needed */
+/* Buttons Row */
 .form-buttons {
   display: flex;
   gap: 16px;
@@ -83,6 +99,7 @@ select:focus {
   display: none;
 }
 
+/* Button Styles */
 .btn {
   flex: 1;
   min-width: min-content;
@@ -95,7 +112,6 @@ select:focus {
   font-weight: 500;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
 }
-
 .btn-blue {
   background-color: #007bff;
   color: #fff;
@@ -113,7 +129,6 @@ select:focus {
   cursor: not-allowed;
   box-shadow: none;
 }
-
 .btn-gray {
   background-color: #6c757d;
   color: #fff;
@@ -131,65 +146,35 @@ select:focus {
   box-shadow: none;
 }
 
-.btn:disabled,
-.btn[disabled] {
-  background-color: #e2e6ea;
-  color: #a6a6a6;
-  cursor: not-allowed;
-  box-shadow: none;
+/* Success and Error Messages */
+.update-success-message {
+  color: #15803d;
+  background: #dcfce7;
+  padding: 12px 16px;
+  border-radius: 6px;
+  font-weight: 500;
+  margin-bottom: 18px;
+  text-align: center;
+  font-size: 1rem;
+}
+.update-error-message {
+  color: #b91c1c;
+  background: #fee2e2;
+  padding: 12px 16px;
+  border-radius: 6px;
+  font-weight: 500;
+  margin-bottom: 18px;
+  text-align: center;
+  font-size: 1rem;
 }
 
-/* Disabled input */
-input:disabled,
-select:disabled {
-  background-color: #f4f4f4;
-  border-color: #e0e0e0;
-  color: #a6a6a6;
-  cursor: not-allowed;
-}
-
-/* Responsive layout */
-@media (max-width: 1260px) {
-  .update-inventory-container {
-    margin-left: 20px;
-    margin-right: 20px;
-  }
-}
-@media (max-width: 900px) {
-  .update-inventory-container {
-    padding: 24px 18px;
-  }
-}
+/* Responsive Adjustments */
 @media (max-width: 768px) {
-  .update-inventory-container {
-    padding: 22px 16px;
-  }
   .form-row {
-    flex-direction: row;
-    gap: 14px;
+    flex-wrap: wrap; /* Switch to one column */
   }
   .form-group {
+    flex: 1 1 100%;
     min-width: 100%;
-  }
-  .update-inventory-heading {
-    font-size: 1.7rem;
-  }
-}
-@media (max-width: 540px) {
-  .update-inventory-container {
-    padding: 18px 12px;
-  }
-  .form-row {
-    flex-direction: column;
-    gap: 10px;
-  }
-  .update-inventory-heading {
-    font-size: 1.45rem;
-  }
-  /* Buttons still stay in one row, even on small screens */
-  .btn {
-    flex: 1;
-    padding: 10px 24px;
-    width: auto;
   }
 }

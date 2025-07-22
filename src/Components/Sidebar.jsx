@@ -2,13 +2,16 @@ import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import {
   FaBox, FaTachometerAlt, FaSignOutAlt, FaCubes,
-  FaPlus, FaEdit, FaMoneyBillWave, FaUsers, FaUser, FaUserPlus
+  FaPlus, FaEdit, FaMoneyBillWave, FaUsers, FaUser, FaUserPlus,
+  FaFileInvoiceDollar, FaFileAlt, FaFolderPlus, FaFolder
 } from 'react-icons/fa';
 import './Sidebar.css';
 
 const Sidebar = () => {
   const [inventoryOpen, setInventoryOpen] = useState(false);
-  const [customersOpen, setCustomersOpen] = useState(false); // Initially closed
+  const [customersOpen, setCustomersOpen] = useState(false);
+  const [expensesOpen, setExpensesOpen] = useState(false);
+  const [documentsOpen, setDocumentsOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -20,15 +23,19 @@ const Sidebar = () => {
   return (
     <aside className="sidebar">
       <nav className="sidebar-nav-links">
+
         <NavLink to="/dashboard/owner" className="sidebar-nav-link">
           <FaTachometerAlt className="icon" /> Owner Dashboard
         </NavLink>
 
-        <div className="sidebar-nav-link sidebar-inventory-toggle" onClick={() => setInventoryOpen(!inventoryOpen)}>
+        {/* Product Management */}
+        <div
+          className="sidebar-nav-link sidebar-inventory-toggle"
+          onClick={() => setInventoryOpen(!inventoryOpen)}
+        >
           <span><FaBox className="icon" /> Product Management</span>
           <span className="toggle-icon">{inventoryOpen ? '−' : '+'}</span>
         </div>
-
         {inventoryOpen && (
           <div className="sidebar-sub-nav">
             <NavLink to="/dashboard/inventory/view" className="sidebar-sub-link">
@@ -50,8 +57,11 @@ const Sidebar = () => {
           <FaMoneyBillWave className="icon" /> Sales & Collections
         </NavLink>
 
-        {/* Customers Navigation */}
-        <div className="sidebar-nav-link sidebar-customers-header" onClick={() => setCustomersOpen(!customersOpen)}>
+        {/* Customers */}
+        <div
+          className="sidebar-nav-link sidebar-customers-header"
+          onClick={() => setCustomersOpen(!customersOpen)}
+        >
           <FaUsers className="icon" /> Customers
           <span className="toggle-icon">{customersOpen ? '−' : '+'}</span>
         </div>
@@ -66,9 +76,51 @@ const Sidebar = () => {
           </div>
         )}
 
+        {/* Expenses */}
+        <div
+          className="sidebar-nav-link sidebar-expenses-header"
+          onClick={() => setExpensesOpen(!expensesOpen)}
+        >
+          <span><FaFileInvoiceDollar className="icon" /> Expenses</span>
+          <span className="toggle-icon">{expensesOpen ? '−' : '+'}</span>
+        </div>
+        {expensesOpen && (
+          <div className="sidebar-sub-nav">
+            <NavLink to="/dashboard/expenses/view" className="sidebar-sub-link">
+              <FaFileAlt className="icon" /> View Expenses
+            </NavLink>
+            <NavLink to="/dashboard/expenses/add" className="sidebar-sub-link">
+              <FaPlus className="icon" /> Add New Expense
+            </NavLink>
+            <NavLink to="/dashboard/expenses/add-category" className="sidebar-sub-link">
+              <FaFolderPlus className="icon" /> Add Category
+            </NavLink>
+          </div>
+        )}
+
+        {/* Document Store */}
+        <div
+          className="sidebar-nav-link sidebar-documents-header"
+          onClick={() => setDocumentsOpen(!documentsOpen)}
+        >
+          <span><FaFolder className="icon" /> Document Store</span>
+          <span className="toggle-icon">{documentsOpen ? '−' : '+'}</span>
+        </div>
+        {documentsOpen && (
+          <div className="sidebar-sub-nav">
+            <NavLink to="/dashboard/documents/view" className="sidebar-sub-link">
+              <FaFileAlt className="icon" /> View Documents
+            </NavLink>
+            <NavLink to="/dashboard/documents/upload" className="sidebar-sub-link">
+              <FaFolderPlus className="icon" /> Upload Documents
+            </NavLink>
+          </div>
+        )}
+
         <button className="sidebar-logout-btn" onClick={handleLogout}>
           <FaSignOutAlt className="icon" /> Logout
         </button>
+
       </nav>
     </aside>
   );
