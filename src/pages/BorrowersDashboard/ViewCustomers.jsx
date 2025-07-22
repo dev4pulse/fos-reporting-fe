@@ -29,7 +29,7 @@ const ViewCustomers = () => {
         setError(null);
 
         const token = localStorage.getItem('token');
-        const response = await axios.get('http://localhost:8080/api/borrowers', {
+        const response = await axios.get('https://pulse-293050141084.asia-south1.run.app/api/borrowers', {
           headers: {
             Authorization: `Bearer ${token}`,
           },

@@ -37,7 +37,7 @@ const ViewExpenses = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.get('http://localhost:8080/expensesList');
+      const response = await axios.get('https://pulse-293050141084.asia-south1.run.app/expensesList');
       const data = response.data || [];
       setExpenses(data);
 
@@ -69,7 +69,7 @@ const ViewExpenses = () => {
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this expense?')) return;
     try {
-      await axios.delete(`http://localhost:8080/expensesList/${id}`);
+      await axios.delete(`https://pulse-293050141084.asia-south1.run.app/expensesList/${id}`);
       setExpenses((prev) => prev.filter((e) => e._id !== id && e.id !== id));
     } catch (err) {
       alert('Failed to delete expense. Please try again.');
