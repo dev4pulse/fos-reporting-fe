@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import './login.css';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { FiEye, FiEyeOff } from "react-icons/fi";
+import "./login.css";
 
 const Login = () => {
   const navigate = useNavigate();
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
@@ -14,28 +15,31 @@ const Login = () => {
     e.preventDefault();
 
     if (!username || !password) {
-      alert('Please enter both username and password');
+      alert("Please enter both username and password");
       return;
     }
 
     setLoading(true);
     try {
-      const response = await axios.post('https://pulse-293050141084.asia-south1.run.app/login', {
-        username,
-        password,
-      });
+      const response = await axios.post(
+        "https://pulse-293050141084.asia-south1.run.app/login",
+        {
+          username,
+          password,
+        }
+      );
 
       if (response.status === 200) {
         const { token, role } = response.data;
-        localStorage.setItem('isLoggedIn', 'true');
-        localStorage.setItem('username', username);
-        localStorage.setItem('token', token);
-        localStorage.setItem('role', role);
-        navigate('/dashboard/home'); // Redirect to standalone home
+        localStorage.setItem("isLoggedIn", "true");
+        localStorage.setItem("username", username);
+        localStorage.setItem("token", token);
+        localStorage.setItem("role", role);
+        navigate("/dashboard/home"); // Redirect to standalone home
       }
     } catch (error) {
-      console.error('Login failed:', error);
-      alert('Invalid credentials or server error.');
+      console.error("Login failed:", error);
+      alert("Invalid credentials or server error.");
     } finally {
       setLoading(false);
     }
@@ -76,22 +80,15 @@ const Login = () => {
               tabIndex={-1}
             >
               {showPassword ? (
-                <svg width="20" height="20" fill="none" viewBox="0 0 24 24">
-                  <path d="M1 12C2.73 7.61 7.21 4.5 12 4.5s9.27 3.11 11 7.5c-1.73 4.39-6.21 7.5-11 7.5S2.73 16.39 1 12z" stroke="#64748b" strokeWidth="2" fill="none"/>
-                  <circle cx="12" cy="12" r="3" stroke="#64748b" strokeWidth="2" fill="none"/>
-                </svg>
+                <FiEye size={22} color="#64748b" />
               ) : (
-                <svg width="20" height="20" fill="none" viewBox="0 0 24 24">
-                  <path d="M1 1l22 22" stroke="#64748b" strokeWidth="2"/>
-                  <path d="M21.17 21.17A11.41 11.41 0 0012 19.5c-4.79 0-9.27-3.11-11-7.5a11.55 11.55 0 013.73-4.77M7.17 7.17A6.94 6.94 0 0112 6c4 0 7.36 2.4 9 6-1.04 2.5-3.01 4.56-5.49 5.74" stroke="#64748b" strokeWidth="2" fill="none"/>
-                  <circle cx="12" cy="12" r="3" stroke="#64748b" strokeWidth="2" fill="none"/>
-                </svg>
+                <FiEyeOff size={22} color="#64748b" />
               )}
             </button>
           </div>
         </div>
         <button type="submit" className="login-button" disabled={loading}>
-          {loading ? 'Logging in...' : 'Login'}
+          {loading ? "Logging in..." : "Login"}
         </button>
         <div className="auth-links">
           <div className="forgot-row">

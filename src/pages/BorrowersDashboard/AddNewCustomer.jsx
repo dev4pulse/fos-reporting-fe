@@ -4,13 +4,17 @@ import './AddNewCustomer.css';
 
 const AddNewCustomer = () => {
   const [form, setForm] = useState({
-    name: '',
-    phone: '',
-    email: '',
-    address: '',
-    amount: '',
+    customerName: '',
+    customerVehicle: '',
+    employeeId: '',
+    amountBorrowed: '',
     borrowDate: '',
     dueDate: '',
+    status: 'Pending',
+    notes: '',
+    customerPhone: '',
+    customerAddress: '',
+    customerEmail: '',
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -23,9 +27,9 @@ const AddNewCustomer = () => {
 
   const isFormValid = () => {
     return (
-      form.name &&
-      form.phone &&
-      form.amount &&
+      form.customerName &&
+      form.customerPhone &&
+      form.amountBorrowed &&
       form.borrowDate &&
       form.dueDate
     );
@@ -37,21 +41,24 @@ const AddNewCustomer = () => {
     setError('');
     setLoading(true);
     try {
-      // Replace with your API URL
-      const response = await fetch('https://your-api.com/api/customers', {
+      const response = await fetch('http://localhost:8080/api/borrowers', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         },
         body: JSON.stringify({
-          name: form.name,
-          phone_number: form.phone,
-          email: form.email,
-          address: form.address,
-          amount_borrowed: parseFloat(form.amount) || 0,
-          borrow_date: form.borrowDate,
-          due_date: form.dueDate,
+          customerName: form.customerName,
+          customerVehicle: form.customerVehicle,
+          employeeId: form.employeeId,
+          amountBorrowed: parseFloat(form.amountBorrowed) || 0,
+          borrowDate: form.borrowDate,
+          dueDate: form.dueDate,
+          status: form.status,
+          notes: form.notes,
+          customerPhone: form.customerPhone,
+          customerAddress: form.customerAddress,
+          customerEmail: form.customerEmail,
         }),
       });
       if (!response.ok) throw new Error('Failed to add customer');
@@ -80,31 +87,30 @@ const AddNewCustomer = () => {
             <label>Customer Name</label>
             <input
               type="text"
-              name="name"
-              value={form.name}
+              name="customerName"
+              value={form.customerName}
               onChange={handleChange}
               required
             />
           </div>
           <div className="form-group">
-            <label>Phone Number</label>
+            <label>Customer Vehicle</label>
             <input
-              type="tel"
-              name="phone"
-              value={form.phone}
+              type="text"
+              name="customerVehicle"
+              value={form.customerVehicle}
               onChange={handleChange}
-              required
             />
           </div>
         </div>
 
         <div className="form-row">
           <div className="form-group">
-            <label>Email ID</label>
+            <label>Employee ID</label>
             <input
-              type="email"
-              name="email"
-              value={form.email}
+              type="text"
+              name="employeeId"
+              value={form.employeeId}
               onChange={handleChange}
             />
           </div>
@@ -112,8 +118,8 @@ const AddNewCustomer = () => {
             <label>Amount Borrowed (₹)</label>
             <input
               type="number"
-              name="amount"
-              value={form.amount}
+              name="amountBorrowed"
+              value={form.amountBorrowed}
               onChange={handleChange}
               min="0"
               required
@@ -144,11 +150,57 @@ const AddNewCustomer = () => {
           </div>
         </div>
 
+        <div className="form-row">
+          <div className="form-group">
+            <label>Status</label>
+            <select
+              name="status"
+              value={form.status}
+              onChange={handleChange}
+            >
+              <option value="Pending">Pending</option>
+              <option value="Paid">Paid</option>
+              <option value="Overdue">Overdue</option>
+            </select>
+          </div>
+          <div className="form-group">
+            <label>Notes</label>
+            <input
+              type="text"
+              name="notes"
+              value={form.notes}
+              onChange={handleChange}
+            />
+          </div>
+        </div>
+
+        <div className="form-row">
+          <div className="form-group">
+            <label>Phone Number</label>
+            <input
+              type="tel"
+              name="customerPhone"
+              value={form.customerPhone}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label>Email ID</label>
+            <input
+              type="email"
+              name="customerEmail"
+              value={form.customerEmail}
+              onChange={handleChange}
+            />
+          </div>
+        </div>
+
         <div className="form-group">
           <label>Address</label>
           <textarea
-            name="address"
-            value={form.address}
+            name="customerAddress"
+            value={form.customerAddress}
             onChange={handleChange}
             rows={3}
           />

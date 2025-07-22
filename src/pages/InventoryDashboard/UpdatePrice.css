@@ -1,3 +1,4 @@
+/* Main container */
 .update-price-container {
   padding: 32px 24px;
   background-color: #fff;
@@ -5,14 +6,15 @@
   box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
   margin: 40px auto 0;
   transition: box-shadow 0.18s;
-  max-width: calc(min(1200px, 98vw)); /* Match dashboard width, fallback to 98vw on narrow screens */
+  max-width: calc(min(1200px, 98vw)); /* Match dashboard width */
   width: 100%;
-  border: 1px solid rgba(0, 0, 0, 0.05); /* subtle border for depth, optional */
+  border: 1px solid rgba(0, 0, 0, 0.05); /* subtle border for depth */
 }
 .update-price-container:hover {
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.13);
 }
 
+/* Heading */
 .update-price-heading {
   font-size: 1.5rem;
   font-weight: 700;
@@ -22,6 +24,7 @@
   letter-spacing: 0.2px;
 }
 
+/* Form labels */
 .update-price-form label {
   display: block;
   margin-bottom: 7px;
@@ -31,6 +34,7 @@
   letter-spacing: 0.01em;
 }
 
+/* Input fields */
 .update-price-form input,
 .update-price-form select {
   display: block;
@@ -66,6 +70,7 @@
   cursor: not-allowed;
 }
 
+/* Buttons */
 .update-price-buttons {
   display: flex;
   gap: 14px;
@@ -122,7 +127,41 @@
   cursor: not-allowed;
 }
 
-/* Responsive Enhancements */
+/* Success and Error Messages */
+.update-success-message {
+  color: #15803d;
+  background: #dcfce7;
+  padding: 12px 16px;
+  border-radius: 6px;
+  font-weight: 500;
+  margin-bottom: 18px;
+  text-align: center;
+  font-size: 1rem;
+}
+
+.update-error-message {
+  color: #b91c1c;
+  background: #fee2e2;
+  padding: 12px 16px;
+  border-radius: 6px;
+  font-weight: 500;
+  margin-bottom: 18px;
+  text-align: center;
+  font-size: 1rem;
+}
+
+/* Button stacking on mobile */
+@media (max-width: 540px) {
+  .update-price-buttons {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .update-price-buttons .btn {
+    width: 100%;
+  }
+}
+
+/* Responsive padding and margins */
 @media (max-width: 1260px) {
   .update-price-container {
     margin-left: 20px;
@@ -138,12 +177,5 @@
 @media (max-width: 540px) {
   .update-price-container {
     padding: 18px 14px;
-  }
-  .update-price-buttons {
-    flex-direction: column;
-    gap: 10px;
-  }
-  .update-price-buttons .btn {
-    width: 100%;
   }
 }

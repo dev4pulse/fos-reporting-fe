@@ -1,0 +1,97 @@
+.add-expense-container {
+  background-color: #fff;
+  padding: 34px 24px;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.09);
+  margin: 24px auto;
+  transition: box-shadow 0.2s;
+  max-width: calc(min(1200px, 98vw));
+  width: 100%;
+}
+
+.add-expense-container h2 {
+  margin-bottom: 24px;
+  font-size: 28px;
+  color: #26547c;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.add-expense-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.add-expense-form label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 15px;
+  color: #555;
+  font-weight: 500;
+}
+
+.add-expense-form .form-group {
+  flex: 1 1 41%;
+  min-width: 230px;
+}
+
+.add-expense-form .form-group-full {
+  flex: 1 1 86%;
+}
+
+.add-expense-form input,
+.add-expense-form select {
+  width: 100%;
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #dee2e6;
+  font-size: 15px;
+  margin-bottom: 3px;
+  background: #fff;
+  transition: border 0.1s;
+}
+
+.add-expense-form input:focus,
+.add-expense-form select:focus {
+  border: 1.5px solid #2176ff;
+  outline: none;
+}
+
+.add-expense-form button[type="submit"] {
+  width: 100%;
+  padding: 12px 8px;
+  background: #2176ff;
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  font-size: 18px;
+  cursor: pointer;
+  margin-top: 16px;
+  transition: background 0.2s;
+  letter-spacing: 0.02em;
+}
+
+.add-expense-form button[type="submit"]:disabled {
+  background: #a1a1a1;
+  cursor: not-allowed;
+}
+
+.add-expense-message {
+  width: 100%;
+  text-align: center;
+  margin-top: 10px;
+  color: #07840b;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.add-expense-error {
+  width: 100%;
+  text-align: center;
+  margin-top: 10px;
+  color: #d90429;
+  font-size: 15px;
+  font-weight: 500;
+}

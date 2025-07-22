@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom'; // Replace useNavigate with NavLink
+import { NavLink } from 'react-router-dom';
 import './DashboardHome.css';
 
 const DashboardHome = () => {
@@ -50,7 +50,7 @@ const DashboardHome = () => {
       buttonText: 'Manage Expenses',
       bgColor: '#e6fff5',
       btnColor: '#20c997',
-      path: '/dashboard/expenses',
+      path: '/dashboard/expenses/view',  // Direct to ViewExpenses
     },
     {
       title: 'Documents',
@@ -58,7 +58,7 @@ const DashboardHome = () => {
       buttonText: 'View Documents',
       bgColor: '#f3e6ff',
       btnColor: '#6610f2',
-      path: '/dashboard/documents',
+      path: '/dashboard/documents/view',  // Updated to open ViewDocuments directly
     },
     {
       title: 'Contact Us',
