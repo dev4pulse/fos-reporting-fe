@@ -50,7 +50,7 @@ const DashboardHome = () => {
       buttonText: 'Manage Expenses',
       bgColor: '#e6fff5',
       btnColor: '#20c997',
-      path: '/dashboard/expenses/view',  // <-- Updated to go directly to ViewExpenses
+      path: '/dashboard/expenses/view',  // Direct to ViewExpenses
     },
     {
       title: 'Documents',
@@ -58,7 +58,7 @@ const DashboardHome = () => {
       buttonText: 'View Documents',
       bgColor: '#f3e6ff',
       btnColor: '#6610f2',
-      path: '/dashboard/documents',
+      path: '/dashboard/documents/view',  // Updated to open ViewDocuments directly
     },
     {
       title: 'Contact Us',

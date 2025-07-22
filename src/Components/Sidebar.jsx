@@ -3,7 +3,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import {
   FaBox, FaTachometerAlt, FaSignOutAlt, FaCubes,
   FaPlus, FaEdit, FaMoneyBillWave, FaUsers, FaUser, FaUserPlus,
-  FaFileInvoiceDollar, FaFileAlt, FaFolderPlus
+  FaFileInvoiceDollar, FaFileAlt, FaFolderPlus, FaFolder
 } from 'react-icons/fa';
 import './Sidebar.css';
 
@@ -11,6 +11,7 @@ const Sidebar = () => {
   const [inventoryOpen, setInventoryOpen] = useState(false);
   const [customersOpen, setCustomersOpen] = useState(false);
   const [expensesOpen, setExpensesOpen] = useState(false);
+  const [documentsOpen, setDocumentsOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -93,6 +94,25 @@ const Sidebar = () => {
             </NavLink>
             <NavLink to="/dashboard/expenses/add-category" className="sidebar-sub-link">
               <FaFolderPlus className="icon" /> Add Category
+            </NavLink>
+          </div>
+        )}
+
+        {/* Document Store */}
+        <div
+          className="sidebar-nav-link sidebar-documents-header"
+          onClick={() => setDocumentsOpen(!documentsOpen)}
+        >
+          <span><FaFolder className="icon" /> Document Store</span>
+          <span className="toggle-icon">{documentsOpen ? '−' : '+'}</span>
+        </div>
+        {documentsOpen && (
+          <div className="sidebar-sub-nav">
+            <NavLink to="/dashboard/documents/view" className="sidebar-sub-link">
+              <FaFileAlt className="icon" /> View Documents
+            </NavLink>
+            <NavLink to="/dashboard/documents/upload" className="sidebar-sub-link">
+              <FaFolderPlus className="icon" /> Upload Documents
             </NavLink>
           </div>
         )}

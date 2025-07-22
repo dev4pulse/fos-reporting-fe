@@ -24,7 +24,6 @@ const AddNewExpense = () => {
   const fetchCategories = async () => {
     try {
       const res = await axios.get('http://localhost:8080/categoryList');
-      // Adjust according to API response shape
       setCategories(res.data || []);
     } catch (err) {
       console.error('Failed to fetch categories:', err);
@@ -34,10 +33,9 @@ const AddNewExpense = () => {
 
   const fetchEmployeeIds = async () => {
     try {
-      const res = await axios.get(
-        'https://pulse-293050141084.asia-south1.run.app/active'
-      );
+      const res = await axios.get('https://pulse-293050141084.asia-south1.run.app/active');
       setEmployeeIds(res.data);
+      console.log(res.data)
     } catch (err) {
       console.error('Failed to fetch employee list:', err);
       setError('Failed to fetch employee list.');
@@ -53,6 +51,7 @@ const AddNewExpense = () => {
     setLoading(true);
     setError('');
     setMessage('');
+
     try {
       const payload = {
         description: form.description,
@@ -61,6 +60,7 @@ const AddNewExpense = () => {
         expenseDate: form.expenseDate,
         employeeId: form.employeeId
       };
+
       await axios.post('http://localhost:8080/expensesPost', payload);
       setMessage('Expense added successfully.');
       setForm({
@@ -99,6 +99,7 @@ const AddNewExpense = () => {
             ))}
           </select>
         </div>
+
         {/* Employee Name + ID */}
         <div className="form-group">
           <label>Employee</label>
@@ -121,6 +122,7 @@ const AddNewExpense = () => {
             })}
           </select>
         </div>
+
         {/* Date */}
         <div className="form-group">
           <label>Date</label>
@@ -130,8 +132,10 @@ const AddNewExpense = () => {
             value={form.expenseDate}
             onChange={handleChange}
             required
+            max={new Date().toISOString().split('T')[0]} // Only today or past dates
           />
         </div>
+
         {/* Description */}
         <div className="form-group">
           <label>Description</label>
@@ -144,6 +148,7 @@ const AddNewExpense = () => {
             placeholder="e.g., Groceries, Coffee"
           />
         </div>
+
         {/* Amount */}
         <div className="form-group form-group-full">
           <label>Amount (₹)</label>
@@ -158,11 +163,13 @@ const AddNewExpense = () => {
             min="0"
           />
         </div>
+
         <div className="form-group form-group-full">
           <button type="submit" disabled={loading}>
             {loading ? 'Adding...' : 'Add Expense'}
           </button>
         </div>
+
         {message && <div className="add-expense-message">{message}</div>}
         {error && <div className="add-expense-error">{error}</div>}
       </form>

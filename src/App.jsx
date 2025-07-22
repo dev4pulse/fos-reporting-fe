@@ -32,6 +32,10 @@ import ViewExpenses from './pages/Expenses/ViewExpenses';
 import AddNewExpense from './pages/Expenses/AddNewExpense';
 import AddCategory from './pages/Expenses/AddCategory';
 
+// Documents pages
+import ViewDocuments from './pages/Documents/ViewDocuments';
+import UploadDocument from './pages/Documents/UploadDocument';
+
 // Route protection
 import ProtectedRoute from './Components/ProtectedRoute';
 
@@ -86,6 +90,10 @@ const App = () => {
         <Route path="expenses/view" element={<ViewExpenses />} />
         <Route path="expenses/add" element={<AddNewExpense />} />
         <Route path="expenses/add-category" element={<AddCategory />} />
+
+        {/* Documents subroutes */}
+        <Route path="documents/view" element={<ViewDocuments />} />
+        <Route path="documents/upload" element={<UploadDocument />} />
       </Route>
 
       {/* Redirect any unknown route to login */}
