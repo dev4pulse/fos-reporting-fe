@@ -13,7 +13,6 @@ import DashboardHome from './Components/DashboardHome';
 import EmployeeDashboard from './pages/EmployeeDashboard/EmployeeDashboard';
 import ManagerDashboard from './pages/ManagerDashboard/ManagerDashboard';
 import OwnerDashboard from './pages/OwnerDashboard/OwnerDashboard';
-import ProductManagement from './pages/ProductManagement/ProductManagement';
 import SalesCollections from './pages/SalesCollections/SalesCollections';
 import BorrowersDashboard from './pages/BorrowersDashboard/BorrowersDashboard';
 
@@ -70,7 +69,6 @@ const App = () => {
         <Route path="employee" element={<EmployeeDashboard />} />
         <Route path="manager" element={<ManagerDashboard />} />
         <Route path="owner" element={<OwnerDashboard />} />
-        <Route path="product" element={<ProductManagement />} />
         <Route path="sales-collections" element={<SalesCollections />} />
         <Route path="borrowers" element={<BorrowersDashboard />} />
 

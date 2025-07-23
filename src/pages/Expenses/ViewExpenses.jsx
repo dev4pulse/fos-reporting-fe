@@ -11,15 +11,18 @@ const ViewExpenses = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  // 1st day of current month
   const [fromDate, setFromDate] = useState(() => {
-    const date = new Date();
-    date.setDate(date.getDate() - 30);
-    return date.toISOString().split('T')[0]; // yyyy-mm-dd
+    const now = new Date();
+    const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
+    return firstDay.toISOString().split('T')[0];
   });
 
+  // last day of current month
   const [toDate, setToDate] = useState(() => {
-    const today = new Date();
-    return today.toISOString().split('T')[0];
+    const now = new Date();
+    const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+    return lastDay.toISOString().split('T')[0];
   });
 
   const [selectedCategory, setSelectedCategory] = useState('');
@@ -36,13 +39,25 @@ const ViewExpenses = () => {
   const fetchExpenses = async () => {
     setLoading(true);
     setError(null);
+
+    const now = new Date();
+    const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
+    const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+
     try {
       const response = await axios.get('https://pulse-293050141084.asia-south1.run.app/expensesList');
       const data = response.data || [];
-      setExpenses(data);
 
-      // Extract categories dynamically
-      const uniqueCategories = [...new Set(data.map((e) => e.category))].filter(Boolean);
+      // filter expenses of current month
+      const currentMonthExpenses = data.filter((expense) => {
+        const expenseDate = new Date(expense.expenseDate || expense.date);
+        return expenseDate >= firstDay && expenseDate <= lastDay;
+      });
+
+      setExpenses(currentMonthExpenses);
+
+      // categories
+      const uniqueCategories = [...new Set(currentMonthExpenses.map((e) => e.category))].filter(Boolean);
       setCategories(uniqueCategories);
     } catch (err) {
       setError('Failed to fetch expenses. Please try again.');
@@ -84,7 +99,7 @@ const ViewExpenses = () => {
     navigate('/dashboard/expenses/add');
   };
 
-  // Calculate total expenses
+  // total expenses
   const totalAmount = filteredExpenses.reduce((sum, e) => sum + (parseFloat(e.amount) || 0), 0);
 
   return (
@@ -102,11 +117,19 @@ const ViewExpenses = () => {
       <div className="filters-container">
         <div className="filter-item">
           <label>From:</label>
-          <input type="date" value={fromDate} onChange={(e) => setFromDate(e.target.value)} />
+          <input
+            type="date"
+            value={fromDate}
+            onChange={(e) => setFromDate(e.target.value)}
+          />
         </div>
         <div className="filter-item">
           <label>To:</label>
-          <input type="date" value={toDate} onChange={(e) => setToDate(e.target.value)} />
+          <input
+            type="date"
+            value={toDate}
+            onChange={(e) => setToDate(e.target.value)}
+          />
         </div>
         <div className="filter-item">
           <label>Category:</label>

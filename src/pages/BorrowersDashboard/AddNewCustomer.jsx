@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import './AddNewCustomer.css';
 
 const AddNewCustomer = () => {
@@ -12,9 +13,9 @@ const AddNewCustomer = () => {
     dueDate: '',
     status: 'Pending',
     notes: '',
-    customerPhone: '',
-    customerAddress: '',
-    customerEmail: '',
+    phone: '',
+    address: '',
+    email: '',
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -28,7 +29,7 @@ const AddNewCustomer = () => {
   const isFormValid = () => {
     return (
       form.customerName &&
-      form.customerPhone &&
+      form.phone &&
       form.amountBorrowed &&
       form.borrowDate &&
       form.dueDate
@@ -38,33 +39,33 @@ const AddNewCustomer = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!isFormValid()) return;
+
     setError('');
     setLoading(true);
     try {
-      const response = await fetch('https://pulse-293050141084.asia-south1.run.app/api/borrowers', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-        body: JSON.stringify({
+      const token = localStorage.getItem('token');
+
+      await axios.post(
+        'http://localhost:8080/borrowers',
+        {
           customerName: form.customerName,
           customerVehicle: form.customerVehicle,
           employeeId: form.employeeId,
           amountBorrowed: parseFloat(form.amountBorrowed) || 0,
-          borrowDate: form.borrowDate,
-          dueDate: form.dueDate,
+          borrowDate: form.borrowDate ? `${form.borrowDate}T00:00:00` : null,
+          dueDate: form.dueDate ? `${form.dueDate}T00:00:00` : null,
           status: form.status,
           notes: form.notes,
-          customerPhone: form.customerPhone,
-          customerAddress: form.customerAddress,
-          customerEmail: form.customerEmail,
-        }),
-      });
-      if (!response.ok) throw new Error('Failed to add customer');
+          phone: form.phone,
+          address: form.address,
+          email: form.email,
+        },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
       navigate('/dashboard/customers/view');
     } catch (err) {
-      setError(err.message || 'Error adding customer');
+      setError(err.response?.data?.message || err.message || 'Error adding customer');
     } finally {
       setLoading(false);
     }
@@ -135,6 +136,7 @@ const AddNewCustomer = () => {
               name="borrowDate"
               value={form.borrowDate}
               onChange={handleChange}
+              max={new Date().toISOString().split('T')[0]} // Prevent future date selection
               required
             />
           </div>
@@ -153,11 +155,7 @@ const AddNewCustomer = () => {
         <div className="form-row">
           <div className="form-group">
             <label>Status</label>
-            <select
-              name="status"
-              value={form.status}
-              onChange={handleChange}
-            >
+            <select name="status" value={form.status} onChange={handleChange}>
               <option value="Pending">Pending</option>
               <option value="Paid">Paid</option>
               <option value="Overdue">Overdue</option>
@@ -179,8 +177,8 @@ const AddNewCustomer = () => {
             <label>Phone Number</label>
             <input
               type="tel"
-              name="customerPhone"
-              value={form.customerPhone}
+              name="phone"
+              value={form.phone}
               onChange={handleChange}
               required
             />
@@ -189,8 +187,8 @@ const AddNewCustomer = () => {
             <label>Email ID</label>
             <input
               type="email"
-              name="customerEmail"
-              value={form.customerEmail}
+              name="email"
+              value={form.email}
               onChange={handleChange}
             />
           </div>
@@ -199,8 +197,8 @@ const AddNewCustomer = () => {
         <div className="form-group">
           <label>Address</label>
           <textarea
-            name="customerAddress"
-            value={form.customerAddress}
+            name="address"
+            value={form.address}
             onChange={handleChange}
             rows={3}
           />

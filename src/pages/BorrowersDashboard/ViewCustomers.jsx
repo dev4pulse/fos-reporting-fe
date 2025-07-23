@@ -21,7 +21,6 @@ const ViewCustomers = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Fetch all borrowers
   useEffect(() => {
     const fetchBorrowers = async () => {
       try {
@@ -29,10 +28,8 @@ const ViewCustomers = () => {
         setError(null);
 
         const token = localStorage.getItem('token');
-        const response = await axios.get('https://pulse-293050141084.asia-south1.run.app/api/borrowers', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+        const response = await axios.get('http://localhost:8080/borrowers', {
+          headers: { Authorization: `Bearer ${token}` },
         });
 
         setBorrowers(response.data);
@@ -46,19 +43,19 @@ const ViewCustomers = () => {
     fetchBorrowers();
   }, []);
 
-  // Filter borrowers by any searchable field
+  // Search by id, name, vehicle, phone, email, address
   const filteredBorrowers = borrowers.filter((borrower) => {
     const search = searchTerm.toLowerCase();
     return (
-      String(borrower.borrowId).toLowerCase().includes(search) ||
-      String(borrower.customerId).toLowerCase().includes(search) ||
+      String(borrower.id).toLowerCase().includes(search) ||
       String(borrower.customerName).toLowerCase().includes(search) ||
-      String(borrower.customerPhone).toLowerCase().includes(search) ||
-      (borrower.customerEmail && borrower.customerEmail.toLowerCase().includes(search))
+      String(borrower.customerVehicle).toLowerCase().includes(search) ||
+      String(borrower.phone).toLowerCase().includes(search) ||
+      (borrower.email && borrower.email.toLowerCase().includes(search)) ||
+      (borrower.address && borrower.address.toLowerCase().includes(search))
     );
   });
 
-  // Calculate total borrowed amount from filtered results
   const totalBorrowedAmount = filteredBorrowers.reduce(
     (sum, borrower) => sum + (borrower.amountBorrowed || 0),
     0
@@ -70,7 +67,7 @@ const ViewCustomers = () => {
         Borrowers
       </Typography>
       <TextField
-        label="Search by ID, Name, Phone, or Email"
+        label="Search by ID, Name, Vehicle, Phone, Email, or Address"
         variant="outlined"
         fullWidth
         margin="normal"
@@ -89,7 +86,6 @@ const ViewCustomers = () => {
         <Typography>No borrower records found</Typography>
       ) : (
         <>
-          {/* Show total borrowed amount */}
           <Typography variant="h6" sx={{ mb: 2 }}>
             Total Borrowed Amount: ₹ {totalBorrowedAmount.toLocaleString('en-IN')}
           </Typography>
@@ -100,9 +96,9 @@ const ViewCustomers = () => {
                 <TableRow>
                   <TableCell>#</TableCell>
                   <TableCell>Borrow ID</TableCell>
-                  <TableCell>Customer ID</TableCell>
                   <TableCell>Customer Name</TableCell>
-                  <TableCell>Customer Vehicle</TableCell>
+                  <TableCell>Vehicle</TableCell>
+                  <TableCell>Employee ID</TableCell>
                   <TableCell>Amount (₹)</TableCell>
                   <TableCell>Borrow Date</TableCell>
                   <TableCell>Due Date</TableCell>
@@ -115,20 +111,20 @@ const ViewCustomers = () => {
               </TableHead>
               <TableBody>
                 {filteredBorrowers.map((borrower, index) => (
-                  <TableRow key={borrower.borrowId}>
+                  <TableRow key={borrower.id}>
                     <TableCell>{index + 1}</TableCell>
-                    <TableCell>{borrower.borrowId}</TableCell>
-                    <TableCell>{borrower.customerId}</TableCell>
+                    <TableCell>{borrower.id}</TableCell>
                     <TableCell>{borrower.customerName}</TableCell>
                     <TableCell>{borrower.customerVehicle}</TableCell>
+                    <TableCell>{borrower.employeeId}</TableCell>
                     <TableCell>{borrower.amountBorrowed.toLocaleString('en-IN')}</TableCell>
                     <TableCell>{new Date(borrower.borrowDate).toLocaleDateString()}</TableCell>
                     <TableCell>{new Date(borrower.dueDate).toLocaleDateString()}</TableCell>
                     <TableCell>{borrower.status}</TableCell>
                     <TableCell>{borrower.notes || '—'}</TableCell>
-                    <TableCell>{borrower.customerPhone}</TableCell>
-                    <TableCell>{borrower.customerEmail || '—'}</TableCell>
-                    <TableCell>{borrower.customerAddress}</TableCell>
+                    <TableCell>{borrower.phone}</TableCell>
+                    <TableCell>{borrower.email || '—'}</TableCell>
+                    <TableCell>{borrower.address}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
