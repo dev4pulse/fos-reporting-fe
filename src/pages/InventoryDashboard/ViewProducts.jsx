@@ -31,8 +31,15 @@ const ViewProducts = () => {
     try {
       await axios.delete(`http://localhost:8080/products/${productId}`);
       setProducts((prev) => prev.filter((p) => (p.productId ?? p.id) !== productId));
+      alert("Product deleted successfully.");
     } catch (err) {
-      alert("Delete failed: " + err.response?.data || err.message);
+      if (err.response?.status === 409) {
+        alert(
+          "Cannot delete this product because it is referenced in other records (e.g., sales, inventory, or collections)."
+        );
+      } else {
+        alert("Delete failed: " + (err.response?.data || err.message));
+      }
     }
   };
 
@@ -50,13 +57,12 @@ const ViewProducts = () => {
       const productId = selectedProduct.productId ?? selectedProduct.id;
       await axios.put(`http://localhost:8080/products/${productId}`, updatedProduct);
       setProducts((prev) =>
-        prev.map((p) =>
-          (p.productId ?? p.id) === productId ? updatedProduct : p
-        )
+        prev.map((p) => (p.productId ?? p.id) === productId ? updatedProduct : p)
       );
       setSelectedProduct(null);
+      alert("Product updated successfully.");
     } catch (err) {
-      alert("Update failed: " + err.response?.data || err.message);
+      alert("Update failed: " + (err.response?.data || err.message));
     }
   };
 
@@ -81,7 +87,7 @@ const ViewProducts = () => {
           </thead>
           <tbody>
             {products.map((product, index) => {
-              const productId = product.productId ?? product.id; // use correct ID
+              const productId = product.productId ?? product.id; // ensure correct key
               return (
                 <tr key={productId}>
                   <td>{index + 1}</td>
@@ -135,7 +141,9 @@ const ViewProducts = () => {
               </select>
 
               <div className="update-buttons">
-                <button type="submit" className="btn btn-save">Save</button>
+                <button type="submit" className="btn btn-save">
+                  Save
+                </button>
                 <button
                   type="button"
                   className="btn btn-cancel"

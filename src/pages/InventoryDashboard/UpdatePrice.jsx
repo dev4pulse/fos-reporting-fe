@@ -15,7 +15,7 @@ const UpdatePrice = () => {
 
   // Fetch all products for the dropdown
   useEffect(() => {
-    axios.get('https://pulse-293050141084.asia-south1.run.app/inventory/latest')
+    axios.get('http://localhost:8080/inventory/latest')
       .then(res => {
         setProducts(res.data);
       })
@@ -88,7 +88,7 @@ const UpdatePrice = () => {
 
     try {
       const response = await axios.put(
-        'https://pulse-293050141084.asia-south1.run.app/inventory/update-price',
+        'http://localhost:8080/inventory/update-price',
         { productName, newPrice: price }
       );
       if (response.status === 200) {

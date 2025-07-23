@@ -9,7 +9,7 @@ const SalesCollections = () => {
   const [employees, setEmployees] = useState([]);
   const [employeeFetchError, setEmployeeFetchError] = useState('');
   const [products, setProducts] = useState([]);
-  const [allProducts, setAllProducts] = useState([]); // Only ACTIVE products
+  const [allProducts, setAllProducts] = useState([]); // show all products
   const [cashReceived, setCashReceived] = useState('');
   const [phonePay, setPhonePay] = useState('');
   const [creditCard, setCreditCard] = useState('');
@@ -25,34 +25,34 @@ const SalesCollections = () => {
       });
   }, []);
 
-  // Fetch only active products
-  useEffect(() => {
-    fetch('https://pulse-293050141084.asia-south1.run.app/products')
-      .then(res => res.ok ? res.json() : Promise.reject(res.statusText))
-      .then(data => {
-        const activeProducts = data.filter(
-          p => p.status && p.status.toUpperCase() === 'ACTIVE'
-        );
-        setAllProducts(activeProducts);
-      })
-      .catch(err => {
-        console.error('Failed to fetch products:', err);
-        alert('Unable to load products');
-      });
-  }, []);
+ // Fetch only ACTIVE products
+ useEffect(() => {
+   fetch('https://pulse-293050141084.asia-south1.run.app/products')
+     .then(res => res.ok ? res.json() : Promise.reject(res.statusText))
+     .then(data => {
+       const activeProducts = data.filter(
+         (p) => p.status && p.status.toUpperCase() === 'ACTIVE'
+       );
+       setAllProducts(activeProducts);
+     })
+     .catch(err => {
+       console.error('Failed to fetch products:', err);
+       alert('Unable to load products');
+     });
+ }, []);
 
   const handleAddProduct = () => {
-    setProducts(prev => [...prev, {
-      productName: '', gun: '', opening: '', closing: '', price: '', testing: '',
-      salesLiters: 0, salesRupees: 0
-    }]);
+    setProducts(prev => [
+      ...prev,
+      { productName: '', gun: '', opening: '', closing: '', price: '', testing: '', salesLiters: 0, salesRupees: 0 }
+    ]);
   };
 
   const handleRemoveProduct = index => {
     setProducts(prev => prev.filter((_, i) => i !== index));
   };
 
-  const calculateSales = row => {
+  const calculateSales = (row) => {
     const opening = parseFloat(row.opening) || 0;
     const closing = parseFloat(row.closing) || 0;
     const testing = parseFloat(row.testing) || 0;
@@ -62,7 +62,7 @@ const SalesCollections = () => {
     row.salesRupees = parseFloat((liters * price).toFixed(2));
   };
 
-  const handleProductChange = (index, field, value) => {
+  const handleProductChange = async (index, field, value) => {
     const updated = [...products];
     updated[index][field] = value;
 
@@ -70,33 +70,33 @@ const SalesCollections = () => {
 
     if (field === 'productName') {
       const selectedProduct = allProducts.find(p => p.productName === value);
-      if (selectedProduct) {
-        updated[index].price = selectedProduct.price; // set price automatically
-      }
-      calculateSales(updated[index]);
-      setProducts(updated);
+      if (selectedProduct) updated[index].price = selectedProduct.price;
     }
 
     if ((field === 'productName' || field === 'gun') && productName && gun) {
-      fetch(`https://pulse-293050141084.asia-south1.run.app/sales/last?productName=${productName}&gun=${gun}`)
-        .then(res => res.ok ? res.json() : Promise.reject(res.statusText))
-        .then(data => {
+      try {
+        const res = await fetch(
+          `https://pulse-293050141084.asia-south1.run.app/sales/last?productName=${productName}&gun=${gun}`
+        );
+        if (res.ok) {
+          const data = await res.json();
           updated[index].opening = data.lastClosing || 0;
-          calculateSales(updated[index]);
-          setProducts(updated);
-        })
-        .catch(err => {
-          alert(`Error fetching last closing for ${productName} - ${gun}`);
-          console.error(err);
-        });
-    } else {
-      calculateSales(updated[index]);
-      setProducts(updated);
+        }
+      } catch (err) {
+        alert(`Error fetching last closing for ${productName} - ${gun}`);
+        console.error(err);
+      }
     }
+
+    calculateSales(updated[index]);
+    setProducts(updated);
   };
 
   const totalSales = products.reduce((sum, p) => sum + (parseFloat(p.salesRupees) || 0), 0);
-  const totalCollection = (parseFloat(cashReceived) || 0) + (parseFloat(phonePay) || 0) + (parseFloat(creditCard) || 0);
+  const totalCollection =
+    (parseFloat(cashReceived) || 0) +
+    (parseFloat(phonePay) || 0) +
+    (parseFloat(creditCard) || 0);
   const shortCollections = (totalCollection - totalSales).toFixed(2);
 
   const formatDate = (date) => {
@@ -175,6 +175,7 @@ const SalesCollections = () => {
     <div className="sales-collections-container">
       <h2 className="section-title">Sales & Collections</h2>
       <form onSubmit={handleSubmit}>
+        {/* Entry Date & Employee */}
         <div className="sales-form">
           <div className="form-group">
             <label>Entry Date & Time</label>
@@ -185,7 +186,7 @@ const SalesCollections = () => {
               timeFormat="HH:mm"
               timeIntervals={15}
               dateFormat="dd-MM-yyyy HH:mm"
-              placeholderText="Select date and time"
+              maxDate={new Date()} // restrict to today or earlier
               className="datetime-input"
             />
           </div>
@@ -204,6 +205,7 @@ const SalesCollections = () => {
           </div>
         </div>
 
+        {/* Sales Section */}
         <h4 className="section-title">Sales</h4>
         {products.map((p, i) => (
           <div className="sales-form" key={i}>
@@ -248,6 +250,7 @@ const SalesCollections = () => {
         ))}
         <button type="button" className="submit-btn" onClick={handleAddProduct}>Add Product</button>
 
+        {/* Collections Section */}
         <h4 className="section-title">Collections</h4>
         <div className="sales-form">
           {[
