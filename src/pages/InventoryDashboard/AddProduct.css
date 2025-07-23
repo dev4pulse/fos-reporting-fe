@@ -31,7 +31,20 @@
   letter-spacing: 0.02em;
 }
 
-.add-product-form input {
+/* Two input fields in one row */
+.add-product-form .input-row {
+  display: flex;
+  gap: 20px; /* space between fields */
+  margin-bottom: 20px;
+}
+
+.add-product-form .input-row input,
+.add-product-form .input-row select {
+  flex: 1;
+}
+
+.add-product-form input,
+.add-product-form select {
   display: block;
   width: 100%;
   padding: 11px 14px;
@@ -43,14 +56,16 @@
   transition: border-color 0.2s, background-color 0.2s, box-shadow 0.15s;
 }
 
-.add-product-form input:focus {
+.add-product-form input:focus,
+.add-product-form select:focus {
   border-color: #007bff;
   outline: none;
   background-color: #fff;
   box-shadow: 0 0 4px 0 #d1e7fd;
 }
 
-.add-product-form input:disabled {
+.add-product-form input:disabled,
+.add-product-form select:disabled {
   background-color: #f3f3f3;
   border-color: #e0e0e0;
   color: #aaa;
@@ -61,18 +76,18 @@
   display: flex;
   gap: 14px;
   margin-top: 15px;
-  flex-wrap: nowrap; /* Buttons always in one row, never wrap */
-  overflow-x: auto; /* For very narrow screens, allow sideways scroll */
-  scrollbar-width: none; /* Hide scrollbar in Firefox */
-  -ms-overflow-style: none; /* Hide scrollbar in IE/Edge */
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 .add-product-buttons::-webkit-scrollbar {
-  display: none; /* Hide scrollbar in Chrome, Safari, Opera */
+  display: none;
 }
 
 .add-product-buttons .btn {
-  flex: 1; /* Buttons share remaining space equally */
-  min-width: min-content; /* Let them shrink, but not break layout */
+  flex: 1;
+  min-width: min-content;
   padding: 11px 0;
   font-weight: 600;
   border: none;
@@ -131,6 +146,11 @@
 @media (max-width: 768px) {
   .add-product-container {
     padding: 24px 20px;
+  }
+
+  /* Stack inputs vertically on smaller screens */
+  .add-product-form .input-row {
+    flex-direction: column;
   }
 }
 

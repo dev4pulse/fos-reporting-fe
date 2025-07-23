@@ -88,8 +88,13 @@ const Login = () => {
           </div>
         </div>
         <button type="submit" className="login-button" disabled={loading}>
-          {loading ? "Logging in..." : "Login"}
+          {loading ? (
+            <div className="spinner"></div>
+          ) : (
+            "Login"
+          )}
         </button>
+
         <div className="auth-links">
           <div className="forgot-row">
             <a href="#">Forgot Username?</a>

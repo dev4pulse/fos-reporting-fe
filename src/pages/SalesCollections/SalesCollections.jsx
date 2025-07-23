@@ -9,10 +9,12 @@ const SalesCollections = () => {
   const [employees, setEmployees] = useState([]);
   const [employeeFetchError, setEmployeeFetchError] = useState('');
   const [products, setProducts] = useState([]);
+  const [allProducts, setAllProducts] = useState([]); // Only ACTIVE products
   const [cashReceived, setCashReceived] = useState('');
   const [phonePay, setPhonePay] = useState('');
   const [creditCard, setCreditCard] = useState('');
 
+  // Fetch employees
   useEffect(() => {
     fetch('https://pulse-293050141084.asia-south1.run.app/active')
       .then(res => res.ok ? res.json() : Promise.reject(res.statusText))
@@ -20,6 +22,22 @@ const SalesCollections = () => {
       .catch(err => {
         setEmployeeFetchError('Failed to load employees.');
         console.error(err);
+      });
+  }, []);
+
+  // Fetch only active products
+  useEffect(() => {
+    fetch('https://pulse-293050141084.asia-south1.run.app/products')
+      .then(res => res.ok ? res.json() : Promise.reject(res.statusText))
+      .then(data => {
+        const activeProducts = data.filter(
+          p => p.status && p.status.toUpperCase() === 'ACTIVE'
+        );
+        setAllProducts(activeProducts);
+      })
+      .catch(err => {
+        console.error('Failed to fetch products:', err);
+        alert('Unable to load products');
       });
   }, []);
 
@@ -51,17 +69,12 @@ const SalesCollections = () => {
     const { productName, gun } = updated[index];
 
     if (field === 'productName') {
-      fetch(`https://pulse-293050141084.asia-south1.run.app/inventory/price?productName=${value}`)
-        .then(res => res.ok ? res.json() : Promise.reject(res.statusText))
-        .then(price => {
-          updated[index].price = price;
-          calculateSales(updated[index]);
-          setProducts(updated);
-        })
-        .catch(err => {
-          alert(`Failed to fetch price for ${value}`);
-          console.error(err);
-        });
+      const selectedProduct = allProducts.find(p => p.productName === value);
+      if (selectedProduct) {
+        updated[index].price = selectedProduct.price; // set price automatically
+      }
+      calculateSales(updated[index]);
+      setProducts(updated);
     }
 
     if ((field === 'productName' || field === 'gun') && productName && gun) {
@@ -129,7 +142,6 @@ const SalesCollections = () => {
       phonePay: parseFloat(phonePay) || 0,
       creditCard: parseFloat(creditCard) || 0,
       shortCollections: parseFloat(shortCollections)
-      // borrowers removed
     };
 
     try {
@@ -198,15 +210,27 @@ const SalesCollections = () => {
             {['productName', 'gun', 'opening', 'closing', 'price', 'testing', 'salesLiters', 'salesRupees'].map((field, j) => (
               <div className="form-group" key={j}>
                 <label>{field.replace(/([A-Z])/g, ' $1')}</label>
-                {['productName', 'gun'].includes(field) ? (
+                {field === 'productName' ? (
                   <select
                     value={p[field]}
                     onChange={e => handleProductChange(i, field, e.target.value)}
                     required
                   >
-                    <option value="">Select</option>
-                    {field === 'productName' && ['Petrol', 'Diesel'].map(opt => <option key={opt}>{opt}</option>)}
-                    {field === 'gun' && ['G1', 'G2', 'G3'].map(opt => <option key={opt}>{opt}</option>)}
+                    <option value="">Select Product</option>
+                    {allProducts.map(prod => (
+                      <option key={prod.productId} value={prod.productName}>
+                        {prod.productName}
+                      </option>
+                    ))}
+                  </select>
+                ) : field === 'gun' ? (
+                  <select
+                    value={p[field]}
+                    onChange={e => handleProductChange(i, field, e.target.value)}
+                    required
+                  >
+                    <option value="">Select Gun</option>
+                    {['G1', 'G2', 'G3'].map(opt => <option key={opt}>{opt}</option>)}
                   </select>
                 ) : (
                   <input
@@ -248,8 +272,6 @@ const SalesCollections = () => {
             </div>
           ))}
         </div>
-
-        {/* Borrowers section REMOVED */}
 
         <div className="sales-actions">
           <button type="submit" className="submit-btn">Submit All</button>

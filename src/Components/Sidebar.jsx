@@ -41,6 +41,9 @@ const Sidebar = () => {
             <NavLink to="/dashboard/inventory/view" className="sidebar-sub-link">
               <FaCubes className="icon" /> View Inventory
             </NavLink>
+            <NavLink to="/dashboard/inventory/view-products" className="sidebar-sub-link">
+              <FaCubes className="icon" /> View Products
+            </NavLink>
             <NavLink to="/dashboard/inventory/add-product" className="sidebar-sub-link">
               <FaPlus className="icon" /> Add Product
             </NavLink>
