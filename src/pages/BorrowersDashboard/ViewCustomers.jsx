@@ -1,19 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './ViewCustomers.css';
 import axios from 'axios';
-import {
-  Box,
-  TextField,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  Typography,
-  CircularProgress,
-} from '@mui/material';
 
 const ViewCustomers = () => {
   const [borrowers, setBorrowers] = useState([]);
@@ -43,7 +30,6 @@ const ViewCustomers = () => {
     fetchBorrowers();
   }, []);
 
-  // Search by id, name, vehicle, phone, email, address
   const filteredBorrowers = borrowers.filter((borrower) => {
     const search = searchTerm.toLowerCase();
     return (
@@ -62,77 +48,72 @@ const ViewCustomers = () => {
   );
 
   return (
-    <Box sx={{ p: 3 }}>
-      <Typography variant="h4" gutterBottom>
-        Borrowers
-      </Typography>
-      <TextField
-        label="Search by ID, Name, Vehicle, Phone, Email, or Address"
-        variant="outlined"
-        fullWidth
-        margin="normal"
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        disabled={loading}
-      />
+    <div className="view-customers">
+      <h1>Borrowers</h1>
+      <div className="search-box">
+        <input
+          type="text"
+          placeholder="Search by ID, Name, Vehicle, Phone, Email, or Address"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          disabled={loading}
+        />
+      </div>
 
       {loading ? (
-        <Box display="flex" justifyContent="center" my={4}>
-          <CircularProgress />
-        </Box>
+        <div className="loading">Loading borrowers...</div>
       ) : error ? (
-        <Typography color="error">{error}</Typography>
+        <div className="error-message">{error}</div>
       ) : borrowers.length === 0 ? (
-        <Typography>No borrower records found</Typography>
+        <div className="empty-message">No borrower records found</div>
       ) : (
         <>
-          <Typography variant="h6" sx={{ mb: 2 }}>
+          <div className="total-amount">
             Total Borrowed Amount: ₹ {totalBorrowedAmount.toLocaleString('en-IN')}
-          </Typography>
-
-          <TableContainer component={Paper} elevation={3}>
-            <Table sx={{ minWidth: 650 }} aria-label="borrowers">
-              <TableHead>
-                <TableRow>
-                  <TableCell>#</TableCell>
-                  <TableCell>Borrow ID</TableCell>
-                  <TableCell>Customer Name</TableCell>
-                  <TableCell>Vehicle</TableCell>
-                  <TableCell>Employee ID</TableCell>
-                  <TableCell>Amount (₹)</TableCell>
-                  <TableCell>Borrow Date</TableCell>
-                  <TableCell>Due Date</TableCell>
-                  <TableCell>Status</TableCell>
-                  <TableCell>Notes</TableCell>
-                  <TableCell>Phone</TableCell>
-                  <TableCell>Email</TableCell>
-                  <TableCell>Address</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
+          </div>
+          <div className="customers-table-container">
+            <table className="customers-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Borrow ID</th>
+                  <th>Customer Name</th>
+                  <th>Vehicle</th>
+                  <th>Employee ID</th>
+                  <th>Amount (₹)</th>
+                  <th>Borrow Date</th>
+                  <th>Due Date</th>
+                  <th>Status</th>
+                  <th>Notes</th>
+                  <th>Phone</th>
+                  <th>Email</th>
+                  <th>Address</th>
+                </tr>
+              </thead>
+              <tbody>
                 {filteredBorrowers.map((borrower, index) => (
-                  <TableRow key={borrower.id}>
-                    <TableCell>{index + 1}</TableCell>
-                    <TableCell>{borrower.id}</TableCell>
-                    <TableCell>{borrower.customerName}</TableCell>
-                    <TableCell>{borrower.customerVehicle}</TableCell>
-                    <TableCell>{borrower.employeeId}</TableCell>
-                    <TableCell>{borrower.amountBorrowed.toLocaleString('en-IN')}</TableCell>
-                    <TableCell>{new Date(borrower.borrowDate).toLocaleDateString()}</TableCell>
-                    <TableCell>{new Date(borrower.dueDate).toLocaleDateString()}</TableCell>
-                    <TableCell>{borrower.status}</TableCell>
-                    <TableCell>{borrower.notes || '—'}</TableCell>
-                    <TableCell>{borrower.phone}</TableCell>
-                    <TableCell>{borrower.email || '—'}</TableCell>
-                    <TableCell>{borrower.address}</TableCell>
-                  </TableRow>
+                  <tr key={borrower.id}>
+                    <td>{index + 1}</td>
+                    <td>{borrower.id}</td>
+                    <td>{borrower.customerName}</td>
+                    <td>{borrower.customerVehicle}</td>
+                    <td>{borrower.employeeId}</td>
+                    <td>{borrower.amountBorrowed.toLocaleString('en-IN')}</td>
+                    <td>{new Date(borrower.borrowDate).toLocaleDateString()}</td>
+                    <td>{new Date(borrower.dueDate).toLocaleDateString()}</td>
+                    <td>{borrower.status}</td>
+                    <td>{borrower.notes || '—'}</td>
+                    <td>{borrower.phone}</td>
+                    <td>{borrower.email || '—'}</td>
+                    <td>{borrower.address}</td>
+                  </tr>
                 ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+              </tbody>
+            </table>
+          </div>
         </>
       )}
-    </Box>
+    </div>
   );
 };
 

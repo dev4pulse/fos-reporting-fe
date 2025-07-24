@@ -6,6 +6,7 @@ const ViewProducts = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [newStatus, setNewStatus] = useState("");
 
@@ -25,21 +26,49 @@ const ViewProducts = () => {
     fetchProducts();
   }, []);
 
+  // Show messages temporarily
+  const showMessage = (setter, msg) => {
+    setter(msg);
+    setTimeout(() => setter(""), 3000);
+  };
+
   // Delete product
   const handleDelete = async (productId) => {
     if (!window.confirm("Are you sure you want to delete this product?")) return;
     try {
       await axios.delete(`http://localhost:8080/products/${productId}`);
       setProducts((prev) => prev.filter((p) => (p.productId ?? p.id) !== productId));
-      alert("Product deleted successfully.");
+      showMessage(setSuccess, "Product deleted successfully.");
     } catch (err) {
       if (err.response?.status === 409) {
-        alert(
-          "Cannot delete this product because it is referenced in other records (e.g., sales, inventory, or collections)."
-        );
+        if (
+          window.confirm(
+            "This product is linked to inventory or sales. Would you like to deactivate it instead?"
+          )
+        ) {
+          await deactivateProduct(productId);
+        }
       } else {
-        alert("Delete failed: " + (err.response?.data || err.message));
+        showMessage(setError, "Delete failed: " + (err.response?.data || err.message));
       }
+    }
+  };
+
+  // Deactivate product (soft delete)
+  const deactivateProduct = async (productId) => {
+    try {
+      const product = products.find((p) => (p.productId ?? p.id) === productId);
+      if (!product) return;
+
+      const updatedProduct = { ...product, status: "INACTIVE" };
+      await axios.put(`http://localhost:8080/products/${productId}`, updatedProduct);
+
+      setProducts((prev) =>
+        prev.map((p) => (p.productId ?? p.id) === productId ? updatedProduct : p)
+      );
+      showMessage(setSuccess, "Product has been deactivated.");
+    } catch (err) {
+      showMessage(setError, "Failed to deactivate product: " + (err.response?.data || err.message));
     }
   };
 
@@ -60,18 +89,22 @@ const ViewProducts = () => {
         prev.map((p) => (p.productId ?? p.id) === productId ? updatedProduct : p)
       );
       setSelectedProduct(null);
-      alert("Product updated successfully.");
+      showMessage(setSuccess, "Product updated successfully.");
     } catch (err) {
-      alert("Update failed: " + (err.response?.data || err.message));
+      showMessage(setError, "Update failed: " + (err.response?.data || err.message));
     }
   };
 
   if (loading) return <p className="loading-text">Loading products...</p>;
-  if (error) return <p className="error-text">{error}</p>;
+  if (error && !success) return <p className="error-text">{error}</p>;
 
   return (
     <div className="view-products-container">
       <h2 className="view-products-heading">View Products</h2>
+
+      {success && <p className="success-message">{success}</p>}
+      {error && <p className="error-message">{error}</p>}
+
       <div className="table-wrapper">
         <table className="products-table">
           <thead>
@@ -87,7 +120,7 @@ const ViewProducts = () => {
           </thead>
           <tbody>
             {products.map((product, index) => {
-              const productId = product.productId ?? product.id; // ensure correct key
+              const productId = product.productId ?? product.id;
               return (
                 <tr key={productId}>
                   <td>{index + 1}</td>

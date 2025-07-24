@@ -4,74 +4,73 @@ import './UpdateInventory.css';
 
 const UpdateInventory = () => {
   const [products, setProducts] = useState([]);
+  const [employees, setEmployees] = useState([]);
   const [formData, setFormData] = useState({
-    productID: '',
+    productId: '',
     productName: '',
-    currentQty: '',
+    currentLevel: 0,
+    tankCapacity: 0,
     newQty: '',
-    tankCapacity: '',
-    currentPrice: '',
-    refillSpace: ''
+    refillSpace: 0,
+    metric: 'liters',
+    employeeId: ''
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
-  // Fetch available products for dropdown
+  // Fetch products and employees
   useEffect(() => {
     axios
       .get('https://pulse-293050141084.asia-south1.run.app/inventory/latest')
-      .then((res) => setProducts(res.data))
+      .then((res) => setProducts(Array.isArray(res.data) ? res.data : []))
       .catch((err) => {
-        setError('Failed to load products. See console for details.');
         console.error('Failed to fetch products:', err);
+        setError('Failed to load products.');
+      });
+
+    axios
+      .get('https://pulse-293050141084.asia-south1.run.app/active')
+      .then((res) => setEmployees(Array.isArray(res.data) ? res.data : []))
+      .catch((err) => {
+        console.error('Failed to fetch employees:', err);
+        setError('Failed to load employees.');
       });
   }, []);
 
-  // Handle product selection and fetch details by name if necessary
-  const handleProductSelect = async (e) => {
-    const productName = e.target.value;
-    if (!productName) {
+  // Handle product selection
+  const handleProductSelect = (e) => {
+    const productId = e.target.value;
+    const product = products.find((p) => String(p.productId) === productId);
+
+    if (!product) {
       resetForm();
       return;
     }
 
-    let product = products.find((p) => p.productName === productName);
-
-    if (!product) {
-      try {
-        const res = await axios.get(
-          `https://pulse-293050141084.asia-south1.run.app/inventory/by-name?productName=${encodeURIComponent(productName)}`
-        );
-        product = res.data;
-      } catch (err) {
-        setError('Product not found or API error.');
-        return;
-      }
-    }
-
-    setFormData({
-      productID: product.productID || '',
+    setFormData((prev) => ({
+      ...prev,
+      productId: product.productId,
       productName: product.productName || '',
-      currentQty: product.quantity?.toString() || '',
-      tankCapacity: product.tankCapacity?.toString() || '',
-      currentPrice: product.price?.toString() || '',
+      currentLevel: product.currentLevel ?? 0,
+      tankCapacity: product.tankCapacity ?? 0,
       newQty: '',
-      refillSpace: (product.tankCapacity && product.quantity != null)
-        ? (Number(product.tankCapacity) - Number(product.quantity)).toString()
-        : ''
-    });
+      refillSpace: (product.tankCapacity ?? 0) - (product.currentLevel ?? 0),
+      metric: product.metric || 'liters'
+    }));
     setError('');
     setSuccess('');
   };
 
-  // Handle changes in 'New Quantity' and calculate refill space
+  // Handle input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     let refillSpace = formData.refillSpace;
 
-    if (name === 'newQty' && formData.tankCapacity && value !== '') {
-      refillSpace = (Number(formData.tankCapacity) - Number(value)).toString();
+    if (name === 'newQty') {
+      const newCurrent = (formData.currentLevel ?? 0) + Number(value || 0);
+      refillSpace = (formData.tankCapacity ?? 0) - newCurrent;
+      if (refillSpace < 0) refillSpace = 0;
     }
 
     setFormData((prev) => ({
@@ -82,86 +81,92 @@ const UpdateInventory = () => {
     setError('');
   };
 
-  // Reset the form state
+  // Reset form
   const resetForm = () => {
     setFormData({
-      productID: '',
+      productId: '',
       productName: '',
-      currentQty: '',
+      currentLevel: 0,
+      tankCapacity: 0,
       newQty: '',
-      tankCapacity: '',
-      currentPrice: '',
-      refillSpace: ''
+      refillSpace: 0,
+      metric: 'liters',
+      employeeId: ''
     });
     setError('');
     setSuccess('');
   };
 
-  // Submit the inventory addition
+  // Submit form
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoading(true);
     setError('');
     setSuccess('');
 
-    const { productID, productName, newQty, tankCapacity, currentPrice } = formData;
+    const { productId, newQty, metric, employeeId, currentLevel, tankCapacity } = formData;
 
-    // Validation checks
-    if (!productName || !newQty || isNaN(Number(newQty))) {
-      setError('Please select a product and enter a valid quantity.');
+    // Validate required fields
+    if (!productId || !newQty || isNaN(Number(newQty)) || !employeeId) {
+      setError('Please select a product, enter a valid quantity, and choose an employee.');
+      setLoading(false);
+      return;
+    }
+
+    // Validate refill space
+    if ((Number(currentLevel) + Number(newQty)) > Number(tankCapacity)) {
+      setError(`Cannot add ${newQty} ${metric}. Tank capacity exceeded by ${(Number(currentLevel) + Number(newQty) - Number(tankCapacity)).toFixed(2)} ${metric}.`);
       setLoading(false);
       return;
     }
 
     const payload = {
-      productID: Number(productID),
-      productName,
+      productId: Number(productId),
       quantity: Number(newQty),
-      tankCapacity: Number(tankCapacity),
-      price: Number(currentPrice),
+      metric,
+      employeeId: Number(employeeId)
     };
 
     axios
       .post('https://pulse-293050141084.asia-south1.run.app/inventory', payload)
       .then((res) => {
-        if (res.status === 200 && res.data === "added to inventory") {
-          setSuccess('Entry added to inventory!');
+        if (res.status === 201 || res.status === 200) {
+          setSuccess('Entry added successfully!');
           resetForm();
         } else {
           setError(res.data || 'Failed to add entry.');
         }
       })
       .catch((err) => {
-        setError(err.response?.data || 'Add failed. See console for details.');
         console.error('Add failed:', err);
+        setError(err.response?.data || 'Failed to add entry.');
       })
-      .finally(() => {
-        setLoading(false);
-      });
+      .finally(() => setLoading(false));
   };
 
   return (
     <div className="dashboard-content">
       <div className="update-inventory-container">
-        {success && (<div className="update-success-message">{success}</div>)}
-        {error && (<div className="update-error-message">{error}</div>)}
+        {success && <div className="update-success-message">{success}</div>}
+        {error && <div className="update-error-message">{error}</div>}
 
-        <h2 className="update-inventory-heading">Add Inventory Entry</h2>
+        <h2 className="update-inventory-heading">Update Inventory</h2>
 
         <form className="update-inventory-form" onSubmit={handleSubmit}>
+          {/* Product select */}
           <div className="form-row">
             <div className="form-group full-width">
               <label>Select Product</label>
               <select
-                name="productName"
-                value={formData.productName}
+                name="productId"
+                value={formData.productId}
                 onChange={handleProductSelect}
                 required
                 disabled={loading}
               >
-                <option value="">-- Select --</option>
+                <option value="">-- Select Product --</option>
                 {products.map((p) => (
-                  <option key={p.productID} value={p.productName}>
+                  <option key={p.productId} value={p.productId}>
                     {p.productName}
                   </option>
                 ))}
@@ -169,32 +174,43 @@ const UpdateInventory = () => {
             </div>
           </div>
 
+          {/* Employee select */}
           <div className="form-row">
-            <div className="form-group">
-              <label>Product ID</label>
-              <input
-                type="text"
-                name="productID"
-                value={formData.productID}
-                readOnly
+            <div className="form-group full-width">
+              <label>Select Employee</label>
+              <select
+                name="employeeId"
+                value={formData.employeeId}
+                onChange={handleChange}
+                required
                 disabled={loading}
-              />
-            </div>
-            <div className="form-group">
-              <label>Current Quantity (L)</label>
-              <input
-                type="number"
-                name="currentQty"
-                value={formData.currentQty}
-                readOnly
-                disabled={loading}
-              />
+              >
+                <option value="">-- Select Employee --</option>
+                {employees.map((e) => (
+                  <option key={e.employeeId} value={e.employeeId}>
+                    {e.name} ({e.employeeId})
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
 
+          {/* Current levels */}
           <div className="form-row">
             <div className="form-group">
-              <label>New Quantity (L)*</label>
+              <label>Current Level ({formData.metric})</label>
+              <input type="number" value={formData.currentLevel} readOnly />
+            </div>
+            <div className="form-group">
+              <label>Tank Capacity ({formData.metric})</label>
+              <input type="number" value={formData.tankCapacity} readOnly />
+            </div>
+          </div>
+
+          {/* New Quantity */}
+          <div className="form-row">
+            <div className="form-group">
+              <label>New Quantity ({formData.metric})</label>
               <input
                 type="number"
                 name="newQty"
@@ -206,57 +222,21 @@ const UpdateInventory = () => {
                 step="0.01"
               />
             </div>
-          </div>
-
-          <div className="form-row">
             <div className="form-group">
-              <label>Tank Capacity (L)</label>
-              <input
-                type="number"
-                name="tankCapacity"
-                value={formData.tankCapacity}
-                readOnly
-                disabled={loading}
-              />
-            </div>
-            <div className="form-group">
-              <label>Current Price (₹)</label>
-              <input
-                type="number"
-                name="currentPrice"
-                value={formData.currentPrice}
-                readOnly
-                disabled={loading}
-              />
+              <label>Refill Space ({formData.metric})</label>
+              <input type="number" value={formData.refillSpace} readOnly />
             </div>
           </div>
 
-          <div className="form-row">
-            <div className="form-group">
-              <label>Refill Space (L)</label>
-              <input
-                type="number"
-                name="refillSpace"
-                value={formData.refillSpace}
-                readOnly
-                disabled={loading}
-              />
-            </div>
-          </div>
-
+          {/* Buttons */}
           <div className="form-buttons">
-            <button
-              type="button"
-              className="btn btn-gray"
-              onClick={resetForm}
-              disabled={loading}
-            >
+            <button type="button" className="btn btn-gray" onClick={resetForm} disabled={loading}>
               Clear
             </button>
             <button
               type="submit"
               className="btn btn-blue"
-              disabled={!formData.productName || !formData.newQty || loading}
+              disabled={!formData.productId || !formData.newQty || !formData.employeeId || loading}
             >
               {loading ? 'Adding...' : 'Add Entry'}
             </button>
@@ -268,4 +248,3 @@ const UpdateInventory = () => {
 };
 
 export default UpdateInventory;
-
