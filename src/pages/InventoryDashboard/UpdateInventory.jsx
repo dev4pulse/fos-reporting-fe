@@ -268,3 +268,4 @@ const UpdateInventory = () => {
 };
 
 export default UpdateInventory;
+

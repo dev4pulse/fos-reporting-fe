@@ -8,7 +8,7 @@ const ViewInventory = () => {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    axios.get('http://localhost:8080/inventory')
+    axios.get('http://localhost:8080/inventory/latest')
       .then(res => {
         console.log('Inventory data:', res.data);
         setInventoryData(res.data);
@@ -35,29 +35,26 @@ const ViewInventory = () => {
               <tr>
                 <th>#</th>
                 <th>Product Name</th>
-                <th>Tank Capacity (L)</th>
-                <th>Inventory (L)</th>
-                <th>Booking Limit (L)</th>
-                <th>Price (₹)</th>
-                <th>Last Inventory Updated</th>
-                <th>Last Price Updated</th>
+                <th>Status</th>
+                <th>Tank Capacity ({inventoryData[0]?.metric || 'L'})</th>
+                <th>Current Inventory ({inventoryData[0]?.metric || 'L'})</th>
+                <th>Current Price (₹)</th>
+                <th>Last Updated</th>
               </tr>
             </thead>
             <tbody>
               {inventoryData.map((item, index) => (
-                <tr key={index}>
+                <tr key={item.productId}>
                   <td>{index + 1}</td>
                   <td>{item.productName || '—'}</td>
+                  <td>{item.status || '—'}</td>
                   <td>{item.tankCapacity ?? '—'}</td>
-                  <td>{item.inventory ?? item.currentLevel ?? '—'}</td>
-                  <td>{item.bookingLimit ?? '—'}</td>
-                  <td>{item.price ?? '—'}</td>
-                  <td>{item.inventoryUpdated || item.lastUpdated
-                    ? new Date(item.inventoryUpdated || item.lastUpdated).toLocaleString()
-                    : '—'}</td>
-                  <td>{item.lastPriceUpdated
-                    ? new Date(item.lastPriceUpdated).toLocaleString()
-                    : '—'}</td>
+                  <td>{item.currentLevel ?? '—'}</td>
+                  <td>{item.currentPrice ?? '—'}</td>
+                  <td>{item.lastUpdated
+                    ? new Date(item.lastUpdated).toLocaleString()
+                    : '—'}
+                  </td>
                 </tr>
               ))}
             </tbody>
