@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import './SalesCollections.css';
@@ -9,42 +10,54 @@ const SalesCollections = () => {
   const [employees, setEmployees] = useState([]);
   const [employeeFetchError, setEmployeeFetchError] = useState('');
   const [products, setProducts] = useState([]);
-  const [allProducts, setAllProducts] = useState([]); // show all products
+  const [allProducts, setAllProducts] = useState([]);
   const [cashReceived, setCashReceived] = useState('');
   const [phonePay, setPhonePay] = useState('');
   const [creditCard, setCreditCard] = useState('');
 
   // Fetch employees
   useEffect(() => {
-    fetch('https://pulse-293050141084.asia-south1.run.app/active')
-      .then(res => res.ok ? res.json() : Promise.reject(res.statusText))
-      .then(setEmployees)
+    axios.get('http://localhost:8080/active')
+      .then(res => setEmployees(res.data))
       .catch(err => {
         setEmployeeFetchError('Failed to load employees.');
         console.error(err);
       });
   }, []);
 
- // Fetch only ACTIVE products
- useEffect(() => {
-   fetch('https://pulse-293050141084.asia-south1.run.app/products')
-     .then(res => res.ok ? res.json() : Promise.reject(res.statusText))
-     .then(data => {
-       const activeProducts = data.filter(
-         (p) => p.status && p.status.toUpperCase() === 'ACTIVE'
-       );
-       setAllProducts(activeProducts);
-     })
-     .catch(err => {
-       console.error('Failed to fetch products:', err);
-       alert('Unable to load products');
-     });
- }, []);
+  // Fetch active products
+  useEffect(() => {
+    axios.get('https://pulse-293050141084.asia-south1.run.app/products')
+      .then(res => {
+        const activeProducts = res.data.filter(
+          p => p.status && p.status.toUpperCase() === 'ACTIVE'
+        );
+        setAllProducts(activeProducts);
+      })
+      .catch(err => {
+        console.error('Failed to fetch products:', err);
+        alert('Unable to load products');
+      });
+  }, []);
 
   const handleAddProduct = () => {
     setProducts(prev => [
       ...prev,
-      { productName: '', gun: '', opening: '', closing: '', price: '', testing: '', salesLiters: 0, salesRupees: 0 }
+      {
+        productId: '',
+        productName: '',
+        gun: '',
+        opening: '',
+        closing: '',
+        price: '',
+        testing: '',
+        salesLiters: 0,
+        salesRupees: 0,
+        currentLevel: 0,
+        tankCapacity: 0,
+        refillSpace: 0,
+        metric: 'liters'
+      }
     ]);
   };
 
@@ -60,6 +73,9 @@ const SalesCollections = () => {
     const liters = Math.max(closing - opening - testing, 0);
     row.salesLiters = liters;
     row.salesRupees = parseFloat((liters * price).toFixed(2));
+    // Update current fuel quantity and refill space
+    row.currentLevel = Math.max((row.currentLevel ?? 0) - liters, 0);
+    row.refillSpace = Math.max((row.tankCapacity ?? 0) - row.currentLevel, 0);
   };
 
   const handleProductChange = async (index, field, value) => {
@@ -70,18 +86,33 @@ const SalesCollections = () => {
 
     if (field === 'productName') {
       const selectedProduct = allProducts.find(p => p.productName === value);
-      if (selectedProduct) updated[index].price = selectedProduct.price;
+      if (selectedProduct) {
+        updated[index].price = selectedProduct.price;
+        updated[index].productId = selectedProduct.productId;
+
+        // Fetch current inventory details
+        try {
+          const invRes = await axios.get('https://pulse-293050141084.asia-south1.run.app/inventory/latest');
+          const invProduct = invRes.data.find(p => p.productId === selectedProduct.productId);
+          if (invProduct) {
+            updated[index].currentLevel = invProduct.currentLevel ?? 0;
+            updated[index].tankCapacity = invProduct.tankCapacity ?? 0;
+            updated[index].refillSpace = (invProduct.tankCapacity ?? 0) - (invProduct.currentLevel ?? 0);
+            updated[index].metric = invProduct.metric || 'liters';
+          }
+        } catch (err) {
+          console.error('Failed to fetch inventory details:', err);
+        }
+      }
     }
 
     if ((field === 'productName' || field === 'gun') && productName && gun) {
       try {
-        const res = await fetch(
-          `https://pulse-293050141084.asia-south1.run.app/sales/last?productName=${productName}&gun=${gun}`
+        const res = await axios.get(
+          `https://pulse-293050141084.asia-south1.run.app/sales/last`,
+          { params: { productName, gun } }
         );
-        if (res.ok) {
-          const data = await res.json();
-          updated[index].opening = data.lastClosing || 0;
-        }
+        updated[index].opening = res.data.lastClosing || 0;
       } catch (err) {
         alert(`Error fetching last closing for ${productName} - ${gun}`);
         console.error(err);
@@ -145,25 +176,22 @@ const SalesCollections = () => {
     };
 
     try {
-      const [res1, res2] = await Promise.all([
-        fetch('https://pulse-293050141084.asia-south1.run.app/sales', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payloadSales)
-        }),
-        fetch('https://pulse-293050141084.asia-south1.run.app/collections', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payloadCollections)
+      const inventoryUpdates = products.map(p =>
+        axios.post('https://pulse-293050141084.asia-south1.run.app/inventory', {
+          productId: p.productId,
+          quantity: -p.salesLiters, // decrement by sales quantity
+          metric: p.metric,
+          employeeId: parseInt(employeeId)
         })
+      );
+
+      const [res1, res2] = await Promise.all([
+        axios.post('https://pulse-293050141084.asia-south1.run.app/sales', payloadSales),
+        axios.post('https://pulse-293050141084.asia-south1.run.app/collections', payloadCollections),
+        ...inventoryUpdates
       ]);
 
-      const msg1 = await res1.text();
-      const msg2 = await res2.text();
-
-      if (!res1.ok || !res2.ok) throw new Error(`${msg1}\n${msg2}`);
-
-      alert(`Submitted!\nSales: ${msg1}\nCollections: ${msg2}`);
+      alert(`Submitted!\nSales: ${res1.data}\nCollections: ${res2.data}`);
       window.location.reload();
     } catch (err) {
       alert('Error submitting form');
@@ -186,7 +214,7 @@ const SalesCollections = () => {
               timeFormat="HH:mm"
               timeIntervals={15}
               dateFormat="dd-MM-yyyy HH:mm"
-              maxDate={new Date()} // restrict to today or earlier
+              maxDate={new Date()}
               className="datetime-input"
             />
           </div>
@@ -209,7 +237,7 @@ const SalesCollections = () => {
         <h4 className="section-title">Sales</h4>
         {products.map((p, i) => (
           <div className="sales-form" key={i}>
-            {['productName', 'gun', 'opening', 'closing', 'price', 'testing', 'salesLiters', 'salesRupees'].map((field, j) => (
+            {['productName', 'gun', 'opening', 'closing', 'price', 'testing', 'salesLiters', 'salesRupees', 'currentLevel', 'refillSpace'].map((field, j) => (
               <div className="form-group" key={j}>
                 <label>{field.replace(/([A-Z])/g, ' $1')}</label>
                 {field === 'productName' ? (
@@ -239,7 +267,7 @@ const SalesCollections = () => {
                     type="number"
                     value={p[field]}
                     onChange={e => handleProductChange(i, field, e.target.value)}
-                    readOnly={['salesLiters', 'salesRupees', 'price', 'opening'].includes(field)}
+                    readOnly={['salesLiters', 'salesRupees', 'price', 'opening', 'currentLevel', 'refillSpace'].includes(field)}
                     className={field === 'closing' && parseFloat(p.closing) < parseFloat(p.opening) ? 'input-error' : ''}
                   />
                 )}

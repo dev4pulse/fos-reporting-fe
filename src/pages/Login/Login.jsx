@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { FiEye, FiEyeOff } from "react-icons/fi";
-import "./login.css";
+import "./Login.css";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -22,7 +22,7 @@ const Login = () => {
     setLoading(true);
     try {
       const response = await axios.post(
-        "https://pulse-293050141084.asia-south1.run.app/login",
+        "http://localhost:8080/login",
         {
           username,
           password,
