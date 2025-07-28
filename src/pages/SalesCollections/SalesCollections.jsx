@@ -17,7 +17,7 @@ const SalesCollections = () => {
 
   // Fetch employees
   useEffect(() => {
-    axios.get('http://localhost:8080/active')
+    axios.get('https://pulse-293050141084.asia-south1.run.app/active')
       .then(res => setEmployees(res.data))
       .catch(err => {
         setEmployeeFetchError('Failed to load employees.');

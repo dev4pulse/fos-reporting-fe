@@ -44,7 +44,7 @@ const Registration = () => {
     setSuccess("");
 
     try {
-      const response = await axios.post("http://localhost:8080/employee", {
+      const response = await axios.post("https://pulse-293050141084.asia-south1.run.app/employee", {
         ...formData,
         employeeSalary: 0,
         isActive: true,
