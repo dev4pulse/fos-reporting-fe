@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { FiEye, FiEyeOff } from "react-icons/fi";
-import "./login.css";
+import "./Login.css";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -88,8 +88,13 @@ const Login = () => {
           </div>
         </div>
         <button type="submit" className="login-button" disabled={loading}>
-          {loading ? "Logging in..." : "Login"}
+          {loading ? (
+            <div className="spinner"></div>
+          ) : (
+            "Login"
+          )}
         </button>
+
         <div className="auth-links">
           <div className="forgot-row">
             <a href="#">Forgot Username?</a>

@@ -5,16 +5,19 @@ import './AddProduct.css';
 const AddProduct = () => {
   const initialValues = {
     productName: '',
+    description: '',
     tankCapacity: '',
-    bookingLimit: ''
+    price: '',
+    status: 'ACTIVE', // default
   };
 
   const [formData, setFormData] = useState(initialValues);
 
   const handleChange = (e) => {
+    const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [e.target.name]: e.target.value
+      [name]: value,
     }));
   };
 
@@ -22,49 +25,80 @@ const AddProduct = () => {
     setFormData(initialValues);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    axios.post('https://pulse-293050141084.asia-south1.run.app/inventory/', formData)
-      .then(() => {
-        alert('Product added successfully!');
-        handleClear();
-      })
-      .catch(err => {
-        alert('Error: ' + err.message);
-      });
+    try {
+      await axios.post('https://pulse-293050141084.asia-south1.run.app/products', formData);
+      alert('Product added successfully!');
+      handleClear();
+    } catch (err) {
+      console.error('Error adding product:', err);
+      alert('Failed to add product: ' + err.message);
+    }
   };
 
   return (
     <div className="add-product-container">
       <h2 className="add-product-heading">Add New Product</h2>
       <form className="add-product-form" onSubmit={handleSubmit}>
-        <label>Product Name</label>
-        <input
-          type="text"
-          name="productName"
-          value={formData.productName}
+        <div className="input-row">
+          <div style={{ flex: 1 }}>
+            <label>Product Name</label>
+            <input
+              type="text"
+              name="productName"
+              value={formData.productName}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <div style={{ flex: 1 }}>
+            <label>Description</label>
+            <input
+              type="text"
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              required
+            />
+          </div>
+        </div>
+
+        <div className="input-row">
+          <div style={{ flex: 1 }}>
+            <label>Tank Capacity (L)</label>
+            <input
+              type="number"
+              name="tankCapacity"
+              value={formData.tankCapacity}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <div style={{ flex: 1 }}>
+            <label>Price (₹)</label>
+            <input
+              type="number"
+              name="price"
+              value={formData.price}
+              onChange={handleChange}
+              required
+            />
+          </div>
+        </div>
+
+        <label>Status</label>
+        <select
+          name="status"
+          value={formData.status}
           onChange={handleChange}
           required
-        />
-
-        <label>Tank Capacity (L)</label>
-        <input
-          type="number"
-          name="tankCapacity"
-          value={formData.tankCapacity}
-          onChange={handleChange}
-          required
-        />
-
-        <label>Inventory</label>
-        <input
-          type="number"
-          name="bookingLimit"
-          value={formData.bookingLimit}
-          onChange={handleChange}
-
-        />
+        >
+          <option value="ACTIVE">ACTIVE</option>
+          <option value="INACTIVE">INACTIVE</option>
+        </select>
 
         <div className="add-product-buttons">
           <button type="submit" className="btn btn-blue">Add Product</button>

@@ -29,11 +29,13 @@ const UpdatePrice = () => {
   const handleProductSelect = (e) => {
     const productName = e.target.value;
     const selectedProduct = products.find(p => p.productName === productName);
+
     setFormData({
       productName,
-      currentPrice: selectedProduct?.price || '',
+      currentPrice: selectedProduct?.currentPrice || '', // <-- Use correct key
       newPrice: '',
     });
+
     setError('');
     setSuccess('');
   };
@@ -92,7 +94,7 @@ const UpdatePrice = () => {
         { productName, newPrice: price }
       );
       if (response.status === 200) {
-        setSuccess('Price updated successfully!'); // <-- Green success message
+        setSuccess('Price updated successfully!');
         handleClear();
       } else {
         setError(response.data || 'Update failed.');
@@ -108,16 +110,8 @@ const UpdatePrice = () => {
   return (
     <div className="update-price-container">
       <h2 className="update-price-heading">Update Product Price</h2>
-      {success && (
-        <div className="update-success-message">
-          {success}
-        </div>
-      )}
-      {error && (
-        <div className="update-error-message">
-          {error}
-        </div>
-      )}
+      {success && <div className="update-success-message">{success}</div>}
+      {error && <div className="update-error-message">{error}</div>}
       <form className="update-price-form" onSubmit={handleSubmit}>
         <label htmlFor="productName">Select Product</label>
         <select
@@ -130,7 +124,7 @@ const UpdatePrice = () => {
         >
           <option value="">-- Select Product --</option>
           {products.map((p) => (
-            <option key={p.productID} value={p.productName}>
+            <option key={p.productId} value={p.productName}>
               {p.productName}
             </option>
           ))}

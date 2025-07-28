@@ -44,7 +44,7 @@ const ViewDocuments = () => {
           {documents.length > 0 ? (
             documents.map((doc, index) => (
               <tr key={index}>
-                <td>{doc.type}</td>
+                <td>{doc.documentType}</td>
                 <td>{doc.issuingAuthority}</td>
                 <td>{doc.issueDate}</td>
                 <td>{doc.expiryDate}</td>

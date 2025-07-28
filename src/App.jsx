@@ -13,7 +13,6 @@ import DashboardHome from './Components/DashboardHome';
 import EmployeeDashboard from './pages/EmployeeDashboard/EmployeeDashboard';
 import ManagerDashboard from './pages/ManagerDashboard/ManagerDashboard';
 import OwnerDashboard from './pages/OwnerDashboard/OwnerDashboard';
-import ProductManagement from './pages/ProductManagement/ProductManagement';
 import SalesCollections from './pages/SalesCollections/SalesCollections';
 import BorrowersDashboard from './pages/BorrowersDashboard/BorrowersDashboard';
 
@@ -22,6 +21,8 @@ import ViewInventory from './pages/InventoryDashboard/ViewInventory';
 import AddProduct from './pages/InventoryDashboard/AddProduct';
 import UpdateInventory from './pages/InventoryDashboard/UpdateInventory';
 import UpdatePrice from './pages/InventoryDashboard/UpdatePrice';
+import ViewProducts from './pages/InventoryDashboard/ViewProducts';
+
 
 // Customers sub-pages
 import ViewCustomers from './pages/BorrowersDashboard/ViewCustomers';
@@ -70,13 +71,13 @@ const App = () => {
         <Route path="employee" element={<EmployeeDashboard />} />
         <Route path="manager" element={<ManagerDashboard />} />
         <Route path="owner" element={<OwnerDashboard />} />
-        <Route path="product" element={<ProductManagement />} />
         <Route path="sales-collections" element={<SalesCollections />} />
         <Route path="borrowers" element={<BorrowersDashboard />} />
 
         {/* Inventory subroutes */}
         <Route path="inventory" element={<Navigate to="view" />} />
         <Route path="inventory/view" element={<ViewInventory />} />
+        <Route path="inventory/view-products" element={<ViewProducts />} />
         <Route path="inventory/add-product" element={<AddProduct />} />
         <Route path="inventory/update" element={<UpdateInventory />} />
         <Route path="inventory/price" element={<UpdatePrice />} />

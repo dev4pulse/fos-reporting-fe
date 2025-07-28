@@ -1,8 +1,18 @@
-/* ViewCustomers.css */
 .view-customers {
+  background-color: #fff;
   padding: 24px;
-  max-width: 1200px;
-  margin: 0 auto;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.09);
+  margin: 24px auto;
+  transition: box-shadow 0.2s;
+  max-width: calc(min(1200px, 98vw));
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 120px);
+  min-height: 550px;
+  box-sizing: border-box;
 }
 
 .view-customers h1 {
@@ -12,8 +22,7 @@
 }
 
 .search-box {
-  margin-bottom: 24px;
-  width: 100%;
+  margin-bottom: 20px;
 }
 
 .search-box input {
@@ -27,56 +36,74 @@
 }
 
 .search-box input:focus {
-  border-color: #0066cc;
-  box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.2);
+  border-color: #28a745;
+  box-shadow: 0 0 0 2px rgba(40, 167, 69, 0.2);
 }
 
-.loading-container {
-  display: flex;
-  justify-content: center;
-  margin: 40px 0;
+.total-amount {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 12px;
+}
+
+.loading,
+.error-message,
+.empty-message {
+  text-align: center;
+  padding: 20px;
+  font-size: 16px;
 }
 
 .error-message {
   color: #dc3545;
-  margin: 20px 0;
-  font-size: 18px;
 }
 
 .empty-message {
   color: #666;
-  margin: 20px 0;
-  font-size: 18px;
+}
+
+/* Scrollable table container */
+.customers-table-container {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: auto;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background: white;
 }
 
 .customers-table {
   width: 100%;
   border-collapse: collapse;
-  background: white;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  overflow: hidden;
+  min-width: 900px;
+}
+
+.customers-table th,
+.customers-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
 }
 
 .customers-table th {
-  background-color: #f5f5f5;
-  padding: 16px;
-  text-align: left;
-  font-weight: 600;
-  color: #333;
-  border-bottom: 2px solid #eee;
-}
-
-.customers-table td {
-  padding: 14px 16px;
-  border-bottom: 1px solid #eee;
+  background: #f1f1f1;
+  font-weight: 500;
   color: #444;
-}
-
-.customers-table tr:last-child td {
-  border-bottom: none;
+  text-transform: uppercase;
+  font-size: 13px;
+  letter-spacing: 0.5px;
 }
 
 .customers-table tr:hover {
-  background-color: #f9f9f9;
+  background-color: #f8f9fa;
+}
+
+@media (max-width: 768px) {
+  .view-customers h1 {
+    font-size: 24px;
+  }
+  .search-box input {
+    font-size: 14px;
+  }
 }
