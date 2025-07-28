@@ -2,7 +2,7 @@ import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 
 // Auth pages
-import Login from './pages/Login/login';
+import Login from './pages/Login/Login';
 import Registration from './pages/Registration/Registration';
 
 // Layout
