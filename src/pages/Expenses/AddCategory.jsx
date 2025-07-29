@@ -20,8 +20,7 @@ const AddCategory = () => {
     try {
       const response = await axios.get('https://pulse-293050141084.asia-south1.run.app/categoryList');
       const list = response.data || [];
-      const names = list.map(cat => cat.name || cat).filter(Boolean);
-      setCategories(names);
+      setCategories(list); // keep full objects {id, name}
     } catch (err) {
       setError('Failed to fetch categories. Please try again.');
       console.error(err);
@@ -40,7 +39,6 @@ const AddCategory = () => {
       setSuccessMsg('Category added successfully!');
       fetchCategories();
 
-      // Remove message after 3 seconds
       setTimeout(() => setSuccessMsg(''), 3000);
     } catch (err) {
       alert('Failed to add category. Maybe it already exists?');
@@ -51,7 +49,9 @@ const AddCategory = () => {
   const handleDeleteCategory = async (name) => {
     if (!window.confirm(`Delete category "${name}"?`)) return;
     try {
-      await axios.delete('https://pulse-293050141084.asia-south1.run.app/categoryPost', { data: { name } });
+      await axios.delete(
+        `http://localhost:8080/categoryDelete/${encodeURIComponent(name)}`
+      );
       fetchCategories();
     } catch (err) {
       alert('Failed to delete category');
@@ -83,12 +83,12 @@ const AddCategory = () => {
       ) : (
         <ul className="category-list">
           {categories.map((cat) => (
-            <li key={cat}>
-              {cat}
+            <li key={cat.name}>
+              {cat.name}
               <FaTrashAlt
                 className="delete-icon"
                 title="Delete category"
-                onClick={() => handleDeleteCategory(cat)}
+                onClick={() => handleDeleteCategory(cat.name)}
               />
             </li>
           ))}
