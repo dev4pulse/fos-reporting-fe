@@ -38,7 +38,6 @@ const UpdateInventory = () => {
       });
   }, []);
 
-  // Handle product selection
   const handleProductSelect = (e) => {
     const productId = e.target.value;
     const product = products.find((p) => String(p.productId) === productId);
@@ -62,7 +61,6 @@ const UpdateInventory = () => {
     setSuccess('');
   };
 
-  // Handle input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     let refillSpace = formData.refillSpace;
@@ -81,7 +79,6 @@ const UpdateInventory = () => {
     setError('');
   };
 
-  // Reset form
   const resetForm = () => {
     setFormData({
       productId: '',
@@ -97,7 +94,6 @@ const UpdateInventory = () => {
     setSuccess('');
   };
 
-  // Submit form
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoading(true);
@@ -106,16 +102,16 @@ const UpdateInventory = () => {
 
     const { productId, newQty, metric, employeeId, currentLevel, tankCapacity } = formData;
 
-    // Validate required fields
     if (!productId || !newQty || isNaN(Number(newQty)) || !employeeId) {
       setError('Please select a product, enter a valid quantity, and choose an employee.');
       setLoading(false);
       return;
     }
 
-    // Validate refill space
     if ((Number(currentLevel) + Number(newQty)) > Number(tankCapacity)) {
-      setError(`Cannot add ${newQty} ${metric}. Tank capacity exceeded by ${(Number(currentLevel) + Number(newQty) - Number(tankCapacity)).toFixed(2)} ${metric}.`);
+      setError(
+        `Cannot add ${newQty} ${metric}. Tank capacity exceeded by ${(Number(currentLevel) + Number(newQty) - Number(tankCapacity)).toFixed(2)} ${metric}.`
+      );
       setLoading(false);
       return;
     }
@@ -145,104 +141,97 @@ const UpdateInventory = () => {
   };
 
   return (
-    <div className="dashboard-content">
-      <div className="update-inventory-container">
-        {success && <div className="update-success-message">{success}</div>}
-        {error && <div className="update-error-message">{error}</div>}
+    <div className="update-inventory-container">
+      {success && <div className="update-success-message">{success}</div>}
+      {error && <div className="update-error-message">{error}</div>}
 
-        <h2 className="update-inventory-heading">Update Inventory</h2>
+      <h2 className="update-inventory-heading">Update Inventory</h2>
 
-        <form className="update-inventory-form" onSubmit={handleSubmit}>
-          {/* Product select */}
-          <div className="form-row">
-            <div className="form-group full-width">
-              <label>Select Product</label>
-              <select
-                name="productId"
-                value={formData.productId}
-                onChange={handleProductSelect}
-                required
-                disabled={loading}
-              >
-                <option value="">-- Select Product --</option>
-                {products.map((p) => (
-                  <option key={p.productId} value={p.productId}>
-                    {p.productName}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          {/* Employee select */}
-          <div className="form-row">
-            <div className="form-group full-width">
-              <label>Select Employee</label>
-              <select
-                name="employeeId"
-                value={formData.employeeId}
-                onChange={handleChange}
-                required
-                disabled={loading}
-              >
-                <option value="">-- Select Employee --</option>
-                {employees.map((e) => (
-                  <option key={e.employeeId} value={e.employeeId}>
-                    {e.name} ({e.employeeId})
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          {/* Current levels */}
-          <div className="form-row">
-            <div className="form-group">
-              <label>Current Level ({formData.metric})</label>
-              <input type="number" value={formData.currentLevel} readOnly />
-            </div>
-            <div className="form-group">
-              <label>Tank Capacity ({formData.metric})</label>
-              <input type="number" value={formData.tankCapacity} readOnly />
-            </div>
-          </div>
-
-          {/* New Quantity */}
-          <div className="form-row">
-            <div className="form-group">
-              <label>New Quantity ({formData.metric})</label>
-              <input
-                type="number"
-                name="newQty"
-                value={formData.newQty}
-                onChange={handleChange}
-                required
-                disabled={loading}
-                min="0"
-                step="0.01"
-              />
-            </div>
-            <div className="form-group">
-              <label>Refill Space ({formData.metric})</label>
-              <input type="number" value={formData.refillSpace} readOnly />
-            </div>
-          </div>
-
-          {/* Buttons */}
-          <div className="form-buttons">
-            <button type="button" className="btn btn-gray" onClick={resetForm} disabled={loading}>
-              Clear
-            </button>
-            <button
-              type="submit"
-              className="btn btn-blue"
-              disabled={!formData.productId || !formData.newQty || !formData.employeeId || loading}
+      <form className="update-inventory-form" onSubmit={handleSubmit}>
+        <div className="form-row">
+          <div className="form-group full-width">
+            <label>Select Product</label>
+            <select
+              name="productId"
+              value={formData.productId}
+              onChange={handleProductSelect}
+              required
+              disabled={loading}
             >
-              {loading ? 'Adding...' : 'Add Entry'}
-            </button>
+              <option value="">-- Select Product --</option>
+              {products.map((p) => (
+                <option key={p.productId} value={p.productId}>
+                  {p.productName}
+                </option>
+              ))}
+            </select>
           </div>
-        </form>
-      </div>
+        </div>
+
+        <div className="form-row">
+          <div className="form-group full-width">
+            <label>Select Employee</label>
+            <select
+              name="employeeId"
+              value={formData.employeeId}
+              onChange={handleChange}
+              required
+              disabled={loading}
+            >
+              <option value="">-- Select Employee --</option>
+              {employees.map((e) => (
+                <option key={e.employeeId} value={e.employeeId}>
+                  {e.name} ({e.employeeId})
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        <div className="form-row">
+          <div className="form-group">
+            <label>Current Level ({formData.metric})</label>
+            <input type="number" value={formData.currentLevel} readOnly />
+          </div>
+          <div className="form-group">
+            <label>Tank Capacity ({formData.metric})</label>
+            <input type="number" value={formData.tankCapacity} readOnly />
+          </div>
+        </div>
+
+        <div className="form-row">
+          <div className="form-group">
+            <label>New Quantity ({formData.metric})</label>
+            <input
+              type="number"
+              name="newQty"
+              value={formData.newQty}
+              onChange={handleChange}
+              required
+              disabled={loading}
+              min="0"
+              step="0.01"
+            />
+          </div>
+          <div className="form-group">
+            <label>Refill Space ({formData.metric})</label>
+            <input type="number" value={formData.refillSpace} readOnly />
+          </div>
+        </div>
+
+        <div className="form-buttons">
+          <button type="button" className="btn btn-gray" onClick={resetForm} disabled={loading}>
+            Clear
+          </button>
+          <button
+            type="submit"
+            className="btn btn-blue"
+            disabled={!formData.productId || !formData.newQty || !formData.employeeId || loading}
+          >
+            {loading ? 'Adding...' : 'Add Entry'}
+          </button>
+        </div>
+      </form>
     </div>
   );
 };
