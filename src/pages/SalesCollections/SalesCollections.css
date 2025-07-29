@@ -80,26 +80,23 @@ input[readonly] {
 }
 
 .sales-actions {
-  margin-top: 30px;
-  text-align: center;
-}
-
-.submit-btn,
-.clear-btn {
-  padding: 11px 0;
-  border-radius: 7px;
-  border: none;
-  font-weight: 600;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background 0.17s, color 0.14s, box-shadow 0.12s;
-  min-width: 120px;
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+  justify-content: flex-start;
+  flex-wrap: wrap;
 }
 
 .submit-btn {
+  padding: 10px 16px;
+  border-radius: 6px;
+  border: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background 0.17s, color 0.14s, box-shadow 0.12s;
   background-color: #10b981;
   color: #fff;
-  margin-right: 10px;
   box-shadow: 0 1px 4px rgba(16, 185, 129, 0.09);
 }
 
@@ -107,14 +104,26 @@ input[readonly] {
   background-color: #059669;
 }
 
-.clear-btn {
+.sc-remove-button {
   background-color: #ef4444;
-  color: #fff;
-  box-shadow: 0 1px 4px rgba(239, 68, 68, 0.10);
+  color: #fff !important;
+  box-shadow: 0 1px 4px rgba(239, 68, 68, 0.1) !important;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  border-radius: 5px;
+  min-width: 100px;
+  cursor: pointer;
+  border: none;
+  transition: background 0.17s, box-shadow 0.12s;
 }
 
-.clear-btn:hover:not(:disabled) {
+.sc-remove-button:hover:not(:disabled) {
   background-color: #b91c1c;
+}
+
+.sc-remove-button:disabled {
+  background-color: #fca5a5;
+  cursor: not-allowed;
 }
 
 small {
@@ -136,10 +145,11 @@ small {
     margin-top: 22px;
     margin-bottom: 15px;
   }
+  .sales-actions {
+    flex-direction: column;
+  }
   .submit-btn,
-  .clear-btn {
+  .sc-remove-button {
     width: 100%;
-    margin-right: 0;
-    margin-bottom: 12px;
   }
 }
