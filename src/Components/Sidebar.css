@@ -3,12 +3,14 @@
   width: 250px;
   background-color: #1f2d3d;
   color: white;
-  min-height: 100vh;
+  height: calc(100vh - 60px); /* full height minus navbar */
   padding-top: 20px;
   display: flex;
   flex-direction: column;
   position: sticky;
-  top: 0;
+  top: 60px; /* sits right below the navbar */
+  box-sizing: border-box;
+  overflow-y: auto;
 }
 
 /* Nav links container */
@@ -30,7 +32,7 @@
   text-decoration: none;
   font-size: 15px;
   transition: background-color 0.3s ease;
-  cursor: pointer; /* pointer cursor on hover */
+  cursor: pointer;
 }
 
 .sidebar-nav-link:hover,
@@ -59,7 +61,7 @@
   padding: 6px 10px;
   border-radius: 6px;
   transition: background-color 0.3s ease;
-  cursor: pointer; /* pointer cursor for sub-links too */
+  cursor: pointer;
 }
 
 .sidebar-sub-link:hover,
@@ -70,7 +72,7 @@
 
 /* Product Toggle */
 .sidebar-inventory-toggle {
-  cursor: pointer; /* ensure pointer cursor */
+  cursor: pointer;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -83,27 +85,6 @@
 
 .sidebar-inventory-toggle:hover {
   background-color: #334155;
-}
-
-/* Logout Button */
-.sidebar-logout-btn {
-  margin-top: auto;
-  margin: 20px 15px;
-  padding: 10px;
-  border: none;
-  border-radius: 6px;
-  background-color: #ef4444;
-  color: white;
-  font-size: 15px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.sidebar-logout-btn:hover {
-  background-color: #dc2626;
 }
 
 /* Icon */
