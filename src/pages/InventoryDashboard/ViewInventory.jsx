@@ -8,7 +8,7 @@ const ViewInventory = () => {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    axios.get('https://pulse-293050141084.asia-south1.run.app/inventory/latest')
+    axios.get('http://localhost:8080/inventory/latest')
       .then(res => {
         console.log('Inventory data:', res.data);
         setInventoryData(res.data);

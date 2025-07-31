@@ -1,6 +1,7 @@
 import React from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import Sidebar from '../../Components/Sidebar';
+import Navbar from '../../Components/Navbar';
 import './DashboardLayout.css';
 
 const DashboardLayout = () => {
@@ -8,14 +9,17 @@ const DashboardLayout = () => {
 
   const handleLogout = () => {
     localStorage.clear();
-    navigate('/');
+    navigate('/login');
   };
 
   return (
-    <div className="dashboard-layout">
-      <Sidebar onLogout={handleLogout} />
-      <div className="dashboard-content">
-        <Outlet />
+    <div className="dashboard-wrapper">
+      <Navbar onLogout={handleLogout} />
+      <div className="dashboard-layout">
+        <Sidebar onLogout={handleLogout} />
+        <div className="dashboard-content">
+          <Outlet />
+        </div>
       </div>
     </div>
   );

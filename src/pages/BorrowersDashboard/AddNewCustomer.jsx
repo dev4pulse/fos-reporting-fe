@@ -46,7 +46,7 @@ const AddNewCustomer = () => {
       const token = localStorage.getItem('token');
 
       await axios.post(
-        'https://pulse-293050141084.asia-south1.run.app/borrowers',
+        'http://localhost:8080/borrowers',
         {
           customerName: form.customerName,
           customerVehicle: form.customerVehicle,

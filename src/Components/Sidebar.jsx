@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import {
-  FaBox, FaTachometerAlt, FaSignOutAlt, FaCubes,
+  FaBox, FaTachometerAlt, FaCubes,
   FaPlus, FaEdit, FaMoneyBillWave, FaUsers, FaUser, FaUserPlus,
   FaFileInvoiceDollar, FaFileAlt, FaFolderPlus, FaFolder
 } from 'react-icons/fa';
@@ -12,13 +12,6 @@ const Sidebar = () => {
   const [customersOpen, setCustomersOpen] = useState(false);
   const [expensesOpen, setExpensesOpen] = useState(false);
   const [documentsOpen, setDocumentsOpen] = useState(false);
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    localStorage.removeItem('isLoggedIn');
-    localStorage.removeItem('username');
-    navigate('/login');
-  };
 
   return (
     <aside className="sidebar">
@@ -33,7 +26,7 @@ const Sidebar = () => {
           className="sidebar-nav-link sidebar-inventory-toggle"
           onClick={() => setInventoryOpen(!inventoryOpen)}
         >
-          <span><FaBox className="icon" /> Product Management</span>
+          <span><FaBox className="icon" /> Inventory</span>
           <span className="toggle-icon">{inventoryOpen ? '−' : '+'}</span>
         </div>
         {inventoryOpen && (
@@ -119,10 +112,6 @@ const Sidebar = () => {
             </NavLink>
           </div>
         )}
-
-        <button className="sidebar-logout-btn" onClick={handleLogout}>
-          <FaSignOutAlt className="icon" /> Logout
-        </button>
 
       </nav>
     </aside>
