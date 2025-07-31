@@ -18,7 +18,7 @@ const SalesCollections = () => {
   // Fetch employees
   useEffect(() => {
     axios
-      .get("https://pulse-293050141084.asia-south1.run.app/active")
+      .get("http://localhost:8080/active")
       .then((res) => setEmployees(res.data))
       .catch((err) => {
         setEmployeeFetchError("Failed to load employees.");
@@ -29,7 +29,7 @@ const SalesCollections = () => {
   // Fetch active products
   useEffect(() => {
     axios
-      .get("https://pulse-293050141084.asia-south1.run.app/products")
+      .get("http://localhost:8080/products")
       .then((res) => {
         const activeProducts = res.data.filter(
           (p) => p.status && p.status.toUpperCase() === "ACTIVE"
@@ -110,7 +110,7 @@ const SalesCollections = () => {
 
         try {
           const invRes = await axios.get(
-            "https://pulse-293050141084.asia-south1.run.app/inventory/latest"
+            "http://localhost:8080/inventory/latest"
           );
           const invProduct = invRes.data.find(
             (p) => p.productId === selectedProduct.productId
@@ -136,7 +136,7 @@ const SalesCollections = () => {
     ) {
       try {
         const res = await axios.get(
-          "https://pulse-293050141084.asia-south1.run.app/sales/last",
+          "http://localhost:8080/sales/last",
           { params: { productName: row.productName, gun: row.gun } }
         );
         row.opening = res.data.lastClosing || 0;
@@ -208,7 +208,7 @@ const SalesCollections = () => {
 
     try {
       const inventoryUpdates = products.map((p) =>
-        axios.post("https://pulse-293050141084.asia-south1.run.app/inventory", {
+        axios.post("http://localhost:8080/inventory", {
           productId: p.productId,
           quantity: -p.salesLiters,
           metric: p.metric,
@@ -218,11 +218,11 @@ const SalesCollections = () => {
 
       await Promise.all([
         axios.post(
-          "https://pulse-293050141084.asia-south1.run.app/sales",
+          "http://localhost:8080/sales",
           payloadSales
         ),
         axios.post(
-          "https://pulse-293050141084.asia-south1.run.app/collections",
+          "http://localhost:8080/collections",
           payloadCollections
         ),
         ...inventoryUpdates,
