@@ -8,7 +8,7 @@ const ViewDocuments = () => {
   useEffect(() => {
     const fetchDocuments = async () => {
       try {
-        const res = await axios.get('https://pulse-293050141084.asia-south1.run.app/api/documents');
+        const res = await axios.get('https://pulse-766719709317.asia-south1.run.app/api/documents');
         setDocuments(res.data || []);
         console.log(res.data)
       } catch (err) {

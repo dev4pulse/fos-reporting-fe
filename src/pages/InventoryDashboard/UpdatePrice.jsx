@@ -14,12 +14,12 @@ const UpdatePrice = () => {
   // Fetch products and employees on mount
   useEffect(() => {
     axios
-      .get('https://pulse-293050141084.asia-south1.run.app/products')
+      .get('https://pulse-766719709317.asia-south1.run.app/products')
       .then((res) => setProducts(res.data))
       .catch((err) => console.error('Error fetching products:', err));
 
     axios
-      .get('https://pulse-293050141084.asia-south1.run.app/active')
+      .get('https://pulse-766719709317.asia-south1.run.app/active')
       .then((res) => setEmployees(res.data))
       .catch((err) => console.error('Error fetching employees:', err));
   }, []);
@@ -52,7 +52,7 @@ const UpdatePrice = () => {
 
     try {
       await axios.put(
-        `https://pulse-293050141084.asia-south1.run.app/products/${selectedProduct.productId}/price`,
+        `https://pulse-766719709317.asia-south1.run.app/products/${selectedProduct.productId}/price`,
         null,
         {
           params: {

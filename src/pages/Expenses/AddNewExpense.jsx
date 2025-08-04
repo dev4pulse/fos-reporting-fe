@@ -23,7 +23,7 @@ const AddNewExpense = () => {
 
   const fetchCategories = async () => {
     try {
-      const res = await axios.get('https://pulse-293050141084.asia-south1.run.app/categoryList');
+      const res = await axios.get('https://pulse-766719709317.asia-south1.run.app/categoryList');
       setCategories(res.data || []);
     } catch (err) {
       console.error('Failed to fetch categories:', err);
@@ -33,7 +33,7 @@ const AddNewExpense = () => {
 
   const fetchEmployeeIds = async () => {
     try {
-      const res = await axios.get('https://pulse-293050141084.asia-south1.run.app/active');
+      const res = await axios.get('https://pulse-766719709317.asia-south1.run.app/active');
       setEmployeeIds(res.data);
       console.log(res.data)
     } catch (err) {
@@ -61,7 +61,7 @@ const AddNewExpense = () => {
         employeeId: form.employeeId
       };
 
-      await axios.post('https://pulse-293050141084.asia-south1.run.app/expensesPost', payload);
+      await axios.post('https://pulse-766719709317.asia-south1.run.app/expensesPost', payload);
       setMessage('Expense added successfully.');
       setForm({
         category: '',

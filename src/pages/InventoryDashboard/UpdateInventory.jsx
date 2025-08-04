@@ -22,7 +22,7 @@ const UpdateInventory = () => {
   // Fetch products and employees
   useEffect(() => {
     axios
-      .get('https://pulse-293050141084.asia-south1.run.app/inventory/latest')
+      .get('https://pulse-766719709317.asia-south1.run.app/inventory/latest')
       .then((res) => setProducts(Array.isArray(res.data) ? res.data : []))
       .catch((err) => {
         console.error('Failed to fetch products:', err);
@@ -30,7 +30,7 @@ const UpdateInventory = () => {
       });
 
     axios
-      .get('https://pulse-293050141084.asia-south1.run.app/active')
+      .get('https://pulse-766719709317.asia-south1.run.app/active')
       .then((res) => setEmployees(Array.isArray(res.data) ? res.data : []))
       .catch((err) => {
         console.error('Failed to fetch employees:', err);
@@ -139,7 +139,7 @@ const UpdateInventory = () => {
     };
 
     axios
-      .post('https://pulse-293050141084.asia-south1.run.app/inventory', payload)
+      .post('https://pulse-766719709317.asia-south1.run.app/inventory', payload)
       .then((res) => {
         if (res.status === 201 || res.status === 200) {
           setSuccess('Entry added successfully!');
