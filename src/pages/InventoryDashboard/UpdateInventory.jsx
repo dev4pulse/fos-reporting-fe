@@ -47,14 +47,18 @@ const UpdateInventory = () => {
       return;
     }
 
+    const currentLevel = parseFloat(product.currentLevel ?? 0);
+    const tankCapacity = parseFloat(product.tankCapacity ?? 0);
+    const refillSpace = parseFloat((tankCapacity - currentLevel).toFixed(2));
+
     setFormData((prev) => ({
       ...prev,
       productId: product.productId,
       productName: product.productName || '',
-      currentLevel: product.currentLevel ?? 0,
-      tankCapacity: product.tankCapacity ?? 0,
+      currentLevel,
+      tankCapacity,
       newQty: '',
-      refillSpace: (product.tankCapacity ?? 0) - (product.currentLevel ?? 0),
+      refillSpace,
       metric: product.metric || 'liters'
     }));
     setError('');
@@ -63,19 +67,27 @@ const UpdateInventory = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    let refillSpace = formData.refillSpace;
 
     if (name === 'newQty') {
-      const newCurrent = (formData.currentLevel ?? 0) + Number(value || 0);
-      refillSpace = (formData.tankCapacity ?? 0) - newCurrent;
+      const newQtyNumber = parseFloat(value || 0);
+      const newCurrent = parseFloat(formData.currentLevel ?? 0) + newQtyNumber;
+      let refillSpace = parseFloat(formData.tankCapacity ?? 0) - newCurrent;
+
       if (refillSpace < 0) refillSpace = 0;
+      refillSpace = parseFloat(refillSpace.toFixed(2));
+
+      setFormData((prev) => ({
+        ...prev,
+        newQty: value,
+        refillSpace
+      }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value
+      }));
     }
 
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-      refillSpace: name === 'newQty' ? refillSpace : prev.refillSpace
-    }));
     setError('');
   };
 
@@ -108,9 +120,12 @@ const UpdateInventory = () => {
       return;
     }
 
-    if ((Number(currentLevel) + Number(newQty)) > Number(tankCapacity)) {
+    const total = parseFloat(currentLevel) + parseFloat(newQty);
+    const capacity = parseFloat(tankCapacity);
+
+    if (total - capacity > 0.01) {
       setError(
-        `Cannot add ${newQty} ${metric}. Tank capacity exceeded by ${(Number(currentLevel) + Number(newQty) - Number(tankCapacity)).toFixed(2)} ${metric}.`
+        `Cannot add ${newQty} ${metric}. Tank capacity exceeded by ${(total - capacity).toFixed(2)} ${metric}.`
       );
       setLoading(false);
       return;
