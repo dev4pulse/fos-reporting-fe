@@ -12,7 +12,7 @@ const UpdatePrice = () => {
   // Fetch products on mount
   useEffect(() => {
     axios
-      .get('http://localhost:8080/products')
+      .get('https://pulse-293050141084.asia-south1.run.app/products')
       .then((res) => setProducts(res.data))
       .catch((err) => console.error('Error fetching products:', err));
   }, []);
@@ -44,7 +44,7 @@ const UpdatePrice = () => {
 
     try {
       await axios.put(
-        `http://localhost:8080/products/${selectedProduct.productId}/price`,
+        `https://pulse-293050141084.asia-south1.run.app/products/${selectedProduct.productId}/price`,
         null,
         { params: { newPrice: price } }
       );

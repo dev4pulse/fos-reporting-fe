@@ -29,7 +29,7 @@ const AddProduct = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:8080/products', formData);
+      await axios.post('https://pulse-293050141084.asia-south1.run.app/products', formData);
       alert('Product added successfully!');
       handleClear();
     } catch (err) {
