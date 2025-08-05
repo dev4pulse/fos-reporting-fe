@@ -8,7 +8,8 @@ const AddProduct = () => {
     description: '',
     tankCapacity: '',
     price: '',
-    status: 'ACTIVE', // default
+    metric: 'LITERS', // new field, default value
+    status: 'ACTIVE',
   };
 
   const [formData, setFormData] = useState(initialValues);
@@ -28,7 +29,7 @@ const AddProduct = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('https://pulse-293050141084.asia-south1.run.app/products', formData);
+      await axios.post('https://pulse-766719709317.asia-south1.run.app/products', formData);
       alert('Product added successfully!');
       handleClear();
     } catch (err) {
@@ -67,7 +68,7 @@ const AddProduct = () => {
 
         <div className="input-row">
           <div style={{ flex: 1 }}>
-            <label>Tank Capacity (L)</label>
+            <label>Tank Capacity</label>
             <input
               type="number"
               name="tankCapacity"
@@ -78,6 +79,21 @@ const AddProduct = () => {
           </div>
 
           <div style={{ flex: 1 }}>
+            <label>Metric</label>
+            <select
+              name="metric"
+              value={formData.metric}
+              onChange={handleChange}
+              required
+            >
+              <option value="LITERS">Liters</option>
+              <option value="PACKETS">Packets</option>
+            </select>
+          </div>
+        </div>
+
+        <div className="input-row">
+          <div style={{ flex: 1 }}>
             <label>Price (₹)</label>
             <input
               type="number"
@@ -87,18 +103,20 @@ const AddProduct = () => {
               required
             />
           </div>
-        </div>
 
-        <label>Status</label>
-        <select
-          name="status"
-          value={formData.status}
-          onChange={handleChange}
-          required
-        >
-          <option value="ACTIVE">ACTIVE</option>
-          <option value="INACTIVE">INACTIVE</option>
-        </select>
+          <div style={{ flex: 1 }}>
+            <label>Status</label>
+            <select
+              name="status"
+              value={formData.status}
+              onChange={handleChange}
+              required
+            >
+              <option value="ACTIVE">ACTIVE</option>
+              <option value="INACTIVE">INACTIVE</option>
+            </select>
+          </div>
+        </div>
 
         <div className="add-product-buttons">
           <button type="submit" className="btn btn-blue">Add Product</button>

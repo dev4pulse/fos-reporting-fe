@@ -13,7 +13,7 @@ const ViewProducts = () => {
   // Fetch all products
   const fetchProducts = async () => {
     try {
-      const res = await axios.get("https://pulse-293050141084.asia-south1.run.app/products");
+      const res = await axios.get("https://pulse-766719709317.asia-south1.run.app/products");
       setProducts(res.data);
     } catch (err) {
       setError("Failed to load products: " + err.message);
@@ -36,7 +36,7 @@ const ViewProducts = () => {
   const handleDelete = async (productId) => {
     if (!window.confirm("Are you sure you want to delete this product?")) return;
     try {
-      await axios.delete(`https://pulse-293050141084.asia-south1.run.app/products/${productId}`);
+      await axios.delete(`https://pulse-766719709317.asia-south1.run.app/products/${productId}`);
       setProducts((prev) => prev.filter((p) => (p.productId ?? p.id) !== productId));
       showMessage(setSuccess, "Product deleted successfully.");
     } catch (err) {
@@ -61,7 +61,7 @@ const ViewProducts = () => {
       if (!product) return;
 
       const updatedProduct = { ...product, status: "INACTIVE" };
-      await axios.put(`https://pulse-293050141084.asia-south1.run.app/products/${productId}`, updatedProduct);
+      await axios.put(`https://pulse-766719709317.asia-south1.run.app/products/${productId}`, updatedProduct);
 
       setProducts((prev) =>
         prev.map((p) => (p.productId ?? p.id) === productId ? updatedProduct : p)
@@ -84,7 +84,7 @@ const ViewProducts = () => {
     try {
       const updatedProduct = { ...selectedProduct, status: newStatus };
       const productId = selectedProduct.productId ?? selectedProduct.id;
-      await axios.put(`https://pulse-293050141084.asia-south1.run.app/products/${productId}`, updatedProduct);
+      await axios.put(`https://pulse-766719709317.asia-south1.run.app/products/${productId}`, updatedProduct);
       setProducts((prev) =>
         prev.map((p) => (p.productId ?? p.id) === productId ? updatedProduct : p)
       );

@@ -22,7 +22,7 @@ const Login = () => {
     setLoading(true);
     try {
       const response = await axios.post(
-        "https://pulse-293050141084.asia-south1.run.app/login",
+        "https://pulse-766719709317.asia-south1.run.app/login",
         {
           username,
           password,

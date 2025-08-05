@@ -1,176 +1,130 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './UpdatePrice.css';
 
 const UpdatePrice = () => {
   const [products, setProducts] = useState([]);
-  const [formData, setFormData] = useState({
-    productName: '',
-    currentPrice: '',
-    newPrice: '',
-  });
+  const [employees, setEmployees] = useState([]);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [employeeId, setEmployeeId] = useState('');
+  const [price, setPrice] = useState('');
+  const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
 
-  // Fetch all products for the dropdown
+  // Fetch products and employees on mount
   useEffect(() => {
-    axios.get('https://pulse-293050141084.asia-south1.run.app/inventory/latest')
-      .then(res => {
-        setProducts(res.data);
-      })
-      .catch(err => {
-        setError('Failed to load products. See console for details.');
-        console.error('Failed to fetch products:', err);
-      });
+    axios
+      .get('https://pulse-766719709317.asia-south1.run.app/products')
+      .then((res) => setProducts(res.data))
+      .catch((err) => console.error('Error fetching products:', err));
+
+    axios
+      .get('https://pulse-766719709317.asia-south1.run.app/active')
+      .then((res) => setEmployees(res.data))
+      .catch((err) => console.error('Error fetching employees:', err));
   }, []);
 
-  // Update current price when product is selected
   const handleProductSelect = (e) => {
-    const productName = e.target.value;
-    const selectedProduct = products.find(p => p.productName === productName);
-
-    setFormData({
-      productName,
-      currentPrice: selectedProduct?.currentPrice || '', // <-- Use correct key
-      newPrice: '',
-    });
-
-    setError('');
-    setSuccess('');
+    const productId = e.target.value;
+    const product = products.find((p) => p.productId.toString() === productId);
+    setSelectedProduct(product);
+    setPrice(product?.price || '');
+    setMessage('');
   };
 
-  // Handle field changes
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value,
-    }));
-    setError('');
+  const handlePriceChange = (e) => {
+    setPrice(e.target.value);
   };
 
-  // Clear the form
-  const handleClear = () => {
-    setFormData({
-      productName: '',
-      currentPrice: '',
-      newPrice: '',
-    });
-    setError('');
-    setSuccess('');
+  const handleEmployeeSelect = (e) => {
+    setEmployeeId(e.target.value);
   };
 
-  // Submit new price to backend
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!selectedProduct || !price || !employeeId) {
+      setMessage('Please select product, new price, and employee.');
+      return;
+    }
+
     setLoading(true);
-    setError('');
-    setSuccess('');
-
-    const { productName, newPrice } = formData;
-
-    // Validation
-    if (!productName) {
-      setError('Please select a product.');
-      setLoading(false);
-      return;
-    }
-    if (!newPrice) {
-      setError('Please enter a new price.');
-      setLoading(false);
-      return;
-    }
-    const price = parseFloat(newPrice);
-    if (isNaN(price) || price <= 0) {
-      setError('Please enter a valid positive price.');
-      setLoading(false);
-      return;
-    }
 
     try {
-      const response = await axios.put(
-        'https://pulse-293050141084.asia-south1.run.app/inventory/update-price',
-        { productName, newPrice: price }
+      await axios.put(
+        `https://pulse-766719709317.asia-south1.run.app/products/${selectedProduct.productId}/price`,
+        null,
+        {
+          params: {
+            newPrice: price,
+            employeeId: employeeId
+          }
+        }
       );
-      if (response.status === 200) {
-        setSuccess('Price updated successfully!');
-        handleClear();
-      } else {
-        setError(response.data || 'Update failed.');
-      }
+
+      setMessage(`Price updated successfully for ${selectedProduct.productName}.`);
     } catch (err) {
-      console.error('Error updating price:', err);
-      setError(err.response?.data || 'Failed to update price. Please try again.');
-    } finally {
-      setLoading(false);
+      console.error(err);
+      setMessage('Failed to update price.');
     }
+
+    setLoading(false);
   };
 
   return (
     <div className="update-price-container">
-      <h2 className="update-price-heading">Update Product Price</h2>
-      {success && <div className="update-success-message">{success}</div>}
-      {error && <div className="update-error-message">{error}</div>}
-      <form className="update-price-form" onSubmit={handleSubmit}>
-        <label htmlFor="productName">Select Product</label>
-        <select
-          id="productName"
-          name="productName"
-          value={formData.productName}
-          onChange={handleProductSelect}
-          required
-          disabled={loading}
-        >
-          <option value="">-- Select Product --</option>
-          {products.map((p) => (
-            <option key={p.productId} value={p.productName}>
-              {p.productName}
-            </option>
-          ))}
-        </select>
-
-        <label htmlFor="currentPrice">Current Price (₹)</label>
-        <input
-          id="currentPrice"
-          type="text"
-          name="currentPrice"
-          value={formData.currentPrice}
-          readOnly
-          disabled={loading}
-        />
-
-        <label htmlFor="newPrice">New Price (₹)</label>
-        <input
-          id="newPrice"
-          type="number"
-          name="newPrice"
-          value={formData.newPrice}
-          onChange={handleChange}
-          min="0"
-          step="0.01"
-          placeholder="Enter new price"
-          required
-          disabled={loading}
-        />
-
-        <div className="update-price-buttons">
-          <button
-            type="submit"
-            className="btn btn-blue"
-            disabled={!formData.productName || !formData.newPrice || loading}
-          >
-            {loading ? 'Updating...' : 'Update Price'}
-          </button>
-          <button
-            type="button"
-            className="btn btn-gray"
-            onClick={handleClear}
-            disabled={loading}
-          >
-            Clear
-          </button>
+      <h2>Update Product Price</h2>
+      <form onSubmit={handleSubmit} className="update-price-form">
+        <div className="form-group">
+          <label>Select Product</label>
+          <select value={selectedProduct?.productId || ''} onChange={handleProductSelect}>
+            <option value="">-- Select Product --</option>
+            {products.map((product) => (
+              <option key={product.productId} value={product.productId}>
+                {product.productName}
+              </option>
+            ))}
+          </select>
         </div>
+
+        {selectedProduct && (
+          <>
+            <div className="form-group">
+              <label>Current Price</label>
+              <input type="text" value={selectedProduct.price} readOnly />
+            </div>
+
+            <div className="form-group">
+              <label>New Price</label>
+              <input
+                type="number"
+                value={price}
+                onChange={handlePriceChange}
+                required
+                min="0"
+                step="0.01"
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Select Employee</label>
+              <select value={employeeId} onChange={handleEmployeeSelect} required>
+                <option value="">-- Select Employee --</option>
+                {employees.map((e) => (
+                  <option key={e.employeeId} value={e.employeeId}>
+                    {e.name} ({e.employeeId})
+                  </option>
+                ))}
+              </select>
+            </div>
+          </>
+        )}
+
+        <button type="submit" disabled={loading}>
+          {loading ? 'Updating...' : 'Update Price'}
+        </button>
+
+        {message && <p className="message">{message}</p>}
       </form>
     </div>
   );

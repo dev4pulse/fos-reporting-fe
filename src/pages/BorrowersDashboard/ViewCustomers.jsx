@@ -1,51 +1,114 @@
-import React, { useState, useEffect } from 'react';
-import './ViewCustomers.css';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import "./ViewCustomers.css";
 
 const ViewCustomers = () => {
   const [borrowers, setBorrowers] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const [selectedBorrower, setSelectedBorrower] = useState(null);
+  const [updateModalOpen, setUpdateModalOpen] = useState(false);
+  const [detailsModalOpen, setDetailsModalOpen] = useState(false);
+  const [transactions, setTransactions] = useState([]);
+
+  // Fetch borrowers
   useEffect(() => {
     const fetchBorrowers = async () => {
       try {
         setLoading(true);
-        setError(null);
-
-        const token = localStorage.getItem('token');
-        const response = await axios.get('https://pulse-293050141084.asia-south1.run.app/borrowers', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        setBorrowers(response.data);
+        const token = localStorage.getItem("token");
+        const res = await axios.get(
+          "https://pulse-766719709317.asia-south1.run.app/borrowers",
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        setBorrowers(res.data);
+        console.log(res.data)
       } catch (err) {
-        setError(err.response?.data?.message || err.message || 'Failed to load borrower records');
+        setError("Failed to load borrowers");
       } finally {
         setLoading(false);
       }
     };
-
     fetchBorrowers();
   }, []);
 
-  const filteredBorrowers = borrowers.filter((borrower) => {
-    const search = searchTerm.toLowerCase();
+  const filteredBorrowers = borrowers.filter((b) => {
+    const s = searchTerm.toLowerCase();
     return (
-      String(borrower.id).toLowerCase().includes(search) ||
-      String(borrower.customerName).toLowerCase().includes(search) ||
-      String(borrower.customerVehicle).toLowerCase().includes(search) ||
-      String(borrower.phone).toLowerCase().includes(search) ||
-      (borrower.email && borrower.email.toLowerCase().includes(search)) ||
-      (borrower.address && borrower.address.toLowerCase().includes(search))
+      String(b.id).includes(s) ||
+      b.customerName?.toLowerCase().includes(s) ||
+      b.customerVehicle?.toLowerCase().includes(s) ||
+      b.phone?.toLowerCase().includes(s)
     );
   });
 
-  const totalBorrowedAmount = filteredBorrowers.reduce(
-    (sum, borrower) => sum + (borrower.amountBorrowed || 0),
-    0
-  );
+  // Open update modal
+  const handleUpdateClick = (borrower) => {
+    setSelectedBorrower({
+      ...borrower,
+      duePaid: "",
+      extraBorrowed: "",
+      status: borrower.status,
+    });
+    setUpdateModalOpen(true);
+  };
+
+  // Calculate new due live
+  const getUpdatedDue = () => {
+    if (!selectedBorrower) return 0;
+    const dueAmount = parseFloat(selectedBorrower.dueAmount) || 0;
+    const duePaid = parseFloat(selectedBorrower.duePaid) || 0;
+    const extraBorrowed = parseFloat(selectedBorrower.extraBorrowed) || 0;
+    return (dueAmount - duePaid + extraBorrowed).toFixed(2);
+  };
+
+  // Submit update
+  const handleUpdateSubmit = async () => {
+    const { id, duePaid, extraBorrowed, status } = selectedBorrower;
+    const updatedDueAmount = parseFloat(getUpdatedDue());
+
+    try {
+      const token = localStorage.getItem("token");
+      await axios.post(
+        `https://pulse-766719709317.asia-south1.run.app/borrowers/${id}/update`,
+        {
+          duePaid: parseFloat(duePaid) || 0,
+          extraBorrowed: parseFloat(extraBorrowed) || 0,
+          status,
+          updatedDueAmount,
+        },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      alert("Borrower updated successfully");
+      setBorrowers((prev) =>
+        prev.map((b) =>
+          b.id === id ? { ...b, dueAmount: updatedDueAmount, status } : b
+        )
+      );
+      setUpdateModalOpen(false);
+    } catch (err) {
+      alert("Failed to update borrower");
+    }
+  };
+
+  // View details
+  const handleViewDetailsClick = async (borrower) => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axios.get(
+        `https://pulse-766719709317.asia-south1.run.app/borrowers/${borrower.id}/transactions`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      console.log("Transaction details:", res.data);
+      setTransactions(res.data);
+      setDetailsModalOpen(true);
+    } catch (err) {
+      alert("Failed to fetch transaction details");
+    }
+  };
 
   return (
     <div className="view-customers">
@@ -53,10 +116,9 @@ const ViewCustomers = () => {
       <div className="search-box">
         <input
           type="text"
-          placeholder="Search by ID, Name, Vehicle, Phone, Email, or Address"
+          placeholder="Search by ID, Name, Vehicle, Phone"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          disabled={loading}
         />
       </div>
 
@@ -64,54 +126,141 @@ const ViewCustomers = () => {
         <div className="loading">Loading borrowers...</div>
       ) : error ? (
         <div className="error-message">{error}</div>
-      ) : borrowers.length === 0 ? (
-        <div className="empty-message">No borrower records found</div>
       ) : (
-        <>
-          <div className="total-amount">
-            Total Borrowed Amount: ₹ {totalBorrowedAmount.toLocaleString('en-IN')}
+        <div className="customers-table-container">
+          <table className="customers-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Phone</th>
+                <th>Vehicle</th>
+                <th>Last Borrowed</th>
+                <th>Due Amount (₹)</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredBorrowers.map((b) => (
+                <tr key={b.id}>
+                  <td>{b.id}</td>
+                  <td>{b.customerName}</td>
+                  <td>{b.phone}</td>
+                  <td>{b.customerVehicle}</td>
+                  <td>{new Date(b.borrowDate).toLocaleDateString()}</td>
+                  <td>{b.amountBorrowed?.toLocaleString("en-IN")}</td>
+                  <td>
+                    <button className="update-btn" onClick={() => handleUpdateClick(b)}>
+                      Update
+                    </button>
+                    <button
+                      className="details-btn"
+                      onClick={() => handleViewDetailsClick(b)}
+                    >
+                      View Details
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {/* Update Modal */}
+      {updateModalOpen && selectedBorrower && (
+        <div className="modal">
+          <div className="modal-content">
+            <h2>Update Borrower</h2>
+            <p>
+              <strong>{selectedBorrower.customerName}</strong> (ID:{" "}
+              {selectedBorrower.id})
+            </p>
+            <p>Current Due Amount: ₹ {selectedBorrower.amountBorrowed}</p>
+            <label>
+              Due Paid:
+              <input
+                type="number"
+                value={selectedBorrower.duePaid}
+                onChange={(e) =>
+                  setSelectedBorrower({ ...selectedBorrower, duePaid: e.target.value })
+                }
+              />
+            </label>
+            <label>
+              Extra Borrowed:
+              <input
+                type="number"
+                value={selectedBorrower.extraBorrowed}
+                onChange={(e) =>
+                  setSelectedBorrower({
+                    ...selectedBorrower,
+                    extraBorrowed: e.target.value,
+                  })
+                }
+              />
+            </label>
+            <p>Updated Due Amount: ₹ {getUpdatedDue()}</p>
+            <label>
+              Status:
+              <select
+                value={selectedBorrower.status}
+                onChange={(e) =>
+                  setSelectedBorrower({ ...selectedBorrower, status: e.target.value })
+                }
+              >
+                <option>Pending</option>
+                <option>Closed</option>
+                <option>Overdue</option>
+              </select>
+            </label>
+            <div className="modal-actions">
+              <button onClick={handleUpdateSubmit} className="submit-btn">
+                Save
+              </button>
+              <button onClick={() => setUpdateModalOpen(false)} className="clear-btn">
+                Cancel
+              </button>
+            </div>
           </div>
-          <div className="customers-table-container">
-            <table className="customers-table">
+        </div>
+      )}
+
+      {/* Details Modal */}
+      {detailsModalOpen && (
+        <div className="modal">
+          <div className="modal-content">
+            <h2>Transaction Details</h2>
+            <table className="transactions-table">
               <thead>
                 <tr>
-                  <th>#</th>
-                  <th>Borrow ID</th>
-                  <th>Customer Name</th>
-                  <th>Vehicle</th>
-                  <th>Employee ID</th>
-                  <th>Amount (₹)</th>
-                  <th>Borrow Date</th>
-                  <th>Due Date</th>
+                  <th>Date</th>
+                  <th>Amount Borrowed</th>
+                  <th>Due Paid</th>
                   <th>Status</th>
-                  <th>Notes</th>
-                  <th>Phone</th>
-                  <th>Email</th>
-                  <th>Address</th>
                 </tr>
               </thead>
               <tbody>
-                {filteredBorrowers.map((borrower, index) => (
-                  <tr key={borrower.id}>
-                    <td>{index + 1}</td>
-                    <td>{borrower.id}</td>
-                    <td>{borrower.customerName}</td>
-                    <td>{borrower.customerVehicle}</td>
-                    <td>{borrower.employeeId}</td>
-                    <td>{borrower.amountBorrowed.toLocaleString('en-IN')}</td>
-                    <td>{new Date(borrower.borrowDate).toLocaleDateString()}</td>
-                    <td>{new Date(borrower.dueDate).toLocaleDateString()}</td>
-                    <td>{borrower.status}</td>
-                    <td>{borrower.notes || '—'}</td>
-                    <td>{borrower.phone}</td>
-                    <td>{borrower.email || '—'}</td>
-                    <td>{borrower.address}</td>
+                {transactions.map((t, i) => (
+                  <tr key={i}>
+                    <td>{new Date(t.date).toLocaleDateString()}</td>
+                    <td>{t.amountBorrowed}</td>
+                    <td>{t.duePaid}</td>
+                    <td>{t.status}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
+            <div className="modal-actions">
+              <button
+                onClick={() => setDetailsModalOpen(false)}
+                className="clear-btn"
+              >
+                Close
+              </button>
+            </div>
           </div>
-        </>
+        </div>
       )}
     </div>
   );
