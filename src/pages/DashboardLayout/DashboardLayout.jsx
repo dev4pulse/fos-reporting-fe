@@ -15,12 +15,9 @@ const DashboardLayout = () => {
   return (
     <div className="dashboard-wrapper">
       <Navbar onLogout={handleLogout} />
-      <div className="dashboard-layout">
-        <Sidebar onLogout={handleLogout} />
         <div className="dashboard-content">
           <Outlet />
         </div>
-      </div>
     </div>
   );
 };
